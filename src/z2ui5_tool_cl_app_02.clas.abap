@@ -1,4 +1,4 @@
-class Z2UI5_TAB_CL_APP_03 definition
+class Z2UI5_TOOL_CL_APP_02 definition
   public
   create public .
 
@@ -9,5 +9,5 @@ ENDCLASS.
 
 
 
-CLASS Z2UI5_TAB_CL_APP_03 IMPLEMENTATION.
+CLASS Z2UI5_TOOL_CL_APP_02 IMPLEMENTATION.
 ENDCLASS.

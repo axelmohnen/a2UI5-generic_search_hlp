@@ -1,4 +1,4 @@
-CLASS z2ui5_tool_cl_app_05 DEFINITION PUBLIC.
+CLASS z2ui5_tool_cl_app_06 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
 
@@ -20,6 +20,10 @@ CLASS z2ui5_tool_cl_app_05 DEFINITION PUBLIC.
     DATA mt_file      TYPE STANDARD TABLE OF ty_file WITH EMPTY KEY.
     DATA ms_file_edit TYPE ty_file.
     DATA ms_file_prev TYPE ty_file.
+
+        DATA mt_table TYPE REF TO data.
+    DATA mt_cols TYPE string_table.
+    DATA mv_name TYPE string.
 
   PROTECTED SECTION.
 
@@ -50,7 +54,7 @@ ENDCLASS.
 
 
 
-CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
+CLASS z2ui5_tool_cl_app_06 IMPLEMENTATION.
 
 
   METHOD ui5_on_event.
@@ -235,39 +239,41 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
         placeholder = 'filepath here...'
         upload      = client->_event( 'UPLOAD' ) ).
 
-    DATA(tab) = page->table(
-            headertext = 'Table'
-            mode = 'SingleSelectLeft'
-            items = client->_bind_edit( mt_file )
-        )->header_toolbar(
-            )->overflow_toolbar(
-                )->title( 'Files'
-                )->toolbar_spacer(
-                )->button(
-                    text = 'Edit Description'
-                    press = client->_event( 'POPUP_DESCR' )
-                )->button(
-                    text = 'Show Base64'
-                    press = client->_event( 'POPUP_DATA' )
-                )->button(
-                    text = 'Show text'
-                    press = client->_event( 'POPUP_NORMAL' )
-                )->button(
-                    text = 'display'
-                    press = client->_event( 'DISPLAY' )
-        )->get_parent( )->get_parent( ).
 
-    tab->columns(
-        )->column( '10%' )->get_parent(
-        )->column( '10%' )->get_parent(
-        )->column( '10%' )->get_parent(
-        )->column( ).
 
-    tab->items( )->column_list_item( selected = '{SELKZ}' )->cells(
-       )->text( '{NAME}'
-       )->text( '{FORMAT}'
-       )->text( '{SIZE}'
-       )->text( '{DESCR}' ).
+
+
+*       FIELD-SYMBOLS <tab> TYPE STANDARD TABLE.
+*        CREATE DATA mt_table TYPE STANDARD TABLE OF (mv_name) with DEFAULT KEY.
+*        ASSIGN mt_table->* TO <tab>.
+*        mt_cols = lcl_db=>get_fieldlist_by_table( <tab> ).
+*
+*  IF mt_table IS BOUND.
+*
+*      FIELD-SYMBOLS <tab> TYPE STANDARD TABLE.
+*      ASSIGN mt_table->* TO <tab>.
+*      DATA(tab) = lo_view->get_parent( )->get_parent( )->simple_form( editable = abap_true
+*                )->content( 'form' )->table(
+*                  items = client->_bind( val = <tab> )
+*              ).
+*
+*      DATA(lo_columns) = tab->columns( ).
+*      mt_cols = lcl_db=>get_fieldlist_by_table( <tab> ).
+*
+*      LOOP AT mt_cols INTO DATA(lv_field) FROM 2.
+*        lo_columns->column( )->text( lv_field ).
+*      ENDLOOP.
+*
+*      DATA(lo_cells) = tab->items( )->column_list_item( selected = '{SELKZ}' )->cells( ).
+*      LOOP AT mt_cols INTO lv_field FROM 2.
+*        lo_cells->input( `{` && lv_field && `}` ).
+*      ENDLOOP.
+*
+*    ENDIF.
+
+
+
+
 
     IF ms_file_prev-data IS NOT INITIAL.
       page->zz_plain( '<html:iframe src="' && ms_file_prev-data && '" height="75%" width="98%"/>' ).

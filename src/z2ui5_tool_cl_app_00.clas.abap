@@ -37,6 +37,17 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
 *        result    =
       ).
 
+            page->generictile(
+*      EXPORTING
+  class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
+           header    = `csv -> itab`
+            press     = client->_event( `z2ui5_tool_cl_app_06` )
+*        frametype =
+*        subheader =
+*      RECEIVING
+*        result    =
+      ).
+
       page->generictile(
 *      EXPORTING
   class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'

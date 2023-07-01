@@ -65,7 +65,18 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
             ms_file_prev = mt_file[ selkz = abap_true ].
 
           WHEN 'UPLOAD'.
-            INSERT VALUE #( name = mv_path data = mv_value size = strlen( mv_value ) format = mv_value+5(5) )   INTO TABLE mt_file.
+
+          z2ui5_tool_cl_file_api=>create( value #( data = mv_value file_format = mv_value+5(5) ) ).
+          commit work.
+
+          client->message_box_display( `File saved succesfully` ).
+
+            INSERT VALUE #(
+                name        = mv_path data = mv_value
+                size   = strlen( mv_value )
+                format = mv_value+5(5)
+                ) INTO TABLE mt_file.
+
             CLEAR ms_file_prev.
             CLEAR ms_file_edit.
             CLEAR mv_value.

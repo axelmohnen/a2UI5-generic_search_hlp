@@ -6,6 +6,7 @@ CLASS z2ui5_tool_cl_file_api DEFINITION
   PUBLIC SECTION.
 
     TYPES ty_s_file TYPE z2ui5_tool_t_001.
+    TYPES ty_t_file TYPE STANDARD TABLE OF z2ui5_tool_t_001 WITH EMPTY KEY.
 
     CLASS-METHODS create
       IMPORTING
@@ -16,6 +17,10 @@ CLASS z2ui5_tool_cl_file_api DEFINITION
         id            TYPE clike
       RETURNING
         VALUE(result) TYPE ty_S_file.
+
+    CLASS-METHODS read_all
+      RETURNING
+        VALUE(result) TYPE ty_t_file.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -37,6 +42,14 @@ CLASS z2ui5_tool_cl_file_api IMPLEMENTATION.
         FIELDS *
        WHERE uuid = @id
      INTO CORRESPONDING FIELDS OF @result.
+
+  ENDMETHOD.
+
+  METHOD read_all.
+
+    SELECT FROM z2ui5_tool_t_001
+    FIELDS name, file_format, file_size, uuid
+    INTO CORRESPONDING FIELDS OF TABLE @result.
 
   ENDMETHOD.
 

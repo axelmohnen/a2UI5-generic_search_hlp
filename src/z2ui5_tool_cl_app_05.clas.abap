@@ -8,18 +8,17 @@ CLASS z2ui5_tool_cl_app_05 DEFINITION PUBLIC.
     DATA mv_value TYPE string.
 
     TYPES:
-      BEGIN OF ty_file,
-        selkz  TYPE abap_bool,
-        name   TYPE string,
-        format TYPE string,
-        size   TYPE string,
-        descr  TYPE string,
-        data   TYPE string,
-      END OF ty_file.
-
-    DATA mt_file      TYPE STANDARD TABLE OF ty_file WITH EMPTY KEY.
-    DATA ms_file_edit TYPE ty_file.
-    DATA ms_file_prev TYPE ty_file.
+      BEGIN OF ty_s_file_out,
+        selkz       TYPE abap_bool,
+        name        TYPE string,
+        file_format TYPE string,
+        file_size   TYPE string,
+        descr       TYPE string,
+      END OF ty_s_file_out.
+    data mt_out TYPE STANDARD TABLE OF ty_s_file_out WITH EMPTY KEY.
+    DATA mt_file      TYPE STANDARD TABLE OF ty_s_file_out WITH EMPTY KEY.
+    DATA ms_file_edit TYPE z2ui5_tool_cl_file_api=>ty_s_file.
+    DATA ms_file_prev TYPE ty_s_file_out.
 
   PROTECTED SECTION.
 
@@ -44,6 +43,7 @@ CLASS z2ui5_tool_cl_app_05 DEFINITION PUBLIC.
     METHODS ui5_render_popup_data
       RETURNING
         VALUE(r_result) TYPE string.
+    METHODS ui5_load.
 
   PRIVATE SECTION.
 ENDCLASS.
@@ -58,6 +58,9 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
 
         CASE client->get( )-event.
 
+          WHEN 'READ'.
+            ui5_load( ).
+
           WHEN 'START'.
             ui5_render_view_main( ).
 
@@ -69,13 +72,14 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
           z2ui5_tool_cl_file_api=>create( value #( data = mv_value file_format = mv_value+5(5) ) ).
           commit work.
 
+          ui5_load( ).
           client->message_box_display( `File saved succesfully` ).
 
-            INSERT VALUE #(
-                name        = mv_path data = mv_value
-                size   = strlen( mv_value )
-                format = mv_value+5(5)
-                ) INTO TABLE mt_file.
+*            INSERT VALUE #(
+*                name        = mv_path data = mv_value
+*                size   = strlen( mv_value )
+*                format = mv_value+5(5)
+*                ) INTO TABLE mt_file.
 
             CLEAR ms_file_prev.
             CLEAR ms_file_edit.
@@ -86,33 +90,33 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
             client->popup_close( ).
 
           WHEN 'TEXTAREA_DESCR_CONFIRM'.
-            mt_file[ selkz = abap_true ] = ms_file_edit.
-            CLEAR ms_file_edit.
+*            mt_file[ selkz = abap_true ] = ms_file_edit.
+*            CLEAR ms_file_edit.
 
           WHEN 'TEXTAREA_DATA_CONFIRM'.
             CLEAR ms_file_edit.
 
           WHEN 'POPUP_DESCR'.
-            ms_file_edit = mt_file[ selkz = abap_true ].
-            ui5_render_popup_descr( ).
+*            ms_file_edit = mt_file[ selkz = abap_true ].
+*            ui5_render_popup_descr( ).
 
           WHEN 'POPUP_DATA'.
-            ms_file_edit = mt_file[ selkz = abap_true ].
-            ui5_render_popup_data( ).
+*            ms_file_edit = mt_file[ selkz = abap_true ].
+*            ui5_render_popup_data( ).
 
           WHEN 'POPUP_NORMAL'.
-            ms_file_edit = mt_file[ selkz = abap_true ].
-            DATA xstring  TYPE xstring.
+*            ms_file_edit = mt_file[ selkz = abap_true ].
+*            DATA xstring  TYPE xstring.
 *          .
 *            xstring = conv #( ms_file_edit-data ).
 *            data(rv_csv_data) = cl_abap_conv_codepage=>create_in( )->convert( ms_file_edit-data ).
 *            data(rv_csv_data) = cl_abap_conv_codepage=>create_out( )->convert( segment( val = ms_file_edit-data sep = `,` index = 2 ) ).
 
-            DATA(lv_base64) = segment( val = ms_file_edit-data sep = `,` index = 2 ).
-
-            DATA(lv_data) = z2ui5_tool_cl_utility=>decode_x_base64( lv_base64 ).
-            DATA(lv_ready) = z2ui5_tool_cl_utility=>get_string_by_xstring( lv_data ).
-            ms_file_edit-data = lv_ready.
+*            DATA(lv_base64) = segment( val = ms_file_edit-data sep = `,` index = 2 ).
+*
+*            DATA(lv_data) = z2ui5_tool_cl_utility=>decode_x_base64( lv_base64 ).
+*            DATA(lv_ready) = z2ui5_tool_cl_utility=>get_string_by_xstring( lv_data ).
+*            ms_file_edit-data = lv_ready.
 
 *            DATA(lv_readyx) = lcl_mime_api=>get_xstring_by_string( lv_ready ).
 *            DATA(lv_data2) = lcl_mime_api=>get_base64_encoded( lv_readyx ).
@@ -266,6 +270,9 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
                 )->button(
                     text = 'display'
                     press = client->_event( 'DISPLAY' )
+                               )->button(
+                    text = 'load'
+                    press = client->_event( 'READ' )
         )->get_parent( )->get_parent( ).
 
     tab->columns(
@@ -280,10 +287,10 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
        )->text( '{SIZE}'
        )->text( '{DESCR}' ).
 
-    IF ms_file_prev-data IS NOT INITIAL.
-      page->zz_plain( '<html:iframe src="' && ms_file_prev-data && '" height="75%" width="98%"/>' ).
-      CLEAR mv_value.
-    ENDIF.
+*    IF ms_file_prev-data IS NOT INITIAL.
+*      page->zz_plain( '<html:iframe src="' && ms_file_prev-data && '" height="75%" width="98%"/>' ).
+*      CLEAR mv_value.
+*    ENDIF.
 
     client->view_display( view->stringify( ) ).
 
@@ -303,4 +310,13 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
     ui5_on_event( ).
 
   ENDMETHOD.
+
+  METHOD ui5_load.
+
+
+    mt_out = CORRESPONDING #( z2ui5_tool_cl_file_api=>read_all( ) ).
+
+
+  ENDMETHOD.
+
 ENDCLASS.

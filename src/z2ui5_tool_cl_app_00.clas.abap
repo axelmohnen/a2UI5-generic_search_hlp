@@ -6,9 +6,9 @@ CLASS z2ui5_tool_cl_app_00 DEFINITION
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-
   PROTECTED SECTION.
   PRIVATE SECTION.
+
 ENDCLASS.
 
 
@@ -26,32 +26,69 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
               navbuttonpress = client->_event( 'BACK' )
               shownavbutton  = abap_true ).
 
-      page->generictile(
+      DATA(box) = page->vbox( ).
+      DATA(hbox) = box->hbox( ).
+      hbox->title( text = `Files` ).
+
+      hbox = box->hbox( ).
+
+      hbox->generictile(
 *      EXPORTING
-  class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-           header    = `file upload download`
-            press     = client->_event( `z2ui5_tool_cl_app_05` )
+         class     = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
+         header    = `upload & download`
+         press     = client->_event( `z2ui5_tool_cl_app_05` )
 *        frametype =
 *        subheader =
 *      RECEIVING
 *        result    =
       ).
 
-            page->generictile(
+      hbox->generictile(
 *      EXPORTING
-  class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-           header    = `csv -> itab`
-            press     = client->_event( `z2ui5_tool_cl_app_06` )
+        class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
+        header    = `editor`
+         press     = client->_event( `z2ui5_tool_cl_app_01` )
 *        frametype =
 *        subheader =
 *      RECEIVING
 *        result    =
-      ).
+  ).
 
-      page->generictile(
+      hbox = box->hbox( ).
+      hbox->title( text = `Transformation` ).
+      hbox = box->hbox( ).
+
+
+      hbox->generictile(
+*      EXPORTING
+        class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
+        header    = `csv -> itab`
+        press     = client->_event( `z2ui5_tool_cl_app_06` )
+*        frametype =
+*        subheader =
+*      RECEIVING
+*        result    =
+).
+
+      hbox->generictile(
+*      EXPORTING
+        class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
+        header    = `db table -> csv`
+        press     = client->_event( `z2ui5_tool_cl_app_06` )
+*        frametype =
+*        subheader =
+*      RECEIVING
+*        result    =
+).
+
+      hbox = box->hbox( ).
+      hbox->title( text = `Maintenance` ).
+      hbox = box->hbox( ).
+
+      hbox->generictile(
 *      EXPORTING
   class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-       header    = `editor`
+       header    = `tab`
 *         press     =
 *        frametype =
 *        subheader =
@@ -59,27 +96,31 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
 *        result    =
   ).
 
-      page->generictile(
-*      EXPORTING
-  class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-       header    = `table maintenance`
-*         press     =
-*        frametype =
-*        subheader =
-*      RECEIVING
-*        result    =
-  ).
-
-      page->generictile(
+      hbox->generictile(
 *      EXPORTING
       class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-       header    = `import / export`
+       header    = `tab edit`
 *         press     =
 *        frametype =
 *        subheader =
 *      RECEIVING
 *        result    =
   ).
+
+      hbox = box->hbox( ).
+      hbox->title( text = `XML` ).
+      hbox = box->hbox( ).
+
+      page->generictile(
+*      EXPORTING
+  class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
+   header    = `validator`
+*         press     =
+*        frametype =
+*        subheader =
+*      RECEIVING
+*        result    =
+).
 
       client->view_display( view->stringify( ) ).
 

@@ -10,15 +10,19 @@ CLASS z2ui5_tool_cl_app_05 DEFINITION PUBLIC.
     TYPES:
       BEGIN OF ty_s_file_out,
         selkz       TYPE abap_bool,
+        id          TYPE string,
         name        TYPE string,
         file_format TYPE string,
         file_size   TYPE string,
         descr       TYPE string,
       END OF ty_s_file_out.
-    data mt_out TYPE STANDARD TABLE OF ty_s_file_out WITH EMPTY KEY.
+    DATA mt_out TYPE STANDARD TABLE OF ty_s_file_out WITH EMPTY KEY.
+    DATA ms_file TYPE ty_s_file_out.
+
     DATA mt_file      TYPE STANDARD TABLE OF ty_s_file_out WITH EMPTY KEY.
     DATA ms_file_edit TYPE z2ui5_tool_cl_file_api=>ty_s_file.
     DATA ms_file_prev TYPE ty_s_file_out.
+
 
   PROTECTED SECTION.
 
@@ -27,6 +31,8 @@ CLASS z2ui5_tool_cl_app_05 DEFINITION PUBLIC.
 
     METHODS ui5_on_init.
     METHODS ui5_on_event.
+
+    METHODS ui5_delete.
 
     METHODS ui5_render_view_main
       RETURNING
@@ -56,10 +62,15 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
   METHOD ui5_on_event.
     TRY.
 
+        ms_file = VALUE #( mt_out[ selkz = abap_true ] DEFAULT VALUE #( ) ).
+
         CASE client->get( )-event.
 
           WHEN 'READ'.
             ui5_load( ).
+
+          WHEN 'DELETE'.
+            ui5_delete( ).
 
           WHEN 'START'.
             ui5_render_view_main( ).
@@ -69,11 +80,11 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
 
           WHEN 'UPLOAD'.
 
-          z2ui5_tool_cl_file_api=>create( value #( data = mv_value file_format = mv_value+5(5) ) ).
-          commit work.
+            z2ui5_tool_cl_file_api=>create( VALUE #( data = mv_value file_format = mv_value+5(5) ) ).
+            COMMIT WORK.
 
-          ui5_load( ).
-          client->message_box_display( `File saved succesfully` ).
+            ui5_load( ).
+            client->message_box_display( `File saved succesfully` ).
 
 *            INSERT VALUE #(
 *                name        = mv_path data = mv_value
@@ -223,8 +234,8 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
 
 *    page->text( ns = 'm' text = 'Custom Control for File Upload is now loaded...'
 *        )->button( ns = 'm' text = 'continue' press = client->_event( 'START' )
-        page->zz_plain( `  <script>  ` && z2ui5_cl_xml_view=>cc_file_uploader_get_js( ) && ` </script>`
-    ).
+    page->zz_plain( `  <script>  ` && z2ui5_cl_xml_view=>cc_file_uploader_get_js( ) && ` </script>`
+).
 
     client->view_display( lo_view->stringify( ) ).
 
@@ -253,7 +264,7 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
     DATA(tab) = page->table(
             headertext = 'Table'
             mode = 'SingleSelectLeft'
-            items = client->_bind_edit( mt_file )
+            items = client->_bind_edit( mt_out )
         )->header_toolbar(
             )->overflow_toolbar(
                 )->title( 'Files'
@@ -283,8 +294,8 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
 
     tab->items( )->column_list_item( selected = '{SELKZ}' )->cells(
        )->text( '{NAME}'
-       )->text( '{FORMAT}'
-       )->text( '{SIZE}'
+       )->text( '{FILE_FORMAT}'
+       )->text( '{FILE_SIZE}'
        )->text( '{DESCR}' ).
 
 *    IF ms_file_prev-data IS NOT INITIAL.
@@ -313,9 +324,16 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
 
   METHOD ui5_load.
 
-
     mt_out = CORRESPONDING #( z2ui5_tool_cl_file_api=>read_all( ) ).
 
+  ENDMETHOD.
+
+
+  METHOD ui5_delete.
+
+    z2ui5_tool_cl_file_api=>delete( ms_file-id ).
+    COMMIT WORK AND WAIT.
+    client->message_box_display( type = `success` text = `File deleted successfully` ).
 
   ENDMETHOD.
 

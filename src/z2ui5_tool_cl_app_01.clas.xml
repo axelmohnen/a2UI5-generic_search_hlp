@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>Z2UI5_TOOL_CL_APP_01</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>demo - mime editor</DESCRIPT>
+    <DESCRIPT>demo - file editor</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

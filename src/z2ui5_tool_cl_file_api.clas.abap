@@ -24,6 +24,10 @@ CLASS z2ui5_tool_cl_file_api DEFINITION
       IMPORTING
         VALUE(val) TYPE ty_S_file.
 
+    CLASS-METHODS update_data
+      IMPORTING
+        VALUE(val) TYPE ty_S_file.
+
     CLASS-METHODS delete
       IMPORTING
         id TYPE clike.
@@ -90,6 +94,15 @@ CLASS z2ui5_tool_cl_file_api IMPLEMENTATION.
   METHOD delete.
 
     DELETE FROM z2ui5_tool_t_001 WHERE id = @id.
+
+  ENDMETHOD.
+
+  METHOD update_data.
+
+    UPDATE z2ui5_tool_t_001
+      SET
+         data = @val-data
+      WHERE id = @val-id.
 
   ENDMETHOD.
 

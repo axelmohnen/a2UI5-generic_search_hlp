@@ -104,7 +104,11 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
             z2ui5_tool_cl_file_api=>update_metadata( ms_file_popup ).
             COMMIT WORK AND WAIT.
             client->message_box_display( `File metadata changed succesfully` ).
+            DATA(lv_selkz_id) = VALUE #( mt_out[ selkz = abap_true ]-id OPTIONAL ).
             ui5_load( ).
+            IF lv_selkz_id IS NOT INITIAL.
+              mt_out[ id = lv_selkz_id ]-selkz = abap_true.
+            ENDIF.
             client->popup_close( ).
 
           WHEN 'EDIT'.
@@ -112,6 +116,11 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
             CLEAR ms_file_popup-data.
             ui5_popup_metadata_display( ).
 
+
+          WHEN 'EDITOR'.
+            DATA(lo_Editor) = NEW z2ui5_tool_cl_app_01( ).
+            lo_editor->ms_file-id = mt_out[ selkz = abap_true ]-id.
+            client->nav_app_call( lo_editor ).
 
           WHEN 'POPUP_BASE64'.
             DATA(lv_data3) = z2ui5_tool_cl_file_api=>read( id = ms_file-id )-data.
@@ -358,6 +367,10 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
       check_initialized = abap_true.
       ui5_on_init( ).
       RETURN.
+    ENDIF.
+
+    IF client->get( )-check_on_navigated = abap_true.
+      ui5_view_main_display( ).
     ENDIF.
 
     ui5_on_event( ).

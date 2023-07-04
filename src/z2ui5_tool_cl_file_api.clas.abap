@@ -10,13 +10,19 @@ CLASS z2ui5_tool_cl_file_api DEFINITION
 
     CLASS-METHODS create
       IMPORTING
-        val TYPE ty_S_file.
+        VALUE(val)    TYPE ty_S_file
+      RETURNING
+        VALUE(result) TYPE string.
 
     CLASS-METHODS read
       IMPORTING
         id            TYPE clike
       RETURNING
         VALUE(result) TYPE ty_S_file.
+
+    CLASS-METHODS update_metadata
+      IMPORTING
+        VALUE(val) TYPE ty_S_file.
 
     CLASS-METHODS delete
       IMPORTING
@@ -56,7 +62,11 @@ CLASS z2ui5_tool_cl_file_api IMPLEMENTATION.
 
   METHOD create.
 
+    val-id = z2ui5_tool_cl_utility=>get_uuid( ).
+    val-file_size = strlen( val-data ).
     MODIFY z2ui5_tool_t_001 FROM @( val ).
+
+    result = val-id.
 
   ENDMETHOD.
 
@@ -72,7 +82,7 @@ CLASS z2ui5_tool_cl_file_api IMPLEMENTATION.
   METHOD read_all.
 
     SELECT FROM z2ui5_tool_t_001
-    FIELDS name, file_format, file_size, id
+    FIELDS name, file_format, file_size, id, descr
     INTO CORRESPONDING FIELDS OF TABLE @result.
 
   ENDMETHOD.
@@ -80,6 +90,17 @@ CLASS z2ui5_tool_cl_file_api IMPLEMENTATION.
   METHOD delete.
 
     DELETE FROM z2ui5_tool_t_001 WHERE id = @id.
+
+  ENDMETHOD.
+
+  METHOD update_metadata.
+
+    UPDATE z2ui5_tool_t_001
+      SET
+         name = @val-name,
+        file_format = @val-file_format,
+        descr = @val-descr
+      WHERE id = @val-id.
 
   ENDMETHOD.
 

@@ -17,7 +17,9 @@ CLASS z2ui5_tool_cl_app_05 DEFINITION PUBLIC.
         descr       TYPE string,
       END OF ty_s_file_out.
     DATA mt_out TYPE STANDARD TABLE OF ty_s_file_out WITH EMPTY KEY.
-    DATA ms_file TYPE ty_s_file_out.
+
+    DATA ms_file       TYPE ty_s_file_out.
+    DATA ms_file_popup TYPE z2ui5_tool_cl_file_api=>ty_s_file.
 
     DATA mt_file      TYPE STANDARD TABLE OF ty_s_file_out WITH EMPTY KEY.
     DATA ms_file_edit TYPE z2ui5_tool_cl_file_api=>ty_s_file.
@@ -34,19 +36,21 @@ CLASS z2ui5_tool_cl_app_05 DEFINITION PUBLIC.
 
     METHODS ui5_delete.
 
-    METHODS ui5_render_view_main
+    METHODS ui5_view_main_display
       RETURNING
         VALUE(r_result) TYPE string.
 
-    METHODS ui5_render_view_init
+    METHODS ui5_view_init_display
       RETURNING
         VALUE(r_result) TYPE string.
 
-    METHODS ui5_render_popup_descr
+    METHODS ui5_popup_metadata_display
       RETURNING
         VALUE(r_result) TYPE string.
 
-    METHODS ui5_render_popup_data
+    METHODS ui5_popup_data_display
+      IMPORTING
+        data            TYPE string
       RETURNING
         VALUE(r_result) TYPE string.
     METHODS ui5_load.
@@ -63,6 +67,7 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
     TRY.
 
         ms_file = VALUE #( mt_out[ selkz = abap_true ] DEFAULT VALUE #( ) ).
+*        CLEAR ms_file_popup.
 
         CASE client->get( )-event.
 
@@ -73,71 +78,50 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
             ui5_delete( ).
 
           WHEN 'START'.
-            ui5_render_view_main( ).
+            ui5_view_main_display( ).
 
           WHEN 'DISPLAY'.
             ms_file_prev = mt_file[ selkz = abap_true ].
 
           WHEN 'UPLOAD'.
 
-            z2ui5_tool_cl_file_api=>create( VALUE #( data = mv_value file_format = mv_value+5(5) ) ).
+            SPLIT mv_value AT `;` INTO DATA(lv_dummy) DATA(lv_data).
+            SPLIT lv_data AT `,` INTO DATA(lv_format) lv_data.
+            DATA(lv_id_new) = z2ui5_tool_cl_file_api=>create( VALUE #( data = lv_data name = mv_path file_format = lv_format ) ).
             COMMIT WORK.
 
             ui5_load( ).
-            client->message_box_display( `File saved succesfully` ).
+            mt_out[ id = lv_id_new ]-selkz = abap_true.
 
-*            INSERT VALUE #(
-*                name        = mv_path data = mv_value
-*                size   = strlen( mv_value )
-*                format = mv_value+5(5)
-*                ) INTO TABLE mt_file.
+            client->message_box_display( `File saved succesfully` ).
 
             CLEAR ms_file_prev.
             CLEAR ms_file_edit.
             CLEAR mv_value.
             CLEAR mv_path.
 
-          WHEN 'TEXTAREA_DATA_CONFIRM'.
+          WHEN 'BUTTON_METADATA_CONFIRM'.
+            z2ui5_tool_cl_file_api=>update_metadata( ms_file_popup ).
+            COMMIT WORK AND WAIT.
+            client->message_box_display( `File metadata changed succesfully` ).
+            ui5_load( ).
             client->popup_close( ).
 
-          WHEN 'TEXTAREA_DESCR_CONFIRM'.
-*            mt_file[ selkz = abap_true ] = ms_file_edit.
-*            CLEAR ms_file_edit.
+          WHEN 'EDIT'.
+            ms_file_popup = z2ui5_tool_cl_file_api=>read( id = ms_file-id ).
+            CLEAR ms_file_popup-data.
+            ui5_popup_metadata_display( ).
 
-          WHEN 'TEXTAREA_DATA_CONFIRM'.
-            CLEAR ms_file_edit.
 
-          WHEN 'POPUP_DESCR'.
-*            ms_file_edit = mt_file[ selkz = abap_true ].
-*            ui5_render_popup_descr( ).
+          WHEN 'POPUP_BASE64'.
+            DATA(lv_data3) = z2ui5_tool_cl_file_api=>read( id = ms_file-id )-data.
+            ui5_popup_data_display( lv_data3 ).
 
           WHEN 'POPUP_DATA'.
-*            ms_file_edit = mt_file[ selkz = abap_true ].
-*            ui5_render_popup_data( ).
-
-          WHEN 'POPUP_NORMAL'.
-*            ms_file_edit = mt_file[ selkz = abap_true ].
-*            DATA xstring  TYPE xstring.
-*          .
-*            xstring = conv #( ms_file_edit-data ).
-*            data(rv_csv_data) = cl_abap_conv_codepage=>create_in( )->convert( ms_file_edit-data ).
-*            data(rv_csv_data) = cl_abap_conv_codepage=>create_out( )->convert( segment( val = ms_file_edit-data sep = `,` index = 2 ) ).
-
-*            DATA(lv_base64) = segment( val = ms_file_edit-data sep = `,` index = 2 ).
-*
-*            DATA(lv_data) = z2ui5_tool_cl_utility=>decode_x_base64( lv_base64 ).
-*            DATA(lv_ready) = z2ui5_tool_cl_utility=>get_string_by_xstring( lv_data ).
-*            ms_file_edit-data = lv_ready.
-
-*            DATA(lv_readyx) = lcl_mime_api=>get_xstring_by_string( lv_ready ).
-*            DATA(lv_data2) = lcl_mime_api=>get_base64_encoded( lv_readyx ).
-
-
-*            IF lv_base64 <> lv_data2.
-*              ASSERT 1 = 0.
-*            ENDIF.
-
-            ui5_render_popup_data( ).
+            lv_data3 = z2ui5_tool_cl_file_api=>read( id = ms_file-id )-data.
+            DATA(lv_data2) = z2ui5_tool_cl_utility=>decode_x_base64( lv_data3 ).
+            lv_data3 = z2ui5_tool_cl_utility=>get_string_by_xstring( lv_data2 ).
+            ui5_popup_data_display( lv_data3 ).
 
           WHEN 'BACK'.
             client->nav_app_leave( client->get_app( client->get( )-id_prev_app_stack ) ).
@@ -153,13 +137,13 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
 
   METHOD ui5_on_init.
 
-    ui5_render_view_init( ).
+    ui5_view_init_display( ).
     client->timer_set( event_finished = `START` interval_ms = `0` ).
 
   ENDMETHOD.
 
 
-  METHOD ui5_render_popup_data.
+  METHOD ui5_popup_data_display.
 
     DATA(lo_popup) = z2ui5_cl_xml_view=>factory_popup( client ).
     lo_popup->dialog(
@@ -170,13 +154,13 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
                 height = '99%'
                 width = '99%'
                 enabled = abap_false
-                value = client->_bind( ms_file_edit-data )
+                value = data
         )->get_parent(
         )->footer( )->overflow_toolbar(
             )->toolbar_spacer(
             )->button(
                 text  = 'close'
-                press = client->_event( 'TEXTAREA_DATA_CONFIRM' )
+                press = client->_event_client( client->cs_event-popup_close )
                 type  = 'Emphasized' ).
 
     client->popup_display( lo_popup->stringify( ) ).
@@ -184,34 +168,60 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD ui5_render_popup_descr.
+  METHOD ui5_popup_metadata_display.
 
-    DATA(lo_popup) = z2ui5_cl_xml_view=>factory_popup( client
-              )->dialog(
-                      title = 'Edit Description'
-                      icon = 'sap-icon://edit'
-                  )->content(
-                      )->text_area(
-                          height = '99%'
-                          width = '99%'
-                          value = client->_bind_edit( ms_file_edit-descr )
-                  )->get_parent(
-                  )->footer( )->overflow_toolbar(
-                      )->toolbar_spacer(
-                      )->button(
-                          text  = 'Cancel'
-                          press = client->_event( 'TEXTAREA_CANCEL' )
-                      )->button(
-                          text  = 'Confirm'
-                          press = client->_event( 'TEXTAREA_DESCR_CONFIRM' )
-                          type  = 'Emphasized' ).
+*    DATA(lo_popup) = z2ui5_cl_xml_view=>factory_popup( client
+*              )->dialog(
+*                      title = 'Edit Description'
+*                      icon = 'sap-icon://edit'
+*                  )->content(
+*                      )->text_area(
+*                          height = '99%'
+*                          width = '99%'
+*                          value = client->_bind_edit( ms_file_edit-descr )
+*                  )->get_parent(
+*                  )->footer( )->overflow_toolbar(
+*                      )->toolbar_spacer(
+*                      )->button(
+*                          text  = 'Cancel'
+*                          press = client->_event( 'TEXTAREA_CANCEL' )
+*                      )->button(
+*                          text  = 'Confirm'
+*                          press = client->_event( 'TEXTAREA_DESCR_CONFIRM' )
+*                          type  = 'Emphasized' ).
+*
+*    client->popup_display( lo_popup->stringify( ) ).
 
-    client->popup_display( lo_popup->stringify( ) ).
+
+    DATA(popup) = z2ui5_cl_xml_view=>factory_popup( client )->dialog(
+       contentheight = '500px'
+       contentwidth  = '500px'
+       title = 'Edit Metadata'
+       )->content(
+           )->simple_form(
+               )->label( 'Name'
+               )->input( client->_bind_edit( ms_file_popup-name )
+               )->label( 'Format'
+               )->input( client->_bind_edit( ms_file_popup-file_format )
+               )->label( 'Description'
+               )->input( client->_bind_edit( ms_file_popup-descr )
+       )->get_parent( )->get_parent(
+       )->footer( )->overflow_toolbar(
+           )->toolbar_spacer(
+           )->button(
+               text  = 'Cancel'
+               press = client->_event_client( client->cs_event-popup_close )
+           )->button(
+               text  = 'Confirm'
+               press = client->_event( 'BUTTON_METADATA_CONFIRM' )
+               type  = 'Emphasized' ).
+
+    client->popup_display( popup->stringify( ) ).
 
   ENDMETHOD.
 
 
-  METHOD ui5_render_view_init.
+  METHOD ui5_view_init_display.
 
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( client = client t_ns = VALUE #(
          ( n = `xmlns:mvc` v = `sap.ui.core.mvc` )
@@ -242,24 +252,24 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD ui5_render_view_main.
+  METHOD ui5_view_main_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( client ).
     DATA(page) = view->shell( )->page(
-            title          = 'abap2UI5 - File Upload/Download'
+            title          = 'abap2UI5 - Upload & Download Files'
             navbuttonpress = client->_event( 'BACK' )
             shownavbutton  = abap_true
         )->header_content(
             )->toolbar_spacer(
-            )->link( text = 'Demo'        href = 'https://twitter.com/abap2UI5/status/1638487600930357248'
+*            )->link( text = 'Demo'        href = 'https://twitter.com/abap2UI5/status/1638487600930357248'
             )->link( text = 'Source_Code' href = view->hlp_get_source_code_url(  )
         )->get_parent( ).
 
-    page->cc_file_uploader(
-        value       = client->_bind_edit( mv_value )
-        path        = client->_bind_edit( mv_path )
-        placeholder = 'filepath here...'
-        upload      = client->_event( 'UPLOAD' ) ).
+*    page->cc_file_uploader(
+*        value       = client->_bind_edit( mv_value )
+*        path        = client->_bind_edit( mv_path )
+*        placeholder = 'filepath here...'
+*        upload      = client->_event( 'UPLOAD' ) ).
 
     DATA(tab) = page->table(
             headertext = 'Table'
@@ -268,29 +278,41 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
         )->header_toolbar(
             )->overflow_toolbar(
                 )->title( 'Files'
-                )->toolbar_spacer(
-                )->button(
-                    text = 'Edit Description'
-                    press = client->_event( 'POPUP_DESCR' )
-                )->button(
+                      )->toolbar_spacer(
+                      )->toolbar_spacer(
+                      )->toolbar_spacer(
+                                )->button(
                     text = 'Show Base64'
-                    press = client->_event( 'POPUP_DATA' )
+                    press = client->_event( 'POPUP_BASE64' )
                 )->button(
                     text = 'Show text'
-                    press = client->_event( 'POPUP_NORMAL' )
+                    press = client->_event( 'POPUP_DATA' )
+                )->toolbar_spacer(
                 )->button(
-                    text = 'display'
-                    press = client->_event( 'DISPLAY' )
-                               )->button(
-                    text = 'load'
-                    press = client->_event( 'READ' )
+                    text = 'Delete File'
+                    press = client->_event( 'DELETE' )
+                    icon = `sap-icon://delete`
+                )->button(
+                    text = 'Change Metadata'
+                    press = client->_event( 'EDIT' )
+                    icon = 'sap-icon://edit'
+                 )->button(
+                    text = 'Editor'
+                    press = client->_event( 'EDITOR' )
+                    type = `Emphasized`
+                    icon = 'sap-icon://write-new-document'
+
         )->get_parent( )->get_parent( ).
 
     tab->columns(
-        )->column( '10%' )->get_parent(
-        )->column( '10%' )->get_parent(
-        )->column( '10%' )->get_parent(
-        )->column( ).
+        )->column(
+            )->text( 'Name' )->get_parent(
+        )->column(
+            )->text( 'Format' )->get_parent(
+        )->column(
+            )->text( 'Size' )->get_parent(
+        )->column(
+            )->text( 'Description' ).
 
     tab->items( )->column_list_item( selected = '{SELKZ}' )->cells(
        )->text( '{NAME}'
@@ -302,6 +324,26 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
 *      page->zz_plain( '<html:iframe src="' && ms_file_prev-data && '" height="75%" width="98%"/>' ).
 *      CLEAR mv_value.
 *    ENDIF.
+
+    DATA(footer) = page->footer( )->overflow_toolbar( ).
+
+    footer->cc_file_uploader(
+      value       = client->_bind_edit( mv_value )
+      path        = client->_bind_edit( mv_path )
+      placeholder = 'filepath here...'
+      upload      = client->_event( 'UPLOAD' ) ).
+
+    footer->toolbar_spacer(
+*        )->button(
+*            text  = 'Edit'
+*            press = client->_event( 'EDIT' )
+*            icon = 'sap-icon://edit'
+            )->button(
+                text  = 'Load List'
+                press = client->_event( 'READ' )
+                type  = 'Emphasized'
+                icon = 'sap-icon://refresh' ).
+
 
     client->view_display( view->stringify( ) ).
 
@@ -333,6 +375,7 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
 
     z2ui5_tool_cl_file_api=>delete( ms_file-id ).
     COMMIT WORK AND WAIT.
+    ui5_load( ).
     client->message_box_display( type = `success` text = `File deleted successfully` ).
 
   ENDMETHOD.

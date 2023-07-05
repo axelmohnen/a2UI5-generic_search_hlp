@@ -76,6 +76,12 @@ CLASS z2ui5_tool_cl_utility DEFINITION
       RETURNING
         VALUE(result) TYPE string.
 
+    CLASS-METHODS trim_upper
+      IMPORTING
+        val           TYPE clike
+      RETURNING
+        VALUE(result) TYPE string.
+
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -146,12 +152,16 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
   METHOD get_table_by_csv.
 
-    SPLIT val AT cl_abap_char_utilities=>cr_lf INTO TABLE DATA(lt_rows).
+    SPLIT val AT cl_abap_char_utilities=>newline INTO TABLE DATA(lt_rows).
     SPLIT lt_rows[ 1 ] AT ';' INTO TABLE DATA(lt_cols).
 
     DATA lt_comp TYPE cl_abap_structdescr=>component_table.
     LOOP AT lt_cols REFERENCE INTO DATA(lr_col).
-      INSERT VALUE #( name = lr_col->* type = cl_abap_elemdescr=>get_c( 40 ) ) INTO TABLE lt_comp.
+
+       data(lv_name) =  trim_upper( lr_col->* ).
+       replace ` ` in lv_name with `_`.
+
+      INSERT VALUE #( name = lv_name type = cl_abap_elemdescr=>get_c( 40 ) ) INTO TABLE lt_comp.
     ENDLOOP.
 
     DATA(struc) = cl_abap_structdescr=>get( lt_comp ).
@@ -162,6 +172,8 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
     CREATE DATA result TYPE HANDLE o_table_desc.
 
+    delete lt_rows where table_line is INITIAL.
+
     LOOP AT lt_rows REFERENCE INTO DATA(lr_rows) FROM 2.
 
       SPLIT lr_rows->* AT ';' INTO TABLE lt_cols.
@@ -169,9 +181,12 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
       CREATE DATA lr_row TYPE HANDLE struc.
 
       LOOP AT lt_cols REFERENCE INTO lr_col.
-        ASSIGN COMPONENT sy-index OF STRUCTURE lr_row->* TO FIELD-SYMBOL(<field>).
+        ASSIGN COMPONENT sy-tabix OF STRUCTURE lr_row->* TO FIELD-SYMBOL(<field>).
         <field> = lr_col->*.
       ENDLOOP.
+      FIELD-SYMBOLS <tab> type STANDARD TABLE.
+      assign result->* to <tab>.
+      insert lr_row->* into table <tab>.
     ENDLOOP.
 
   ENDMETHOD.
@@ -350,6 +365,11 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
 *    result = cl_abap_conv_codepage=>create_out( )->convert( val ).
 
+  ENDMETHOD.
+
+
+  METHOD trim_upper.
+    result = to_upper( shift_left( shift_right( val ) ) ).
   ENDMETHOD.
 
 ENDCLASS.

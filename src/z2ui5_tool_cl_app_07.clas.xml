@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>Z2UI5_TOOL_CL_APP_07</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>tool - file download/upload</DESCRIPT>
+    <DESCRIPT>tool - csv to itab</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

@@ -46,7 +46,7 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
       hbox->generictile(
 *      EXPORTING
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-        header    = `editor`
+        header    = `file editor`
          press     = client->_event( `z2ui5_tool_cl_app_01` )
 *        frametype =
 *        subheader =

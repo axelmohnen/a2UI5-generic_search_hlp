@@ -146,23 +146,33 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
   METHOD get_table_by_csv.
 
-*    SPLIT val AT ';' INTO TABLE DATA(lt_cols).
-*
-*    LOOP AT lt_cols INTO DATA(lv_field).
-*
-*      DATA(ls_row) = VALUE z2ui5_tool_cl_app_04=>ty_s_spfli( ).
-*      DATA(lv_index) = 1.
-*      DO.
-*        ASSIGN COMPONENT lv_index OF STRUCTURE ls_row TO FIELD-SYMBOL(<field>).
-*        IF sy-subrc <> 0.
-*          EXIT.
-*        ENDIF.
-*        <field> = lv_field.
-*        lv_index = lv_index + 1.
-*      ENDDO.
-*      INSERT ls_row INTO TABLE result.
-*
-*    ENDLOOP.
+    SPLIT val AT cl_abap_char_utilities=>cr_lf INTO TABLE DATA(lt_rows).
+    SPLIT lt_rows[ 1 ] AT ';' INTO TABLE DATA(lt_cols).
+
+    DATA lt_comp TYPE cl_abap_structdescr=>component_table.
+    LOOP AT lt_cols REFERENCE INTO DATA(lr_col).
+      INSERT VALUE #( name = lr_col->* type = cl_abap_elemdescr=>get_c( 40 ) ) INTO TABLE lt_comp.
+    ENDLOOP.
+
+    DATA(struc) = cl_abap_structdescr=>get( lt_comp ).
+    DATA(o_table_desc) = cl_abap_tabledescr=>create(
+          p_line_type  = CAST #( struc )
+          p_table_kind = cl_abap_tabledescr=>tablekind_std
+          p_unique     = abap_false ).
+
+    CREATE DATA result TYPE HANDLE o_table_desc.
+
+    LOOP AT lt_rows REFERENCE INTO DATA(lr_rows) FROM 2.
+
+      SPLIT lr_rows->* AT ';' INTO TABLE lt_cols.
+      DATA lr_row TYPE REF TO data.
+      CREATE DATA lr_row TYPE HANDLE struc.
+
+      LOOP AT lt_cols REFERENCE INTO lr_col.
+        ASSIGN COMPONENT sy-index OF STRUCTURE lr_row->* TO FIELD-SYMBOL(<field>).
+        <field> = lr_col->*.
+      ENDLOOP.
+    ENDLOOP.
 
   ENDMETHOD.
 

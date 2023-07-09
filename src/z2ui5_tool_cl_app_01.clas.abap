@@ -64,7 +64,7 @@ CLASS z2ui5_tool_cl_app_01 IMPLEMENTATION.
       WHEN 'CLEAR'.
         mv_editor = ``.
       WHEN 'BACK'.
-        client->nav_app_leave( client->get_app( client->get( )-id_prev_app_stack ) ).
+        client->nav_app_leave( client->get_app( client->get( )-s_draft-id_prev_app_stack ) ).
         RETURN.
     ENDCASE.
 

@@ -48,16 +48,13 @@ CLASS z2ui5_tool_cl_app_02 IMPLEMENTATION.
 
     z2ui5_on_render( ).
 
-*    client->set_next( app-next ).
-*    CLEAR app-get.
-*    CLEAR app-next.
 
   ENDMETHOD.
 
 
   METHOD z2ui5_on_event.
 
-    CASE app-get-event.
+    CASE client->get( )-event.
 
       WHEN 'BUTTON_TABLE'.
         FIELD-SYMBOLS <tab> TYPE STANDARD TABLE.
@@ -85,7 +82,7 @@ CLASS z2ui5_tool_cl_app_02 IMPLEMENTATION.
         app-view_popup = ''.
 
       WHEN 'BACK'.
-        client->nav_app_leave( client->get_app( app-get-id_prev_app_stack ) ).
+        client->nav_app_leave( client->get_app( client->get( )-s_draft-id_prev_app_stack ) ).
 
     ENDCASE.
 

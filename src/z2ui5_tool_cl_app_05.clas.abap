@@ -73,6 +73,7 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
 
           WHEN 'READ'.
             ui5_load( ).
+            client->view_model_update( ).
 
           WHEN 'DELETE'.
             ui5_delete( ).
@@ -109,7 +110,7 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
             IF lv_selkz_id IS NOT INITIAL.
               mt_out[ id = lv_selkz_id ]-selkz = abap_true.
             ENDIF.
-            client->popup_close( ).
+            client->popup_destroy( ).
 
           WHEN 'EDIT'.
             ms_file_popup = z2ui5_tool_cl_file_api=>read( id = ms_file-id ).
@@ -133,7 +134,7 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
             ui5_popup_data_display( lv_data3 ).
 
           WHEN 'BACK'.
-            client->nav_app_leave( client->get_app( client->get( )-id_prev_app_stack ) ).
+            client->nav_app_leave( client->get_app( client->get( )-s_draft-id_prev_app_stack ) ).
 
         ENDCASE.
 
@@ -268,11 +269,13 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
             title          = 'abap2UI5 - Upload & Download Files'
             navbuttonpress = client->_event( 'BACK' )
             shownavbutton  = abap_true
+            showHeader     = xsdbool( client->get( )-check_launchpad_active = abap_false )
         )->header_content(
             )->toolbar_spacer(
 *            )->link( text = 'Demo'        href = 'https://twitter.com/abap2UI5/status/1638487600930357248'
             )->link( text = 'Source_Code' href = view->hlp_get_source_code_url(  )
         )->get_parent( ).
+
 
 *    page->cc_file_uploader(
 *        value       = client->_bind_edit( mv_value )

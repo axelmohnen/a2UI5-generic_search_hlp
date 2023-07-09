@@ -69,33 +69,33 @@ CLASS z2ui5_tool_cl_app_06 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    "frontend -> backend
-    IF client->get( )-s_config-body IS NOT INITIAL.
-      DATA lr_model TYPE REF TO data.
-      /ui2/cl_json=>deserialize(
-        EXPORTING
-          json             = client->get( )-s_config-body
-        CHANGING
-          data             = lr_model
-      ).
-      ASSIGN (`LR_MODEL->OUPDATE->QUANTITY->*`) TO FIELD-SYMBOL(<field>).
-      quantity = <field>.
-    ENDIF.
-
-    IF check_initialized = abap_false.
-      check_initialized = abap_true.
-      quantity = `600`.
-    ENDIF.
-
-
-
-
-    "backend -> frontend
-    DATA(lv_model_new) = `{ "oUpdate" : { "QUANTITY" : "` && quantity && `" } }`.
-    DATA(lv_view_new)  = read_view( ).
-
-    client->view_display( lv_view_new ).
-*        _viewmodel = lv_model_new
+*    "frontend -> backend
+*    IF client->get( )-s_config-body IS NOT INITIAL.
+*      DATA lr_model TYPE REF TO data.
+*      /ui2/cl_json=>deserialize(
+*        EXPORTING
+*          json             = client->get( )-s_config-body
+*        CHANGING
+*          data             = lr_model
+*      ).
+*      ASSIGN (`LR_MODEL->OUPDATE->QUANTITY->*`) TO FIELD-SYMBOL(<field>).
+*      quantity = <field>.
+*    ENDIF.
+*
+*    IF check_initialized = abap_false.
+*      check_initialized = abap_true.
+*      quantity = `600`.
+*    ENDIF.
+*
+*
+*
+*
+*    "backend -> frontend
+*    DATA(lv_model_new) = `{ "oUpdate" : { "QUANTITY" : "` && quantity && `" } }`.
+*    DATA(lv_view_new)  = read_view( ).
+*
+*    client->view_display( lv_view_new ).
+**        _viewmodel = lv_model_new
 
 
   ENDMETHOD.

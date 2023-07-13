@@ -1,5 +1,5 @@
 # app-tools
-The larger apps from demo repository are collected here and will be adjusted to cater to a broader range of use cases. <br>
+The larger apps from demo repository are collected here and can be adjusted to cater to a broader range of use cases. <br>
 
 Apps:
 * File upload

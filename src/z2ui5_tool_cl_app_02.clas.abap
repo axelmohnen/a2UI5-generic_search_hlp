@@ -60,7 +60,7 @@ CLASS z2ui5_tool_cl_app_02 IMPLEMENTATION.
         FIELD-SYMBOLS <tab> TYPE STANDARD TABLE.
         CREATE DATA mt_table TYPE STANDARD TABLE OF (mv_name) with DEFAULT KEY.
         ASSIGN mt_table->* TO <tab>.
-        mt_cols = lcl_db=>get_fieldlist_by_table( <tab> ).
+        mt_cols = z2ui5_tool_cl_utility=>get_fieldlist_by_table( <tab> ).
 
 
       WHEN 'BUTTON_POST'.
@@ -100,7 +100,7 @@ CLASS z2ui5_tool_cl_app_02 IMPLEMENTATION.
   METHOD z2ui5_on_render.
 
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( client )->shell( )->page(
-             title          = 'abap2UI5 - Change the table type with RTTI'
+             title          = 'abap2UI5 - Database View'
              navbuttonpress = client->_event( 'BACK' )
              shownavbutton  = abap_true
          )->header_content(
@@ -133,7 +133,7 @@ CLASS z2ui5_tool_cl_app_02 IMPLEMENTATION.
               ).
 
       DATA(lo_columns) = tab->columns( ).
-      mt_cols = lcl_db=>get_fieldlist_by_table( <tab> ).
+      mt_cols = z2ui5_tool_cl_utility=>get_fieldlist_by_table( <tab> ).
 
       LOOP AT mt_cols INTO DATA(lv_field) FROM 2.
         lo_columns->column( )->text( lv_field ).

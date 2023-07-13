@@ -353,13 +353,13 @@ CLASS z2ui5_lcl_utility DEFINITION INHERITING FROM cx_no_check.
       IMPORTING
         v             TYPE clike
       RETURNING
-        VALUE(result) TYPE z2ui5_if_client=>ty_s_name_value-value.
+        VALUE(result) TYPE z2ui5_if_client=>ty_s_name_value-v.
 
     CLASS-METHODS get_param_val
       IMPORTING
         v             TYPE clike
       RETURNING
-        VALUE(result) TYPE z2ui5_if_client=>ty_s_name_value-value.
+        VALUE(result) TYPE z2ui5_if_client=>ty_s_name_value-v.
 
     CLASS-METHODS get_uuid
       RETURNING

@@ -21,9 +21,7 @@ CLASS z2ui5_tool_cl_app_07 DEFINITION PUBLIC.
       RETURNING
         VALUE(r_result) TYPE string.
 
-    METHODS ui5_view_init_display
-      RETURNING
-        VALUE(r_result) TYPE string.
+    METHODS ui5_view_init_display.
 
   PRIVATE SECTION.
 ENDCLASS.
@@ -44,7 +42,7 @@ CLASS z2ui5_tool_cl_app_07 IMPLEMENTATION.
           WHEN 'UPLOAD'.
 
             SPLIT mv_value AT `;` INTO DATA(lv_dummy) DATA(lv_data).
-            SPLIT lv_data AT `,` INTO DATA(lv_format) lv_data.
+            SPLIT lv_data AT `,` INTO lv_dummy lv_data.
 
             DATA(lv_data2) = z2ui5_tool_cl_utility=>decode_x_base64( lv_data ).
             DATA(lv_ready) = z2ui5_tool_cl_utility=>get_string_by_xstring( lv_data2 ).

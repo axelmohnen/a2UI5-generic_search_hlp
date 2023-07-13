@@ -17,9 +17,7 @@ CLASS z2ui5_tool_cl_app_01 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-
 CLASS z2ui5_tool_cl_app_01 IMPLEMENTATION.
-
 
   METHOD z2ui5_if_app~main.
 
@@ -37,17 +35,6 @@ CLASS z2ui5_tool_cl_app_01 IMPLEMENTATION.
     ENDIF.
 
     CASE client->get( )-event.
-
-      WHEN 'DB_LOAD'.
-
-        mv_editor = COND #(
-            WHEN mv_path CS 'abap' THEN lcl_mime_api=>read_abap( )
-            WHEN mv_path CS 'json' THEN lcl_mime_api=>read_json( )
-            WHEN mv_path CS 'yaml' THEN lcl_mime_api=>read_yaml( )
-            WHEN mv_path CS 'text' THEN lcl_mime_api=>read_text( )
-            WHEN mv_path CS 'js'   THEN lcl_mime_api=>read_js( )
-            ).
-        client->message_toast_display( 'Download successfull' ).
 
       WHEN 'DB_SAVE'.
 

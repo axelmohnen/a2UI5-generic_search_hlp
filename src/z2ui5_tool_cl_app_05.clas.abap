@@ -24,7 +24,7 @@ CLASS z2ui5_tool_cl_app_05 DEFINITION PUBLIC.
     DATA mt_file      TYPE STANDARD TABLE OF ty_s_file_out WITH EMPTY KEY.
     DATA ms_file_edit TYPE z2ui5_tool_cl_file_api=>ty_s_file.
     DATA ms_file_prev TYPE ty_s_file_out.
-
+    DATA mv_check_download TYPE abap_Bool.
 
   PROTECTED SECTION.
 
@@ -44,15 +44,12 @@ CLASS z2ui5_tool_cl_app_05 DEFINITION PUBLIC.
       RETURNING
         VALUE(r_result) TYPE string.
 
-    METHODS ui5_popup_metadata_display
-      RETURNING
-        VALUE(r_result) TYPE string.
+    METHODS ui5_popup_metadata_display..
 
     METHODS ui5_popup_data_display
       IMPORTING
-        data            TYPE string
-      RETURNING
-        VALUE(r_result) TYPE string.
+        data            TYPE string.
+
     METHODS ui5_load.
 
   PRIVATE SECTION.
@@ -67,7 +64,6 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
     TRY.
 
         ms_file = VALUE #( mt_out[ selkz = abap_true ] DEFAULT VALUE #( ) ).
-*        CLEAR ms_file_popup.
 
         CASE client->get( )-event.
 
@@ -127,6 +123,10 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
             DATA(lv_data3) = z2ui5_tool_cl_file_api=>read( id = ms_file-id )-data.
             ui5_popup_data_display( lv_data3 ).
 
+          when 'DOWNLOAD'.
+            mv_check_download = ABAP_TRUE.
+            ui5_view_main_display( ).
+
           WHEN 'POPUP_DATA'.
             lv_data3 = z2ui5_tool_cl_file_api=>read( id = ms_file-id )-data.
             DATA(lv_data2) = z2ui5_tool_cl_utility=>decode_x_base64( lv_data3 ).
@@ -179,29 +179,6 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
 
 
   METHOD ui5_popup_metadata_display.
-
-*    DATA(lo_popup) = z2ui5_cl_xml_view=>factory_popup( client
-*              )->dialog(
-*                      title = 'Edit Description'
-*                      icon = 'sap-icon://edit'
-*                  )->content(
-*                      )->text_area(
-*                          height = '99%'
-*                          width = '99%'
-*                          value = client->_bind_edit( ms_file_edit-descr )
-*                  )->get_parent(
-*                  )->footer( )->overflow_toolbar(
-*                      )->toolbar_spacer(
-*                      )->button(
-*                          text  = 'Cancel'
-*                          press = client->_event( 'TEXTAREA_CANCEL' )
-*                      )->button(
-*                          text  = 'Confirm'
-*                          press = client->_event( 'TEXTAREA_DESCR_CONFIRM' )
-*                          type  = 'Emphasized' ).
-*
-*    client->popup_display( lo_popup->stringify( ) ).
-
 
     DATA(popup) = z2ui5_cl_xml_view=>factory_popup( client )->dialog(
        contentheight = '500px'
@@ -324,11 +301,6 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
        )->text( '{FILE_SIZE}'
        )->text( '{DESCR}' ).
 
-*    IF ms_file_prev-data IS NOT INITIAL.
-*      page->zz_plain( '<html:iframe src="' && ms_file_prev-data && '" height="75%" width="98%"/>' ).
-*      CLEAR mv_value.
-*    ENDIF.
-
     DATA(footer) = page->footer( )->overflow_toolbar( ).
 
     footer->cc_file_uploader(
@@ -337,6 +309,7 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
       placeholder = 'filepath here...'
       upload      = client->_event( 'UPLOAD' ) ).
 
+*    footer->button( text = 'Download' press = client->_event( 'DOWNLOAD' ) ).
     footer->toolbar_spacer(
 *        )->button(
 *            text  = 'Edit'
@@ -348,6 +321,10 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
                 type  = 'Emphasized'
                 icon = 'sap-icon://refresh' ).
 
+*    IF mv_check_download = abap_true.
+*      mv_check_download = abap_false.
+*      footer->zz_plain( '<html:iframe src="data:text/csv;base64,' && z2ui5_tool_cl_file_api=>read( ms_file-id )-data && '" height="75%" width="98%"/>' ).
+*    ENDIF.
 
     client->view_display( view->stringify( ) ).
 

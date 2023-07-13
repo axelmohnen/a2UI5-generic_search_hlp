@@ -4,7 +4,7 @@ CLASS z2ui5_tool_cl_app_03 DEFINITION PUBLIC.
 
     INTERFACES z2ui5_if_app.
 
-   TYPES:
+    TYPES:
       BEGIN OF ty_s_spfli,
         selkz     TYPE abap_bool,
         carrid    TYPE c LENGTH 3,
@@ -18,7 +18,7 @@ CLASS z2ui5_tool_cl_app_03 DEFINITION PUBLIC.
       END OF ty_s_spfli.
 
     TYPES ty_t_table TYPE STANDARD TABLE OF ty_s_spfli WITH EMPTY KEY.
-      DATA st_db TYPE ty_t_table.
+    DATA st_db TYPE ty_t_table.
     TYPES:
       BEGIN OF ty_s_token,
         key     TYPE string,
@@ -131,8 +131,6 @@ CLASS z2ui5_tool_cl_app_03 DEFINITION PUBLIC.
 
     DATA mv_layout_name TYPE string.
 
-  PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
     DATA:
       BEGIN OF app,
@@ -146,7 +144,6 @@ CLASS z2ui5_tool_cl_app_03 DEFINITION PUBLIC.
     METHODS z2ui5_on_init.
     METHODS z2ui5_on_event.
     METHODS z2ui5_on_render.
-    METHODS init_table_output.
     METHODS z2ui5_on_render_main.
     METHODS z2ui5_on_render_detail.
     METHODS z2ui5_on_render_pop_setup.
@@ -164,12 +161,13 @@ CLASS z2ui5_tool_cl_app_03 DEFINITION PUBLIC.
         io_box TYPE REF TO z2ui5_cl_xml_view.
     METHODS z2ui5_set_data.
 
-private section.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 ENDCLASS.
 
 
 
-CLASS Z2UI5_TOOL_CL_APP_03 IMPLEMENTATION.
+CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
 
 
   METHOD encode_base64.
@@ -191,40 +189,6 @@ CLASS Z2UI5_TOOL_CL_APP_03 IMPLEMENTATION.
             encoded   = result.
 
     ENDTRY.
-
-  ENDMETHOD.
-
-
-  METHOD init_table_output.
-
-    " CLEAR  ms_layout-s_table.
-    " CLEAR mt_cols.
-    "  CLEAR  ms_layout-t_cols.
-
-    ms_view-headerexpanded = abap_true.
-    ms_view-headerpinned   = abap_true.
-
-    DATA(lt_cols)   = lcl_db=>get_fieldlist_by_table( mt_table ).
-    LOOP AT lt_cols REFERENCE INTO DATA(lr_col) FROM 2.
-
-      INSERT VALUE #(
-        name = lr_col->*
-      ) INTO TABLE  ms_layout-t_filter_show.
-
-      INSERT VALUE #(
-         visible = abap_true
-         name = lr_col->*
-       "  length = `10px`
-         title = lr_col->*
-       ) INTO TABLE ms_layout-t_cols.
-
-*      INSERT VALUE #(
-*       "  selkz = abap_true
-*         name = lr_col->*
-*      "   length = `10px`
-*       ) INTO TABLE  ms_layout-t_cols.
-
-    ENDLOOP.
 
   ENDMETHOD.
 
@@ -921,7 +885,7 @@ CLASS Z2UI5_TOOL_CL_APP_03 IMPLEMENTATION.
 
   METHOD z2ui5_set_detail.
 
-    data(lt_arg) = client->get( )-t_event_arg.
+    DATA(lt_arg) = client->get( )-t_event_arg.
     ms_detail = mt_table[ uuid = lt_arg[ 1 ] ].
 
     SELECT SINGLE FROM z2ui5_t_draft
@@ -961,9 +925,7 @@ CLASS Z2UI5_TOOL_CL_APP_03 IMPLEMENTATION.
       lv_row = lv_row && cl_abap_char_utilities=>cr_lf.
     ENDLOOP.
 
-    DATA lv_bas64enc TYPE string.
-
-    lv_bas64enc = encode_base64( lv_row ).
+    DATA(lv_bas64enc) = encode_base64( lv_row ).
 
     i_view->zz_plain( `<html:iframe src="data:text/csv;base64,` && lv_bas64enc && `" hidden="hidden" />`).
 
@@ -974,13 +936,13 @@ CLASS Z2UI5_TOOL_CL_APP_03 IMPLEMENTATION.
 
   METHOD z2ui5_set_filter.
 
-      io_box->search_field(
-                    value = client->_bind( ms_view-search_val )
-                    search = client->_event( 'BUTTON_SEARCH' )
-                    change = client->_event( 'BUTTON_SEARCH' )
-                    width = `17.5rem`
-                    id    = `SEARCH`
-              ).
+    io_box->search_field(
+                  value = client->_bind( ms_view-search_val )
+                  search = client->_event( 'BUTTON_SEARCH' )
+                  change = client->_event( 'BUTTON_SEARCH' )
+                  width = `17.5rem`
+                  id    = `SEARCH`
+            ).
 
     IF line_exists( ms_layout-t_filter_show[  name = `UUID` selkz = abap_true  ] ).
       io_box->input( value = client->_bind( ms_layout-s_filter-uuid ) description = `UUID` ).

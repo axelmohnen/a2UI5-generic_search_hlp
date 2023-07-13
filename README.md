@@ -20,4 +20,4 @@ Apps:
 <br>
 <img width="500" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/60d980c4-720f-4f58-a96f-f6c4998ca464">
 <br>
-<img width="500" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/ef8d4dcd-6e25-4d7b-bb1b-17b1fa5738d9">
+<img width="500" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/7c3869f6-7e64-43f2-88ae-26d717f6b657">

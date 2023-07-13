@@ -121,21 +121,24 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
 *    DATA lt_tab TYPE ty_t_table.
 *
-*    /ui2/cl_json=>deserialize(
-*      EXPORTING
-*        json             = val
-**        jsonx            =
-**        pretty_name      =
-**        assoc_arrays     =
-**        assoc_arrays_opt =
-**        name_mappings    =
-**        conversion_exits =
-**        hex_as_base64    =
-*      CHANGING
-*        data             = lt_tab
-*    ).
-*
-*    result = lt_tab.
+
+data lt_tab type ref to data.
+
+    /ui2/cl_json=>deserialize(
+      EXPORTING
+        json             = val
+*        jsonx            =
+*        pretty_name      =
+*        assoc_arrays     =
+*        assoc_arrays_opt =
+*        name_mappings    =
+*        conversion_exits =
+*        hex_as_base64    =
+      CHANGING
+        data             = lt_tab
+    ).
+
+    result = lt_tab.
 
   ENDMETHOD.
 
@@ -144,7 +147,7 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
 *    DATA lt_tab TYPE ty_t_table.
 *
-*    CALL TRANSFORMATION id SOURCE xml = val RESULT data = lt_tab.
+   CALL TRANSFORMATION id SOURCE xml = val RESULT data = result.
 *
 *    result = lt_tab.
 
@@ -241,19 +244,25 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
   METHOD get_csv_by_table.
 
-*    LOOP AT val INTO DATA(ls_row).
-*
-*      DATA(lv_index) = 1.
-*      DO.
-*        ASSIGN COMPONENT lv_index OF STRUCTURE ls_row TO FIELD-SYMBOL(<field>).
-*        IF sy-subrc <> 0.
-*          EXIT.
-*        ENDIF.
-*        lv_index = lv_index + 1.
-*        result = result && <field> && ';'.
-*      ENDDO.
-*      result = result && cl_abap_char_utilities=>cr_lf.
-*    ENDLOOP.
+    FIELD-SYMBOLS <tab> type table.
+    assign val to <tab>.
+
+    data lr_row type ref to data.
+
+    LOOP AT <tab> REFERENCE INTO lr_row.
+    "INTO DATA(ls_row).
+
+      DATA(lv_index) = 1.
+      DO.
+        ASSIGN COMPONENT lv_index OF STRUCTURE lr_row->* TO FIELD-SYMBOL(<field>).
+        IF sy-subrc <> 0.
+          EXIT.
+        ENDIF.
+        lv_index = lv_index + 1.
+        result = result && <field> && ';'.
+      ENDDO.
+      result = result && cl_abap_char_utilities=>cr_lf.
+    ENDLOOP.
 
 
   ENDMETHOD.

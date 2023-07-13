@@ -22,11 +22,11 @@ CLASS z2ui5_tool_cl_file_api DEFINITION
 
     CLASS-METHODS update_metadata
       IMPORTING
-        VALUE(val) TYPE ty_S_file.
+        val TYPE ty_S_file.
 
     CLASS-METHODS update_data
       IMPORTING
-        VALUE(val) TYPE ty_S_file.
+        val TYPE ty_S_file.
 
     CLASS-METHODS delete
       IMPORTING

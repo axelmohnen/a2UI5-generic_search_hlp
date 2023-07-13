@@ -17,9 +17,7 @@ CLASS z2ui5_tool_cl_app_07 DEFINITION PUBLIC.
     METHODS ui5_on_init.
     METHODS ui5_on_event.
 
-    METHODS ui5_view_main_display
-      RETURNING
-        VALUE(r_result) TYPE string.
+    METHODS ui5_view_main_display.
 
     METHODS ui5_view_init_display.
 

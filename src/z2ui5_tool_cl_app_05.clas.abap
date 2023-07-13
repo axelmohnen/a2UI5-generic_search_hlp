@@ -272,16 +272,8 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
             showHeader     = xsdbool( client->get( )-check_launchpad_active = abap_false )
         )->header_content(
             )->toolbar_spacer(
-*            )->link( text = 'Demo'        href = 'https://twitter.com/abap2UI5/status/1638487600930357248'
             )->link( text = 'Source_Code' href = view->hlp_get_source_code_url(  )
         )->get_parent( ).
-
-
-*    page->cc_file_uploader(
-*        value       = client->_bind_edit( mv_value )
-*        path        = client->_bind_edit( mv_path )
-*        placeholder = 'filepath here...'
-*        upload      = client->_event( 'UPLOAD' ) ).
 
     DATA(tab) = page->table(
             headertext = 'Table'

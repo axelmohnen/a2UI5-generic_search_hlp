@@ -7,8 +7,6 @@ CLASS z2ui5_tool_cl_app_06 DEFINITION
 
     INTERFACES z2ui5_if_app.
 
-    DATA check_initialized TYPE abap_bool.
-
     CLASS-METHODS read_view
       RETURNING
         VALUE(result) TYPE string.
@@ -63,6 +61,8 @@ CLASS z2ui5_tool_cl_app_06 IMPLEMENTATION.
 *             `  press="onEvent( { &apos;EVENT&apos; : &apos;BUTTON_POST&apos;, &apos;METHOD&apos; : &apos;UPDATE&apos; , &apos;isHoldView&apos; : false } )" ` && |\n|  &&
 *             `  text="post" ` && |\n|  &&
 *             ` /></form:content></form:SimpleForm></Page></Shell></mvc:View>`.
+
+    result = 'test'.
 
   ENDMETHOD.
 

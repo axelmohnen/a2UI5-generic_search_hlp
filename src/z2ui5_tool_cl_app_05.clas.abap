@@ -36,15 +36,11 @@ CLASS z2ui5_tool_cl_app_05 DEFINITION PUBLIC.
 
     METHODS ui5_delete.
 
-    METHODS ui5_view_main_display
-      RETURNING
-        VALUE(r_result) TYPE string.
+    METHODS ui5_view_main_display.
 
-    METHODS ui5_view_init_display
-      RETURNING
-        VALUE(r_result) TYPE string.
+    METHODS ui5_view_init_display.
 
-    METHODS ui5_popup_metadata_display..
+    METHODS ui5_popup_metadata_display.
 
     METHODS ui5_popup_data_display
       IMPORTING

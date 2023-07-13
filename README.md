@@ -7,7 +7,7 @@ Apps:
 * Database view
 
 <br>
-🚧 This repository is still under construction, issues and PRs are welcome 🚧 <br>
+🚧 This repository is under construction, issues and PRs are welcome 🚧 <br>
 <br>
 
 <img width="500" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/bc176b4f-ce4a-46d9-8ed0-250054e0f3e5">

@@ -4,6 +4,7 @@ The larger apps from demo repository are collected here and will be adjusted to 
 Apps:
 * File upload
 * File editor
+* Database View
 
 Stay tuned for more updates...
 

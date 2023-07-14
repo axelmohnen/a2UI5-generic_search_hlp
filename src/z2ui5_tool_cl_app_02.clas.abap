@@ -71,7 +71,7 @@ CLASS z2ui5_tool_cl_app_02 IMPLEMENTATION.
         SELECT FROM (mv_name)
             FIELDS *
           INTO CORRESPONDING FIELDS OF TABLE @<tab>
-            UP TO 100 ROWS.
+            UP TO 50 ROWS.
 
       WHEN 'BUTTON_CONFIRM'.
         client->message_toast_display( |confirm| ).
@@ -116,7 +116,7 @@ CLASS z2ui5_tool_cl_app_02 IMPLEMENTATION.
                  )->title( 'Table'
                  )->label( 'Name' ).
 
-    lo_view->input( client->_bind( mv_name  ) ).
+    lo_view->input( client->_bind_edit( mv_name  ) ).
 
     lo_view->button(
                 text  = 'read'

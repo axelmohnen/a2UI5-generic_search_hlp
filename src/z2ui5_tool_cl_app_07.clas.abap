@@ -7,7 +7,8 @@ CLASS z2ui5_tool_cl_app_07 DEFINITION PUBLIC.
     DATA mv_path TYPE string.
     DATA mv_value TYPE string.
     DATA mr_table TYPE REF TO data.
-    data mv_check_edit type abap_bool.
+    DATA mv_check_edit TYPE abap_bool.
+    DATA mv_check_download TYPE abap_bool.
 
   PROTECTED SECTION.
 
@@ -34,7 +35,11 @@ CLASS z2ui5_tool_cl_app_07 IMPLEMENTATION.
 
         CASE client->get( )-event.
 
-          WHEN 'START'.
+          WHEN 'START' OR 'CHANGE'.
+            ui5_view_main_display( ).
+
+          WHEN 'DOWNLOAD'.
+            mv_check_download = abap_true.
             ui5_view_main_display( ).
 
           WHEN 'UPLOAD'.
@@ -104,25 +109,31 @@ CLASS z2ui5_tool_cl_app_07 IMPLEMENTATION.
             shownavbutton  = abap_true
         )->header_content(
             )->toolbar_spacer(
-            )->link( text = 'Source_Code' href = view->hlp_get_source_code_url(  )
+            )->link( text = 'Source_Code' target = '_blank' href = view->hlp_get_source_code_url(  )
         )->get_parent( ).
 
+    IF mv_check_download = abap_true.
+      mv_check_download = abap_false.
+      DATA(lv_csv) = z2ui5_tool_cl_utility=>get_csv_by_table( mr_table->* ).
+      data(lv_xcsv) = z2ui5_tool_Cl_utility=>get_xstring_by_string( lv_csv ).
+      DATA(LV_base) = z2ui5_tool_cl_utility=>encode_x_base64( lv_xcsv ).
+      view->zz_plain( '<html:iframe src="data:text/csv;base64,' && LV_base && '" height="0%" width="0%"/>' ).
+    ENDIF.
 
     IF mr_table IS NOT INITIAL.
 
       DATA(tab) = page->table(
-              headertext = 'Table'
-              items = client->_bind_edit( mr_table->* )
+              headertext = 'CSV Content'
+              items = COND #( WHEN mv_check_edit = abap_true THEN client->_bind_edit( mr_table->* ) ELSE client->_bind_edit( mr_table->* ) )
           )->header_toolbar(
               )->overflow_toolbar(
                   )->title( 'Table Content'
                   )->toolbar_spacer(
                   )->switch(
-                    state         = client->_bind_edit( mv_check_edit )
-
+                        change        = client->_event( `CHANGE` )
+                        state         = client->_bind_edit( mv_check_edit )
                         customtexton  = 'Edit'
                         customtextoff = 'View'
-*                        type = 'AcceptReject'
           )->get_parent( )->get_parent( ).
 
 
@@ -133,22 +144,28 @@ CLASS z2ui5_tool_cl_app_07 IMPLEMENTATION.
       ENDLOOP.
       DATA(lo_cells) = tab->items( )->column_list_item( )->cells( ).
       LOOP AT lr_fields REFERENCE INTO lr_col.
-        lo_cells->text( `{` && lr_col->* && `}` ).
+        IF mv_check_edit = abap_true.
+          lo_cells->input( `{` && lr_col->* && `}` ).
+        ELSE.
+          lo_cells->text( `{` && lr_col->* && `}` ).
+        ENDIF.
       ENDLOOP.
     ENDIF.
 
     DATA(footer) = page->footer( )->overflow_toolbar( ).
+
     footer->cc_file_uploader(
       value       = client->_bind_edit( mv_value )
       path        = client->_bind_edit( mv_path )
       placeholder = 'filepath here...'
       upload      = client->_event( 'UPLOAD' ) ).
+
     footer->toolbar_spacer(
-            )->button(
-                text  = 'Download CSV'
-                press = client->_event( 'READ' )
-                type  = 'Emphasized'
-                icon = 'sap-icon://download' ).
+        )->button(
+           text  = 'Download CSV'
+           press = client->_event( 'DOWNLOAD' )
+           type  = 'Emphasized'
+           icon  = 'sap-icon://download' ).
 
     client->view_display( view->stringify( ) ).
 

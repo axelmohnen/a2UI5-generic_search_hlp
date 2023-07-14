@@ -206,31 +206,9 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
 
   METHOD ui5_view_init_display.
 
-    DATA(lo_view) = z2ui5_cl_xml_view=>factory( client = client t_ns = VALUE #(
-         ( n = `xmlns:mvc` v = `sap.ui.core.mvc` )
-         ( n = `xmlns:m` v = `sap.m` )
-         ( n = `xmlns:z2ui5` v = `z2ui5` )
-         ( n = `xmlns:core` v = `sap.ui.core` )
-         ( n = `xmlns` v = `http://www.w3.org/1999/xhtml` )
-     ) ).
-
-    DATA(page) = lo_view->_generic( name = 'Shell' ns = 'm' )->page(
-           ns             = 'm'
-           title          = 'abap2UI5 - File Upload/Download'
-           navbuttonpress = client->_event( 'BACK' )
-           shownavbutton  = abap_true
-*       )->header_content( ns = 'm'
-*           )->toolbar_spacer( ns = 'm'
-*           )->link( ns = 'm' text = 'Demo'   target = '_blank'     href = 'https://twitter.com/abap2UI5/status/1638487600930357248'
-*           )->link( ns = 'm'  target = '_blank' text = 'Source_Code' href = lo_view->hlp_get_source_code_url(  )
-       )->get_parent( ).
-
-*    page->text( ns = 'm' text = 'Custom Control for File Upload is now loaded...'
-*        )->button( ns = 'm' text = 'continue' press = client->_event( 'START' )
-    page->zz_plain( `  <script>  ` && z2ui5_cl_xml_view=>cc_file_uploader_get_js( ) && ` </script>`
-).
-
-    client->view_display( lo_view->stringify( ) ).
+    client->view_display( z2ui5_cl_xml_view=>factory( client
+         )->cc_file_uploader_get_js(
+         )->stringify( ) ).
 
   ENDMETHOD.
 

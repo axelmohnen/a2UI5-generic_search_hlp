@@ -122,7 +122,7 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 *    DATA lt_tab TYPE ty_t_table.
 *
 
-data lt_tab type ref to data.
+    DATA lt_tab TYPE REF TO data.
 
     /ui2/cl_json=>deserialize(
       EXPORTING
@@ -147,7 +147,7 @@ data lt_tab type ref to data.
 
 *    DATA lt_tab TYPE ty_t_table.
 *
-   CALL TRANSFORMATION id SOURCE xml = val RESULT data = result.
+    CALL TRANSFORMATION id SOURCE xml = val RESULT data = result.
 *
 *    result = lt_tab.
 
@@ -161,8 +161,8 @@ data lt_tab type ref to data.
     DATA lt_comp TYPE cl_abap_structdescr=>component_table.
     LOOP AT lt_cols REFERENCE INTO DATA(lr_col).
 
-       data(lv_name) =  trim_upper( lr_col->* ).
-       replace ` ` in lv_name with `_`.
+      DATA(lv_name) =  trim_upper( lr_col->* ).
+      REPLACE ` ` IN lv_name WITH `_`.
 
       INSERT VALUE #( name = lv_name type = cl_abap_elemdescr=>get_c( 40 ) ) INTO TABLE lt_comp.
     ENDLOOP.
@@ -175,7 +175,7 @@ data lt_tab type ref to data.
 
     CREATE DATA result TYPE HANDLE o_table_desc.
 
-    delete lt_rows where table_line is INITIAL.
+    DELETE lt_rows WHERE table_line IS INITIAL.
 
     LOOP AT lt_rows REFERENCE INTO DATA(lr_rows) FROM 2.
 
@@ -187,9 +187,9 @@ data lt_tab type ref to data.
         ASSIGN COMPONENT sy-tabix OF STRUCTURE lr_row->* TO FIELD-SYMBOL(<field>).
         <field> = lr_col->*.
       ENDLOOP.
-      FIELD-SYMBOLS <tab> type STANDARD TABLE.
-      assign result->* to <tab>.
-      insert lr_row->* into table <tab>.
+      FIELD-SYMBOLS <tab> TYPE STANDARD TABLE.
+      ASSIGN result->* TO <tab>.
+      INSERT lr_row->* INTO TABLE <tab>.
     ENDLOOP.
 
   ENDMETHOD.
@@ -244,13 +244,22 @@ data lt_tab type ref to data.
 
   METHOD get_csv_by_table.
 
-    FIELD-SYMBOLS <tab> type table.
-    assign val to <tab>.
+    FIELD-SYMBOLS <tab> TYPE table.
+    ASSIGN val TO <tab>.
 
-    data lr_row type ref to data.
+    DATA lr_row TYPE REF TO data.
+
+    DATA(tab) = CAST cl_abap_tabledescr( cl_abap_typedescr=>describe_by_data( <tab> ) ).
+
+    DATA(struc) = CAST cl_abap_structdescr( tab->get_table_line_type( ) ).
+
+    LOOP AT struc->get_components( ) REFERENCE INTO DATA(lr_comp).
+      result = result && lr_comp->name && ';'.
+    ENDLOOP.
+
+    result = result && cl_abap_char_utilities=>cr_lf.
 
     LOOP AT <tab> REFERENCE INTO lr_row.
-    "INTO DATA(ls_row).
 
       DATA(lv_index) = 1.
       DO.
@@ -263,7 +272,6 @@ data lt_tab type ref to data.
       ENDDO.
       result = result && cl_abap_char_utilities=>cr_lf.
     ENDLOOP.
-
 
   ENDMETHOD.
 

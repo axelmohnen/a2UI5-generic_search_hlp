@@ -79,23 +79,9 @@ CLASS z2ui5_tool_cl_app_07 IMPLEMENTATION.
 
   METHOD ui5_view_init_display.
 
-    DATA(lo_view) = z2ui5_cl_xml_view=>factory( client = client t_ns = VALUE #(
-         ( n = `xmlns:mvc` v = `sap.ui.core.mvc` )
-         ( n = `xmlns:m` v = `sap.m` )
-         ( n = `xmlns:z2ui5` v = `z2ui5` )
-         ( n = `xmlns:core` v = `sap.ui.core` )
-         ( n = `xmlns` v = `http://www.w3.org/1999/xhtml` )
-     ) ).
-
-    DATA(page) = lo_view->_generic( name = 'Shell' ns = 'm' )->page(
-           ns             = 'm'
-           title          = 'abap2UI5 - File Upload/Download'
-           navbuttonpress = client->_event( 'BACK' )
-           shownavbutton  = abap_true
-       )->get_parent( ).
-
-    page->zz_plain( `  <script>  ` && z2ui5_cl_xml_view=>cc_file_uploader_get_js( ) && ` </script>` ).
-    client->view_display( lo_view->stringify( ) ).
+    client->view_display( z2ui5_cl_xml_view=>factory( client
+         )->cc_file_uploader_get_js(
+         )->stringify( ) ).
 
   ENDMETHOD.
 
@@ -115,7 +101,7 @@ CLASS z2ui5_tool_cl_app_07 IMPLEMENTATION.
     IF mv_check_download = abap_true.
       mv_check_download = abap_false.
       DATA(lv_csv) = z2ui5_tool_cl_utility=>get_csv_by_table( mr_table->* ).
-      data(lv_xcsv) = z2ui5_tool_Cl_utility=>get_xstring_by_string( lv_csv ).
+      DATA(lv_xcsv) = z2ui5_tool_Cl_utility=>get_xstring_by_string( lv_csv ).
       DATA(LV_base) = z2ui5_tool_cl_utility=>encode_x_base64( lv_xcsv ).
       view->zz_plain( '<html:iframe src="data:text/csv;base64,' && LV_base && '" height="0%" width="0%"/>' ).
     ENDIF.

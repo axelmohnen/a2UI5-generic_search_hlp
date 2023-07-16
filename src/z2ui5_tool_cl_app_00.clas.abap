@@ -79,8 +79,17 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
       page->generictile(
 *      EXPORTING
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-        header    = `Database View`
+        header    = `Database Viewer`
          press     = client->_event( `z2ui5_tool_cl_app_02` )
+      )->get( )->TileContent(
+         )->imagecontent( src = 'sap-icon://detail-view'
+      ).
+
+     page->generictile(
+*      EXPORTING
+        class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
+        header    = `CSV to Itab Editor`
+         press     = client->_event( `z2ui5_tool_cl_app_07` )
       )->get( )->TileContent(
          )->imagecontent( src = 'sap-icon://table-view'
       ).

@@ -109,11 +109,10 @@ CLASS z2ui5_tool_cl_app_07 IMPLEMENTATION.
     IF mr_table IS NOT INITIAL.
 
       DATA(tab) = page->table(
-              headertext = 'CSV Content'
               items = COND #( WHEN mv_check_edit = abap_true THEN client->_bind_edit( mr_table->* ) ELSE client->_bind_edit( mr_table->* ) )
           )->header_toolbar(
               )->overflow_toolbar(
-                  )->title( 'Table Content'
+                  )->title( 'CSV Content'
                   )->toolbar_spacer(
                   )->switch(
                         change        = client->_event( `CHANGE` )

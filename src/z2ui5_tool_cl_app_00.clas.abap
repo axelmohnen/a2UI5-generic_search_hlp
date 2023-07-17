@@ -94,6 +94,15 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
          )->imagecontent( src = 'sap-icon://table-view'
       ).
 
+     page->generictile(
+*      EXPORTING
+        class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
+        header    = `List Report Viewer`
+         press     = client->_event( `z2ui5_tool_cl_app_03` )
+      )->get( )->TileContent(
+         )->imagecontent( src = 'sap-icon://my-view'
+      ).
+
 *      hbox = box->hbox( ).
 *      hbox->title( text = `Transformation` ).
 *      hbox = box->hbox( ).

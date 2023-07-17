@@ -5,6 +5,18 @@ CLASS z2ui5_tool_cl_utility DEFINITION
 
   PUBLIC SECTION.
 
+    CLASS-METHODS trans_xml_2_object
+      IMPORTING
+        xml  TYPE clike
+      EXPORTING
+        data TYPE data.
+
+    CLASS-METHODS trans_data_2_xml
+      IMPORTING
+        data        TYPE data
+      RETURNING
+        VALUE(result) TYPE string.
+
     CLASS-METHODS get_table_by_json
       IMPORTING
         val           TYPE string
@@ -142,6 +154,27 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
   ENDMETHOD.
 
+
+  METHOD trans_data_2_xml.
+
+   " FIELD-SYMBOLS <object> TYPE any.
+  "  ASSIGN object->* TO <object>.
+  "  raise( when = xsdbool( sy-subrc <> 0 ) ).
+
+    CALL TRANSFORMATION id
+       SOURCE data = data
+       RESULT XML result
+        OPTIONS data_refs = `heap-or-create`.
+
+  ENDMETHOD.
+
+  METHOD trans_xml_2_object.
+
+    CALL TRANSFORMATION id
+       SOURCE XML xml
+       RESULT data = data.
+
+  ENDMETHOD.
 
   METHOD get_table_by_xml.
 

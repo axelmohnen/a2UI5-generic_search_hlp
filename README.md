@@ -17,8 +17,8 @@ Apps:
 <br>
 <img width="700" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/41eb2bb7-8a3e-46d0-9938-712b6364baaa">
 <br>
-<img width="500" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/63b57853-e520-4f62-aeea-c972c9a34d7c">
+<img width="700" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/63b57853-e520-4f62-aeea-c972c9a34d7c">
 <br>
-<img width="500" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/60d980c4-720f-4f58-a96f-f6c4998ca464">
+<img width="700" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/60d980c4-720f-4f58-a96f-f6c4998ca464">
 <br>
-<img width="500" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/7c3869f6-7e64-43f2-88ae-26d717f6b657">
+<img width="700" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/7c3869f6-7e64-43f2-88ae-26d717f6b657">

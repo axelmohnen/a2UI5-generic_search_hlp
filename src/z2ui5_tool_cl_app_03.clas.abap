@@ -4,21 +4,10 @@ CLASS z2ui5_tool_cl_app_03 DEFINITION PUBLIC.
 
     INTERFACES z2ui5_if_app.
 
-    TYPES:
-      BEGIN OF ty_s_spfli,
-        selkz     TYPE abap_bool,
-        carrid    TYPE c LENGTH 3,
-        connid    TYPE n LENGTH 4,
-        countryfr TYPE c LENGTH 3,
-        cityfrom  TYPE c LENGTH 20,
-        airpfrom  TYPE c LENGTH 3,
-        countryto TYPE c LENGTH 3,
-        cityto    TYPE c LENGTH 20,
-        airpto    TYPE c LENGTH 3,
-      END OF ty_s_spfli.
 
-    TYPES ty_t_table TYPE STANDARD TABLE OF ty_s_spfli WITH EMPTY KEY.
-    DATA st_db TYPE ty_t_table.
+    DATA mr_table TYPE REF TO data.
+    DATA mv_name TYPE string.
+
     TYPES:
       BEGIN OF ty_s_token,
         key     TYPE string,
@@ -29,7 +18,7 @@ CLASS z2ui5_tool_cl_app_03 DEFINITION PUBLIC.
 
     DATA mt_token            TYPE STANDARD TABLE OF ty_S_token WITH EMPTY KEY.
 
-    DATA mt_table TYPE STANDARD TABLE OF z2ui5_t_draft.
+*    DATA mt_table TYPE STANDARD TABLE OF z2ui5_t_draft.
     DATA ms_detail TYPE z2ui5_t_draft.
     DATA mv_check_columns TYPE abap_bool.
     DATA mv_check_sort TYPE abap_bool.
@@ -40,16 +29,16 @@ CLASS z2ui5_tool_cl_app_03 DEFINITION PUBLIC.
 
     DATA mv_check_download_csv TYPE abap_bool.
 
-    TYPES:
-      BEGIN OF ty_S_out,
-        selkz               TYPE abap_bool,
-        uuid                TYPE string,
-        uuid_prev           TYPE string,
-        uuid_prev_app       TYPE string,
-        uuid_prev_app_stack TYPE string,
-        timestampl          TYPE string,
-        uname               TYPE string,
-      END OF ty_s_out.
+*    TYPES:
+*      BEGIN OF ty_S_out,
+*        selkz               TYPE abap_bool,
+*        uuid                TYPE string,
+*        uuid_prev           TYPE string,
+*        uuid_prev_app       TYPE string,
+*        uuid_prev_app_stack TYPE string,
+*        timestampl          TYPE string,
+*        uname               TYPE string,
+*      END OF ty_s_out.
 
     DATA:
       BEGIN OF ms_view,
@@ -57,7 +46,7 @@ CLASS z2ui5_tool_cl_app_03 DEFINITION PUBLIC.
         headerexpanded TYPE abap_bool,
         search_val     TYPE string,
         title          TYPE string,
-        t_tab          TYPE STANDARD TABLE OF ty_S_out WITH EMPTY KEY,
+*        t_tab          TYPE STANDARD TABLE OF ty_S_out WITH EMPTY KEY,
       END OF ms_view.
 
     TYPES:
@@ -113,12 +102,6 @@ CLASS z2ui5_tool_cl_app_03 DEFINITION PUBLIC.
 
     TYPES ty_t_combo TYPE STANDARD TABLE OF s_combobox WITH EMPTY KEY.
 
-    CLASS-METHODS encode_base64
-      IMPORTING
-        val           TYPE string
-      RETURNING
-        VALUE(result) TYPE string.
-
     TYPES:
       BEGIN OF ty_S_db_layout,
         selkz   TYPE ABap_bool,
@@ -141,7 +124,6 @@ CLASS z2ui5_tool_cl_app_03 DEFINITION PUBLIC.
         view_popup        TYPE string,
         get               TYPE z2ui5_if_client=>ty_s_get,
       END OF app.
-
 
     METHODS z2ui5_on_init.
     METHODS z2ui5_on_event.
@@ -171,30 +153,6 @@ ENDCLASS.
 
 CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
 
-
-  METHOD encode_base64.
-
-    TRY.
-        CALL METHOD ('CL_WEB_HTTP_UTILITY')=>encode_base64
-          EXPORTING
-            unencoded = val
-          RECEIVING
-            encoded   = result.
-
-      CATCH cx_sy_dyn_call_illegal_class.
-
-        DATA(classname) = 'CL_HTTP_UTILITY'.
-        CALL METHOD (classname)=>encode_base64
-          EXPORTING
-            unencoded = val
-          RECEIVING
-            encoded   = result.
-
-    ENDTRY.
-
-  ENDMETHOD.
-
-
   METHOD init_table_output.
 
     " CLEAR  ms_layout-s_table.
@@ -204,7 +162,7 @@ CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
     ms_view-headerexpanded = abap_true.
     ms_view-headerpinned   = abap_true.
 
-    DATA(lt_cols)   = z2ui5_tool_cl_utility=>get_fieldlist_by_table( mt_table ).
+    DATA(lt_cols)   = z2ui5_tool_cl_utility=>get_fieldlist_by_table( mr_table->* ).
     LOOP AT lt_cols REFERENCE INTO DATA(lr_col) FROM 2.
 
       INSERT VALUE #(
@@ -270,7 +228,7 @@ CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
         app-view_popup = 'POPUP_SETUP'.
 
       WHEN 'BUTTON_DELETE'.
-        DELETE ms_view-t_tab WHERE selkz = abap_true.
+*        DELETE ms_view-t_tab WHERE selkz = abap_true.
 
       WHEN 'BUTTON_CUSTOM'.
         client->message_box_display( `custom action called` ).
@@ -358,13 +316,14 @@ CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
 
   METHOD z2ui5_on_init.
 
-
-    init_table_output( ).
+    IF mr_table IS NOT INITIAL.
+      init_table_output( ).
+    ENDIF.
 
     ms_view-title = `Standart`.
     ms_layout-selmode = 'MultiSelect'.
     ms_layout-check_zebra = abap_true.
-    ms_view-t_tab = CORRESPONDING #( mt_table ).
+*    ms_view-t_tab = CORRESPONDING #( mr_table->* ).
     ms_layout-sticky_header = `HeaderToolbar,InfoToolbar,ColumnHeaders`.
     ms_layout-title = `Drafts`.
 
@@ -449,7 +408,7 @@ CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
 *    app-next-path = app-next-path && `(` && ms_detail-uuid && `)`.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( client ).
-    data(view2) = view->page(
+    DATA(view2) = view->page(
             title          = 'abap2UI5 - List Report'
             navbuttonpress = client->_event( 'MAIN' )
             shownavbutton  = abap_true
@@ -532,10 +491,11 @@ CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
 
     z2ui5_set_sort( ).
 
+    mv_name = 'z2ui5_t_draft'.
     "   DATA(view) = z2ui5_cl_xml_view=>factory( )->shell( ).
 
     DATA(view) = z2ui5_cl_xml_view=>factory( client ).
-    data(view2) = view->page( id = `page_main`
+    DATA(view2) = view->page( id = `page_main`
             title          = 'abap2UI5 - List Report'
             navbuttonpress = client->_event( 'BACK' )
             shownavbutton  = abap_true
@@ -545,7 +505,14 @@ CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
                 href = 'https://twitter.com/abap2UI5/status/1637163852264624139'
             )->link(
                 text = 'Source_Code' target = '_blank' href = view->hlp_get_source_code_url(  )
-       )->get_parent( ).
+        )->get_parent(
+        )->sub_header(
+            )->overflow_toolbar(
+                )->toolbar_spacer(
+                )->text( text = 'Table'
+                )->input( value = client->_bind_edit( mv_name )
+                )->button( press = client->_event( 'LOAD' ) text = 'Load'
+        )->get_parent( )->get_parent( ).
 
     IF mv_check_download_csv = abap_true.
       z2ui5_set_download_csv( view ).
@@ -579,86 +546,96 @@ CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
 
     DATA(cont) = page->content( ns = 'f' ).
 
+    IF mr_table IS NOT INITIAL.
 
-    DATA(tab) = cont->table(
-        items = client->_bind( val = ms_view-t_tab )
-        alternaterowcolors = ms_layout-check_zebra
-        sticky = ms_layout-sticky_header
-        autopopinmode = abap_true
-        mode = ms_layout-selmode ).
 
-    tab->header_toolbar(
-          )->toolbar(
-              )->title( text = ms_layout-title && ` (` && shift_right( CONV string( lines( ms_view-t_tab ) ) ) && `)` level = `H2`
-                  )->toolbar_spacer(
-              )->button(
-                  icon = 'sap-icon://refresh'
-                  press = client->_event( 'BUTTON_REFRESH' )
-              )->multi_input(
-                    tokens = client->_bind( mt_token )
-                    showclearicon   = abap_true
+      DATA(tab) = cont->table(
+          items = client->_bind( mr_table->* )
+          alternaterowcolors = ms_layout-check_zebra
+          sticky = ms_layout-sticky_header
+          autopopinmode = abap_true
+          mode = ms_layout-selmode ).
+
+      IF mr_table IS NOT INITIAL.
+        FIELD-SYMBOLS <tab> TYPE table.
+        ASSIGN mr_table->* TO <tab>.
+        DATA(lv_lines) = CONV string( lines(  <tab> ) ).
+      ENDIF.
+
+      tab->header_toolbar(
+            )->toolbar(
+                )->title( text = ms_layout-title && ` (` && shift_right( lv_lines ) && `)` level = `H2`
+                    )->toolbar_spacer(
+                )->button(
+                    icon = 'sap-icon://refresh'
+                    press = client->_event( 'BUTTON_REFRESH' )
+                )->multi_input(
+                      tokens = client->_bind( mt_token )
+                      showclearicon   = abap_true
 *                    showvaluehelp   = abap_true
 *                    suggestionitems = client->_bind( mt_token_sugg )
-                )->item(
-                        key = `{KEY}`
-                        text = `{TEXT}`
-                )->tokens(
-                    )->token(
-                        key = `{KEY}`
-                        text = `{TEXT}`
-                        selected = `{SELKZ}`
+                  )->item(
+                          key = `{KEY}`
+                          text = `{TEXT}`
+                  )->tokens(
+                      )->token(
+                          key = `{KEY}`
+                          text = `{TEXT}`
+                          selected = `{SELKZ}`
 *                        visible = `{VISIBLE}`
-               )->get_parent( )->get_parent(
+                 )->get_parent( )->get_parent(
 
-      )->toolbar_spacer(
+        )->toolbar_spacer(
 *             )->button(
 *                text = `Custom Action`
 *                  press = client->_event( 'BUTTON_CUSTOM' )
 
-              )->button(
-                  text = `Anlegen`
-                  enabled = abap_false
-                  press = client->_event( 'BUTTON_CREATE' )
-                     )->button(
-                  text = `Löschen`
-                  press = client->_event( 'BUTTON_DELETE' )
-              )->button(
-                  icon = 'sap-icon://action-settings'
-                  press = client->_event( 'BUTTON_SETUP' )
-              )->button(
-                  icon = 'sap-icon://download'
-                  press = client->_event( 'BUTTON_DOWNLOAD' )
-              ).
+                )->button(
+                    text = `Anlegen`
+                    enabled = abap_false
+                    press = client->_event( 'BUTTON_CREATE' )
+                       )->button(
+                    text = `Löschen`
+                    press = client->_event( 'BUTTON_DELETE' )
+                )->button(
+                    icon = 'sap-icon://action-settings'
+                    press = client->_event( 'BUTTON_SETUP' )
+                )->button(
+                    icon = 'sap-icon://download'
+                    press = client->_event( 'BUTTON_DOWNLOAD' )
+                ).
 
 
-    DATA(lv_width) = 10.
-    DATA(lo_columns) = tab->columns( ).
-    LOOP AT ms_layout-t_cols REFERENCE INTO DATA(lr_field)
-          WHERE visible = abap_true.
-      lo_columns->column(
-            minscreenwidth = shift_right( CONV string( lv_width ) ) && `px`
-            demandpopin = abap_true width = lr_field->length )->text( text = CONV char10( lr_field->title )
-        )->footer(
-        )->object_number( number = `Summe` unit = 'ST' state = `Warning` ).
-      lv_width = lv_width + 10.
-    ENDLOOP.
+      DATA(lv_width) = 10.
+      DATA(lo_columns) = tab->columns( ).
+      LOOP AT ms_layout-t_cols REFERENCE INTO DATA(lr_field)
+            WHERE visible = abap_true.
+        lo_columns->column(
+              minscreenwidth = shift_right( CONV string( lv_width ) ) && `px`
+              demandpopin = abap_true width = lr_field->length )->text( text = CONV char10( lr_field->title )
+          )->footer(
+          )->object_number( number = `Summe` unit = 'ST' state = `Warning` ).
+        lv_width = lv_width + 10.
+      ENDLOOP.
 
-    DATA(lo_cells) = tab->items( )->column_list_item(
-        press = client->_event( val = 'DETAIL' t_arg = VALUE #( ( `${UUID}` ) ) )
-        selected = `{SELKZ}`
-        type = `Navigation` )->cells( ).
-    LOOP AT ms_layout-t_cols REFERENCE INTO lr_field
-          WHERE visible = abap_true.
-      IF lr_field->editable = abap_true.
-        lo_cells->input( `{` && lr_field->name && `}` ).
-      ELSE.
-        " lo_cells->text(  `{` && lr_field->name && `}` ).
-        lo_cells->link( text = `{` && lr_field->name && `}`
-        "   press = client->_event( val = `POPUP_DETAIL` data = `${` && lr_field->name && `}` ) ).
-           press = client->_event( val = `POPUP_DETAIL` t_arg = VALUE #(  (  `${$source>/id}` ) ) ) ).
-        " press = client->_event( val = `POPUP_DETAIL` data = `$event` ) ).
-      ENDIF.
-    ENDLOOP.
+      DATA(lo_cells) = tab->items( )->column_list_item(
+          press = client->_event( val = 'DETAIL' t_arg = VALUE #( ( `${UUID}` ) ) )
+          selected = `{SELKZ}`
+          type = `Navigation` )->cells( ).
+      LOOP AT ms_layout-t_cols REFERENCE INTO lr_field
+            WHERE visible = abap_true.
+        IF lr_field->editable = abap_true.
+          lo_cells->input( `{` && lr_field->name && `}` ).
+        ELSE.
+          " lo_cells->text(  `{` && lr_field->name && `}` ).
+          lo_cells->link( text = `{` && lr_field->name && `}`
+          "   press = client->_event( val = `POPUP_DETAIL` data = `${` && lr_field->name && `}` ) ).
+             press = client->_event( val = `POPUP_DETAIL` t_arg = VALUE #(  (  `${$source>/id}` ) ) ) ).
+          " press = client->_event( val = `POPUP_DETAIL` data = `$event` ) ).
+        ENDIF.
+      ENDLOOP.
+
+    ENDIF.
 
     client->view_display( page->stringify( ) ).
 
@@ -907,75 +884,49 @@ CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
     "dirty solution
     "todo: map filters to rangetab and make a nice select
 
-    IF ms_layout-s_filter-uuid IS INITIAL.
+*    IF ms_layout-s_filter-uuid IS INITIAL.
 
-      SELECT FROM z2ui5_t_draft
-          FIELDS uuid, uuid_prev, timestampl, uname
-        INTO CORRESPONDING FIELDS OF TABLE @mt_table
-          UP TO 50 ROWS.
+    SELECT FROM (mv_name)
+        FIELDS *
+      INTO CORRESPONDING FIELDS OF TABLE @mr_table->*
+        UP TO 50 ROWS.
 
-    ELSE.
+*    ELSE.
 
-      SELECT FROM z2ui5_t_draft
-      FIELDS uuid, uuid_prev, timestampl, uname
-      WHERE uuid = @ms_layout-s_filter-uuid
-            INTO CORRESPONDING FIELDS OF TABLE @mt_table
-                    UP TO 50 ROWS.
+*      SELECT FROM z2ui5_t_draft
+*      FIELDS uuid, uuid_prev, timestampl, uname
+*      WHERE uuid = @ms_layout-s_filter-uuid
+*            INTO CORRESPONDING FIELDS OF TABLE @mt_table
+*                    UP TO 50 ROWS.
+*
+*    ENDIF.
 
-    ENDIF.
-
-    ms_view-t_tab = CORRESPONDING #( mt_table ).
+*    ms_view-t_tab = CORRESPONDING #( mr_table->* ).
 
   ENDMETHOD.
 
 
   METHOD z2ui5_set_detail.
 
-    DATA(lt_arg) = client->get( )-t_event_arg.
-    ms_detail = mt_table[ uuid = lt_arg[ 1 ] ].
-
-    SELECT SINGLE FROM z2ui5_t_draft
-      FIELDS *
-      WHERE uuid = @ms_detail-uuid
-    INTO CORRESPONDING FIELDS OF @ms_detail
-    .
+*    DATA(lt_arg) = client->get( )-t_event_arg.
+*    ms_detail = mt_table[ uuid = lt_arg[ 1 ] ].
+*
+*    SELECT SINGLE FROM z2ui5_t_draft
+*      FIELDS *
+*      WHERE uuid = @ms_detail-uuid
+*    INTO CORRESPONDING FIELDS OF @ms_detail
+*    .
 
   ENDMETHOD.
 
 
   METHOD z2ui5_set_download_csv.
 
-    DATA(lo_struc) = CAST cl_abap_structdescr( cl_abap_structdescr=>describe_by_data( ms_view-t_tab[ 1 ] ) ).
-    DATA(lt_components) = lo_struc->get_components( ).
+    DATA(lv_csv) = z2ui5_tool_cl_utility=>get_csv_by_table( mr_table->* ).
+    DATA(lv_xcsv) = z2ui5_tool_Cl_utility=>get_xstring_by_string( lv_csv ).
+    DATA(LV_base) = z2ui5_tool_cl_utility=>encode_x_base64( lv_xcsv ).
 
-    DATA(lv_row) = ``.
-    LOOP AT lt_components INTO DATA(lv_name) FROM 2.
-      lv_row = lv_row && lv_name-name && `;`.
-    ENDLOOP.
-    lv_row = lv_row && cl_abap_char_utilities=>cr_lf.
-
-
-    LOOP AT ms_view-t_tab REFERENCE INTO DATA(lr_row) FROM 2.
-
-      DATA(lv_index) = 2.
-      DO.
-        ASSIGN COMPONENT lv_index OF STRUCTURE lr_row->* TO FIELD-SYMBOL(<field>).
-        IF sy-subrc <> 0.
-          EXIT.
-        ENDIF.
-        lv_row = lv_row && <field>.
-        lv_index = lv_index + 1.
-        lv_row = lv_row && `;`.
-      ENDDO.
-
-      lv_row = lv_row && cl_abap_char_utilities=>cr_lf.
-    ENDLOOP.
-
-    DATA lv_bas64enc TYPE string.
-
-    lv_bas64enc = encode_base64( lv_row ).
-
-    i_view->zz_plain( `<html:iframe src="data:text/csv;base64,` && lv_bas64enc && `" hidden="hidden" />`).
+    i_view->zz_plain( `<html:iframe src="data:text/csv;base64,` && LV_base && `" hidden="hidden" />`).
 
     mv_check_download_csv = abap_false.
 
@@ -1015,25 +966,25 @@ CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
 
   METHOD z2ui5_set_search.
 
-    ms_view-t_tab = CORRESPONDING #( mt_table ).
-    IF ms_view-search_val IS NOT INITIAL.
-      LOOP AT ms_view-t_tab REFERENCE INTO DATA(lr_row).
-        DATA(lv_row) = ``.
-        DATA(lv_index) = 1.
-        DO.
-          ASSIGN COMPONENT lv_index OF STRUCTURE lr_row->* TO FIELD-SYMBOL(<field>).
-          IF sy-subrc <> 0.
-            EXIT.
-          ENDIF.
-          lv_row = lv_row && <field>.
-          lv_index = lv_index + 1.
-        ENDDO.
-
-        IF lv_row NS ms_view-search_val.
-          DELETE ms_view-t_tab.
-        ENDIF.
-      ENDLOOP.
-    ENDIF.
+*    ms_view-t_tab = CORRESPONDING #( mt_table ).
+*    IF ms_view-search_val IS NOT INITIAL.
+*      LOOP AT ms_view-t_tab REFERENCE INTO DATA(lr_row).
+*        DATA(lv_row) = ``.
+*        DATA(lv_index) = 1.
+*        DO.
+*          ASSIGN COMPONENT lv_index OF STRUCTURE lr_row->* TO FIELD-SYMBOL(<field>).
+*          IF sy-subrc <> 0.
+*            EXIT.
+*          ENDIF.
+*          lv_row = lv_row && <field>.
+*          lv_index = lv_index + 1.
+*        ENDDO.
+*
+*        IF lv_row NS ms_view-search_val.
+*          DELETE ms_view-t_tab.
+*        ENDIF.
+*      ENDLOOP.
+*    ENDIF.
 
   ENDMETHOD.
 
@@ -1047,9 +998,9 @@ CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
           DATA(ls_field1) = VALUE #( ms_layout-t_sort[ 1 ] OPTIONAL ).
           DATA(ls_field2) = VALUE #( ms_layout-t_sort[ 2 ] OPTIONAL ).
 
-          SORT ms_view-t_tab BY
-            (ls_field1-name) (ls_field1-type)
-            (ls_field2-name) (ls_field2-type).
+*          SORT ms_view-t_tab BY
+*            (ls_field1-name) (ls_field1-type)
+*            (ls_field2-name) (ls_field2-type).
 
         ENDIF.
       CATCH cx_root.

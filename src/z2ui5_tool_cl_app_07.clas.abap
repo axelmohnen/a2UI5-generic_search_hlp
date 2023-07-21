@@ -73,7 +73,7 @@ CLASS z2ui5_tool_cl_app_07 IMPLEMENTATION.
   METHOD ui5_on_init.
 
     ui5_view_init_display( ).
-    client->timer_set( event_finished = `START` interval_ms = `0` ).
+    client->timer_set( event_finished = client->_event( `START` ) interval_ms = `0` ).
 
   ENDMETHOD.
 

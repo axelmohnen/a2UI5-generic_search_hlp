@@ -3,14 +3,13 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>Z2UI5_TOOL_CL_APP_06</CLSNAME>
+    <CLSNAME>Z2UI5_TOOL_CL_APP_08</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>view app</DESCRIPT>
+    <DESCRIPT>view - editor</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>
     <UNICODE>X</UNICODE>
-    <WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>
    </VSEOCLASS>
   </asx:values>
  </asx:abap>

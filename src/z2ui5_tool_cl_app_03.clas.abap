@@ -886,7 +886,7 @@ CLASS Z2UI5_TOOL_CL_APP_03 IMPLEMENTATION.
     "todo: map filters to rangetab and make a nice select
 
 *    IF ms_layout-s_filter-uuid IS INITIAL.
-CREATE DATA mr_table TYPE STANDARD TABLE OF (mv_name) .
+CREATE DATA mr_table TYPE STANDARD TABLE OF (mv_name).
 
     SELECT FROM (mv_name)
         FIELDS *

@@ -66,24 +66,41 @@ CLASS z2ui5_tool_cl_view IMPLEMENTATION.
   METHOD display.
 
     DATA(lv_view) = db_read( name )-data.
-
-    SPLIT lv_view AT `{/oUpdate/` INTO TABLE DATA(lt_view).
-    DELETE lt_view INDEX 1.
-
     DATA(lo_app) = CAST object( client->get( )-s_draft-app ).
 
-    LOOP AT lt_view REFERENCE INTO DATA(lr_view).
 
-      SPLIT lr_view->* AT `}` INTO DATA(lv_attribute) DATA(lv_dummy).
+    "Two Way Binding with mark $$$
+    SPLIT lv_view AT `$$${` INTO TABLE DATA(lt_view).
+    DATA(result) = lt_view[ 1 ].
+    LOOP AT lt_view REFERENCE INTO DATA(lr_view) FROM 2.
+
+      SPLIT lr_view->* AT `}$$$` INTO DATA(lv_attribute) DATA(lv_rest).
 
       ASSIGN lo_app->(lv_attribute) TO FIELD-SYMBOL(<ref>).
       IF <ref> IS ASSIGNED.
         client->_bind_edit( <ref> ).
       ENDIF.
 
+      result = result && `{/` && client->get( )-s_config-view_model_edit_name  && `/` && lv_attribute && `}` && lv_rest.
     ENDLOOP.
 
-    client->view_display( lv_view ).
+
+    "One Way Binding with mark $$
+    SPLIT result AT `$${` INTO TABLE lt_view.
+    result = lt_view[ 1 ].
+    LOOP AT lt_view REFERENCE INTO lr_view FROM 2.
+
+      SPLIT lr_view->* AT `}$$` INTO lv_attribute lv_rest.
+
+      ASSIGN lo_app->(lv_attribute) TO <ref>.
+      IF <ref> IS ASSIGNED.
+        client->_bind( <ref> ).
+      ENDIF.
+
+      result = result && `{/` && lv_attribute && `}` && lv_rest.
+    ENDLOOP.
+
+    client->view_display( result ).
 
   ENDMETHOD.
 

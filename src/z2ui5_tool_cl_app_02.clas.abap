@@ -8,6 +8,14 @@ CLASS z2ui5_tool_cl_app_02 DEFINITION PUBLIC.
     DATA mt_cols TYPE string_table.
     DATA mv_name TYPE string.
 
+    TYPES:
+      BEGIN OF ty_S_range,
+        name    TYPE string,
+        value   TYPE string,
+        t_range TYPE RANGE OF string,
+      END OF ty_S_range.
+
+    DATA mt_range TYPE STANDARD TABLE OF ty_S_range.
   PROTECTED SECTION.
 
     DATA client TYPE REF TO z2ui5_if_client.
@@ -58,7 +66,7 @@ CLASS z2ui5_tool_cl_app_02 IMPLEMENTATION.
 
       WHEN 'BUTTON_TABLE'.
         FIELD-SYMBOLS <tab> TYPE STANDARD TABLE.
-        CREATE DATA mt_table TYPE STANDARD TABLE OF (mv_name) with DEFAULT KEY.
+        CREATE DATA mt_table TYPE STANDARD TABLE OF (mv_name) WITH DEFAULT KEY.
         ASSIGN mt_table->* TO <tab>.
         mt_cols = z2ui5_tool_cl_utility=>get_fieldlist_by_table( <tab> ).
 
@@ -123,17 +131,33 @@ CLASS z2ui5_tool_cl_app_02 IMPLEMENTATION.
                 press = client->_event( 'BUTTON_POST' )
             ).
 
+
     IF mt_table IS BOUND.
 
       FIELD-SYMBOLS <tab> TYPE STANDARD TABLE.
       ASSIGN mt_table->* TO <tab>.
+      mt_cols = z2ui5_tool_cl_utility=>get_fieldlist_by_table( <tab> ).
+
+      mt_range = VALUE #( FOR line IN mt_cols ( name = line ) ).
+
+      lo_view->get_parent( )->get_parent( )->list(
+        items = client->_bind( mt_range )
+        headertext      = `Filter`
+        )->custom_list_item(
+            )->hbox(
+                )->text( `{NAME}`
+                )->input( value = `{VALUE}` enabled = abap_false
+        ).
+
+
+
       DATA(tab) = lo_view->get_parent( )->get_parent( )->simple_form( editable = abap_true
                 )->content( 'form' )->table(
                   items = client->_bind( val = <tab> )
               ).
 
       DATA(lo_columns) = tab->columns( ).
-      mt_cols = z2ui5_tool_cl_utility=>get_fieldlist_by_table( <tab> ).
+
 
       LOOP AT mt_cols INTO DATA(lv_field) FROM 2.
         lo_columns->column( )->text( lv_field ).

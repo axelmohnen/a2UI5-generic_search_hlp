@@ -40,11 +40,11 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
 *        )->content( 'layout' ).
 
 *      hbox = box->hbox( ).
-*    <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Cumulative Totals" subheader="Expenses" press="onPress" >
+*    <generic_tile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Cumulative Totals" subheader="Expenses" press="onPress" >
 *        <TileContent unit="Unit" footer="Footer Text">
 *            <NumericContent value="1762" icon="sap-icon://line-charts" withMargin="false" />
 *        </TileContent>
-*    </GenericTile>
+*    </generic_tile>
 
     select from z2ui5_tool_t_001
     fields
@@ -53,7 +53,7 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
 
       data(lv_count) = value #( lt_tab[ 1 ]-number optional ).
 
-      page->generictile(
+      page->generic_tile(
 *      EXPORTING
          class     = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
          header    = `Upload`
@@ -67,7 +67,7 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
         )->NumericContent( value = conv #( lv_count ) icon = 'sap-icon://documents' withMargin = abap_false
       ).
 
-      page->generictile(
+      page->generic_tile(
 *      EXPORTING
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `File Editor`
@@ -76,7 +76,7 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
          )->imagecontent( src = 'sap-icon://edit'
       ).
 
-      page->generictile(
+      page->generic_tile(
 *      EXPORTING
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `Database Viewer`
@@ -85,7 +85,7 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
          )->imagecontent( src = 'sap-icon://detail-view'
       ).
 
-     page->generictile(
+     page->generic_tile(
 *      EXPORTING
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `CSV to Itab Editor`
@@ -94,7 +94,7 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
          )->imagecontent( src = 'sap-icon://table-view'
       ).
 
-     page->generictile(
+     page->generic_tile(
 *      EXPORTING
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `List Report Viewer`
@@ -108,7 +108,7 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
 *      hbox = box->hbox( ).
 *
 *
-*      hbox->generictile(
+*      hbox->generic_tile(
 **      EXPORTING
 *        class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
 *        header    = `csv -> itab`
@@ -119,7 +119,7 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
 **        result    =
 *).
 *
-*      hbox->generictile(
+*      hbox->generic_tile(
 **      EXPORTING
 *        class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
 *        header    = `db table -> csv`
@@ -134,7 +134,7 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
 *      hbox->title( text = `Maintenance` ).
 *      hbox = box->hbox( ).
 *
-*      hbox->generictile(
+*      hbox->generic_tile(
 **      EXPORTING
 *  class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
 *       header    = `tab`
@@ -145,7 +145,7 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
 **        result    =
 *  ).
 *
-*      hbox->generictile(
+*      hbox->generic_tile(
 **      EXPORTING
 *      class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
 *       header    = `tab edit`
@@ -160,7 +160,7 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
 *      hbox->title( text = `XML` ).
 *      hbox = box->hbox( ).
 *
-*      page->generictile(
+*      page->generic_tile(
 **      EXPORTING
 *  class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
 *   header    = `validator`

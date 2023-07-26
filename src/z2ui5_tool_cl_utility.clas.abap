@@ -188,7 +188,7 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
   METHOD get_table_by_csv.
 
-    SPLIT val AT cl_abap_char_utilities=>newline INTO TABLE DATA(lt_rows).
+   SPLIT val AT cl_abap_char_utilities=>newline INTO TABLE DATA(lt_rows).
     SPLIT lt_rows[ 1 ] AT ';' INTO TABLE DATA(lt_cols).
 
     DATA lt_comp TYPE cl_abap_structdescr=>component_table.
@@ -207,6 +207,8 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
           p_unique     = abap_false ).
 
     CREATE DATA result TYPE HANDLE o_table_desc.
+    FIELD-SYMBOLS <tab> TYPE STANDARD TABLE.
+    ASSIGN result->* TO <tab>.
 
     DELETE lt_rows WHERE table_line IS INITIAL.
 
@@ -217,12 +219,12 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
       CREATE DATA lr_row TYPE HANDLE struc.
 
       LOOP AT lt_cols REFERENCE INTO lr_col.
-        ASSIGN COMPONENT sy-tabix OF STRUCTURE lr_row->* TO FIELD-SYMBOL(<field>).
+        ASSIGN lr_row->* TO FIELD-SYMBOL(<row>).
+        ASSIGN COMPONENT sy-tabix OF STRUCTURE <row> TO FIELD-SYMBOL(<field>).
         <field> = lr_col->*.
       ENDLOOP.
-      FIELD-SYMBOLS <tab> TYPE STANDARD TABLE.
-      ASSIGN result->* TO <tab>.
-      INSERT lr_row->* INTO TABLE <tab>.
+
+      INSERT <row> INTO TABLE <tab>.
     ENDLOOP.
 
   ENDMETHOD.
@@ -296,7 +298,8 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
       DATA(lv_index) = 1.
       DO.
-        ASSIGN COMPONENT lv_index OF STRUCTURE lr_row->* TO FIELD-SYMBOL(<field>).
+        ASSIGN lr_row->* TO FIELD-SYMBOL(<row>).
+        ASSIGN COMPONENT lv_index OF STRUCTURE <row> TO FIELD-SYMBOL(<field>).
         IF sy-subrc <> 0.
           EXIT.
         ENDIF.

@@ -151,7 +151,8 @@ ENDCLASS.
 
 
 
-CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
+CLASS Z2UI5_TOOL_CL_APP_03 IMPLEMENTATION.
+
 
   METHOD init_table_output.
 
@@ -885,6 +886,7 @@ CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
     "todo: map filters to rangetab and make a nice select
 
 *    IF ms_layout-s_filter-uuid IS INITIAL.
+CREATE DATA mr_table TYPE STANDARD TABLE OF (mv_name).
 
     SELECT FROM (mv_name)
         FIELDS *
@@ -902,7 +904,7 @@ CLASS z2ui5_tool_cl_app_03 IMPLEMENTATION.
 *    ENDIF.
 
 *    ms_view-t_tab = CORRESPONDING #( mr_table->* ).
-
+init_table_output( ).
   ENDMETHOD.
 
 

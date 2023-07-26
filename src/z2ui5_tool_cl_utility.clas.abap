@@ -100,134 +100,7 @@ ENDCLASS.
 
 
 
-CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
-
-
-  METHOD get_uuid.
-    TRY.
-
-        DATA uuid TYPE c LENGTH 32.
-
-        TRY.
-            CALL METHOD (`CL_SYSTEM_UUID`)=>if_system_uuid_static~create_uuid_c32
-              RECEIVING
-                uuid = uuid.
-
-          CATCH cx_sy_dyn_call_illegal_class.
-
-            DATA(lv_fm) = `GUID_CREATE`.
-            CALL FUNCTION lv_fm
-              IMPORTING
-                ev_guid_32 = uuid.
-
-        ENDTRY.
-
-        result = uuid.
-
-      CATCH cx_root.
-        ASSERT 1 = 0.
-    ENDTRY.
-  ENDMETHOD.
-
-  METHOD get_table_by_json.
-
-*    DATA lt_tab TYPE ty_t_table.
-*
-
-    DATA lt_tab TYPE REF TO data.
-
-    /ui2/cl_json=>deserialize(
-      EXPORTING
-        json             = val
-*        jsonx            =
-*        pretty_name      =
-*        assoc_arrays     =
-*        assoc_arrays_opt =
-*        name_mappings    =
-*        conversion_exits =
-*        hex_as_base64    =
-      CHANGING
-        data             = lt_tab
-    ).
-
-    result = lt_tab.
-
-  ENDMETHOD.
-
-
-  METHOD trans_data_2_xml.
-
-   " FIELD-SYMBOLS <object> TYPE any.
-  "  ASSIGN object->* TO <object>.
-  "  raise( when = xsdbool( sy-subrc <> 0 ) ).
-
-    CALL TRANSFORMATION id
-       SOURCE data = data
-       RESULT XML result
-        OPTIONS data_refs = `heap-or-create`.
-
-  ENDMETHOD.
-
-  METHOD trans_xml_2_object.
-
-    CALL TRANSFORMATION id
-       SOURCE XML xml
-       RESULT data = data.
-
-  ENDMETHOD.
-
-  METHOD get_table_by_xml.
-
-*    DATA lt_tab TYPE ty_t_table.
-*
-    CALL TRANSFORMATION id SOURCE xml = val RESULT data = result.
-*
-*    result = lt_tab.
-
-  ENDMETHOD.
-
-  METHOD get_table_by_csv.
-
-   SPLIT val AT cl_abap_char_utilities=>newline INTO TABLE DATA(lt_rows).
-    SPLIT lt_rows[ 1 ] AT ';' INTO TABLE DATA(lt_cols).
-
-    DATA lt_comp TYPE cl_abap_structdescr=>component_table.
-    LOOP AT lt_cols REFERENCE INTO DATA(lr_col).
-
-      DATA(lv_name) =  trim_upper( lr_col->* ).
-      REPLACE ` ` IN lv_name WITH `_`.
-
-      INSERT VALUE #( name = lv_name type = cl_abap_elemdescr=>get_c( 40 ) ) INTO TABLE lt_comp.
-    ENDLOOP.
-
-    DATA(struc) = cl_abap_structdescr=>get( lt_comp ).
-    DATA(o_table_desc) = cl_abap_tabledescr=>create(
-          p_line_type  = CAST #( struc )
-          p_table_kind = cl_abap_tabledescr=>tablekind_std
-          p_unique     = abap_false ).
-
-    CREATE DATA result TYPE HANDLE o_table_desc.
-    FIELD-SYMBOLS <tab> TYPE STANDARD TABLE.
-    ASSIGN result->* TO <tab>.
-
-    DELETE lt_rows WHERE table_line IS INITIAL.
-
-    LOOP AT lt_rows REFERENCE INTO DATA(lr_rows) FROM 2.
-
-      SPLIT lr_rows->* AT ';' INTO TABLE lt_cols.
-      DATA lr_row TYPE REF TO data.
-      CREATE DATA lr_row TYPE HANDLE struc.
-
-      LOOP AT lt_cols REFERENCE INTO lr_col.
-        ASSIGN lr_row->* TO FIELD-SYMBOL(<row>).
-        ASSIGN COMPONENT sy-tabix OF STRUCTURE <row> TO FIELD-SYMBOL(<field>).
-        <field> = lr_col->*.
-      ENDLOOP.
-
-      INSERT <row> INTO TABLE <tab>.
-    ENDLOOP.
-
-  ENDMETHOD.
+CLASS Z2UI5_TOOL_CL_UTILITY IMPLEMENTATION.
 
 
   METHOD decode_x_base64.
@@ -277,6 +150,7 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD get_csv_by_table.
 
     FIELD-SYMBOLS <tab> TYPE table.
@@ -311,6 +185,21 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
   ENDMETHOD.
 
+
+  METHOD get_fieldlist_by_table.
+
+    DATA(lo_tab) = CAST cl_abap_tabledescr( cl_abap_datadescr=>describe_by_data( it_table ) ).
+    DATA(lo_struc) = CAST cl_abap_structdescr( lo_tab->get_table_line_type( ) ).
+
+    DATA(lt_comp) = lo_struc->get_components( ).
+
+    LOOP AT lt_comp INTO DATA(ls_comp).
+      INSERT ls_comp-name INTO TABLE result.
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
   METHOD get_json_by_table.
 
     result = /ui2/cl_json=>serialize(
@@ -333,24 +222,6 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD get_xml_by_table.
-
-    CALL TRANSFORMATION id SOURCE values = val RESULT XML result.
-
-  ENDMETHOD.
-
-  METHOD get_fieldlist_by_table.
-
-    DATA(lo_tab) = CAST cl_abap_tabledescr( cl_abap_datadescr=>describe_by_data( it_table ) ).
-    DATA(lo_struc) = CAST cl_abap_structdescr( lo_tab->get_table_line_type( ) ).
-
-    DATA(lt_comp) = lo_struc->get_components( ).
-
-    LOOP AT lt_comp INTO DATA(ls_comp).
-      INSERT ls_comp-name INTO TABLE result.
-    ENDLOOP.
-
-  ENDMETHOD.
 
   METHOD get_string_by_xstring.
 
@@ -383,6 +254,122 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
     ENDTRY.
 
   ENDMETHOD.
+
+
+  METHOD get_table_by_csv.
+
+   SPLIT val AT cl_abap_char_utilities=>newline INTO TABLE DATA(lt_rows).
+    SPLIT lt_rows[ 1 ] AT ';' INTO TABLE DATA(lt_cols).
+
+    DATA lt_comp TYPE cl_abap_structdescr=>component_table.
+    LOOP AT lt_cols REFERENCE INTO DATA(lr_col).
+
+      DATA(lv_name) =  trim_upper( lr_col->* ).
+      REPLACE ` ` IN lv_name WITH `_`.
+
+      INSERT VALUE #( name = lv_name type = cl_abap_elemdescr=>get_c( 40 ) ) INTO TABLE lt_comp.
+    ENDLOOP.
+
+    DATA(struc) = cl_abap_structdescr=>get( lt_comp ).
+    DATA(o_table_desc) = cl_abap_tabledescr=>create(
+          p_line_type  = CAST #( struc )
+          p_table_kind = cl_abap_tabledescr=>tablekind_std
+          p_unique     = abap_false ).
+
+    CREATE DATA result TYPE HANDLE o_table_desc.
+    FIELD-SYMBOLS <tab> TYPE STANDARD TABLE.
+    ASSIGN result->* TO <tab>.
+
+    DELETE lt_rows WHERE table_line IS INITIAL.
+
+    LOOP AT lt_rows REFERENCE INTO DATA(lr_rows) FROM 2.
+
+      SPLIT lr_rows->* AT ';' INTO TABLE lt_cols.
+      DATA lr_row TYPE REF TO data.
+      CREATE DATA lr_row TYPE HANDLE struc.
+
+      LOOP AT lt_cols REFERENCE INTO lr_col.
+        ASSIGN lr_row->* TO FIELD-SYMBOL(<row>).
+        ASSIGN COMPONENT sy-tabix OF STRUCTURE <row> TO FIELD-SYMBOL(<field>).
+        <field> = lr_col->*.
+      ENDLOOP.
+
+      INSERT <row> INTO TABLE <tab>.
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
+  METHOD get_table_by_json.
+
+*    DATA lt_tab TYPE ty_t_table.
+*
+
+    DATA lt_tab TYPE REF TO data.
+
+    /ui2/cl_json=>deserialize(
+      EXPORTING
+        json             = val
+*        jsonx            =
+*        pretty_name      =
+*        assoc_arrays     =
+*        assoc_arrays_opt =
+*        name_mappings    =
+*        conversion_exits =
+*        hex_as_base64    =
+      CHANGING
+        data             = lt_tab
+    ).
+
+    result = lt_tab.
+
+  ENDMETHOD.
+
+
+  METHOD get_table_by_xml.
+
+*    DATA lt_tab TYPE ty_t_table.
+*
+    CALL TRANSFORMATION id SOURCE xml = val RESULT data = result.
+*
+*    result = lt_tab.
+
+  ENDMETHOD.
+
+
+  METHOD get_uuid.
+    TRY.
+
+        DATA uuid TYPE c LENGTH 32.
+
+        TRY.
+            CALL METHOD (`CL_SYSTEM_UUID`)=>if_system_uuid_static~create_uuid_c32
+              RECEIVING
+                uuid = uuid.
+
+          CATCH cx_sy_dyn_call_illegal_class.
+
+            DATA(lv_fm) = `GUID_CREATE`.
+            CALL FUNCTION lv_fm
+              IMPORTING
+                ev_guid_32 = uuid.
+
+        ENDTRY.
+
+        result = uuid.
+
+      CATCH cx_root.
+        ASSERT 1 = 0.
+    ENDTRY.
+  ENDMETHOD.
+
+
+  METHOD get_xml_by_table.
+
+    CALL TRANSFORMATION id SOURCE values = val RESULT XML result.
+
+  ENDMETHOD.
+
 
   METHOD get_xstring_by_string.
 
@@ -421,8 +408,30 @@ CLASS z2ui5_tool_cl_utility IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD trans_data_2_xml.
+
+   " FIELD-SYMBOLS <object> TYPE any.
+  "  ASSIGN object->* TO <object>.
+  "  raise( when = xsdbool( sy-subrc <> 0 ) ).
+
+    CALL TRANSFORMATION id
+       SOURCE data = data
+       RESULT XML result
+        OPTIONS data_refs = `heap-or-create`.
+
+  ENDMETHOD.
+
+
+  METHOD trans_xml_2_object.
+
+    CALL TRANSFORMATION id
+       SOURCE XML xml
+       RESULT data = data.
+
+  ENDMETHOD.
+
+
   METHOD trim_upper.
     result = to_upper( shift_left( shift_right( val ) ) ).
   ENDMETHOD.
-
 ENDCLASS.

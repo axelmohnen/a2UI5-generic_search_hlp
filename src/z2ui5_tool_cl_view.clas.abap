@@ -53,15 +53,70 @@ ENDCLASS.
 
 
 
-CLASS z2ui5_tool_cl_view IMPLEMENTATION.
+CLASS Z2UI5_TOOL_CL_VIEW IMPLEMENTATION.
 
 
-  METHOD factory.
+  METHOD db_create.
 
-    r_result = NEW #( ).
-    r_result->client = client.
+*    val-id = z2ui5_tool_cl_utility=>get_uuid( ).
+*    val-file_size = strlen( val-data ).
+    val-name = to_upper( val-name ).
+    MODIFY z2ui5_tool_t_002 FROM @( val ).
+
+*    result = val-id.
 
   ENDMETHOD.
+
+
+  METHOD db_delete.
+
+    DELETE FROM z2ui5_tool_t_002 WHERE name = @name.
+
+  ENDMETHOD.
+
+
+  METHOD db_read.
+
+    DATA(lv_name) = to_upper( name ).
+
+    SELECT SINGLE FROM z2ui5_tool_t_002
+        FIELDS *
+       WHERE name = @lv_name
+     INTO CORRESPONDING FIELDS OF @result.
+
+  ENDMETHOD.
+
+
+  METHOD db_read_all.
+
+    SELECT FROM z2ui5_tool_t_002
+    FIELDS name
+    INTO CORRESPONDING FIELDS OF TABLE @result.
+
+  ENDMETHOD.
+
+
+  METHOD db_update_data.
+
+    UPDATE z2ui5_tool_t_002
+      SET
+         data = @val-data
+      WHERE name = @val-name.
+
+  ENDMETHOD.
+
+
+  METHOD db_update_metadata.
+
+    UPDATE z2ui5_tool_t_002
+      SET
+         name = @val-name,
+*        file_format = @val-file_format,
+        descr = @val-descr
+      WHERE name = @val-name.
+
+  ENDMETHOD.
+
 
   METHOD display.
 
@@ -104,60 +159,11 @@ CLASS z2ui5_tool_cl_view IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD db_create.
 
-*    val-id = z2ui5_tool_cl_utility=>get_uuid( ).
-*    val-file_size = strlen( val-data ).
-    val-name = to_upper( val-name ).
-    MODIFY z2ui5_tool_t_002 FROM @( val ).
+  METHOD factory.
 
-*    result = val-id.
+    r_result = NEW #( ).
+    r_result->client = client.
 
   ENDMETHOD.
-
-  METHOD db_read.
-
-    DATA(lv_name) = to_upper( name ).
-
-    SELECT SINGLE FROM z2ui5_tool_t_002
-        FIELDS *
-       WHERE name = @lv_name
-     INTO CORRESPONDING FIELDS OF @result.
-
-  ENDMETHOD.
-
-  METHOD db_read_all.
-
-    SELECT FROM z2ui5_tool_t_002
-    FIELDS name
-    INTO CORRESPONDING FIELDS OF TABLE @result.
-
-  ENDMETHOD.
-
-  METHOD db_delete.
-
-    DELETE FROM z2ui5_tool_t_002 WHERE name = @name.
-
-  ENDMETHOD.
-
-  METHOD db_update_data.
-
-    UPDATE z2ui5_tool_t_002
-      SET
-         data = @val-data
-      WHERE name = @val-name.
-
-  ENDMETHOD.
-
-  METHOD db_update_metadata.
-
-    UPDATE z2ui5_tool_t_002
-      SET
-         name = @val-name,
-*        file_format = @val-file_format,
-        descr = @val-descr
-      WHERE name = @val-name.
-
-  ENDMETHOD.
-
 ENDCLASS.

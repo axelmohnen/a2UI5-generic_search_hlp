@@ -27,7 +27,7 @@ ENDCLASS.
 
 
 
-CLASS z2ui5_tool_cl_app_07 IMPLEMENTATION.
+CLASS Z2UI5_TOOL_CL_APP_07 IMPLEMENTATION.
 
 
   METHOD ui5_on_event.
@@ -76,6 +76,7 @@ CLASS z2ui5_tool_cl_app_07 IMPLEMENTATION.
     client->timer_set( event_finished = client->_event( `START` ) interval_ms = `0` ).
 
   ENDMETHOD.
+
 
   METHOD ui5_view_init_display.
 
@@ -174,6 +175,4 @@ CLASS z2ui5_tool_cl_app_07 IMPLEMENTATION.
     ui5_on_event( ).
 
   ENDMETHOD.
-
-
 ENDCLASS.

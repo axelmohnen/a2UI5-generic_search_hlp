@@ -46,7 +46,26 @@ ENDCLASS.
 
 
 
-CLASS z2ui5_tool_cl_file_api IMPLEMENTATION.
+CLASS Z2UI5_TOOL_CL_FILE_API IMPLEMENTATION.
+
+
+  METHOD create.
+
+    val-id = z2ui5_tool_cl_utility=>get_uuid( ).
+    val-file_size = strlen( val-data ).
+    MODIFY z2ui5_tool_t_001 FROM @( val ).
+
+    result = val-id.
+
+  ENDMETHOD.
+
+
+  METHOD delete.
+
+    DELETE FROM z2ui5_tool_t_001 WHERE id = @id.
+
+  ENDMETHOD.
+
 
   METHOD get_editor_type.
 
@@ -64,16 +83,6 @@ CLASS z2ui5_tool_cl_file_api IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD create.
-
-    val-id = z2ui5_tool_cl_utility=>get_uuid( ).
-    val-file_size = strlen( val-data ).
-    MODIFY z2ui5_tool_t_001 FROM @( val ).
-
-    result = val-id.
-
-  ENDMETHOD.
-
   METHOD read.
 
     SELECT SINGLE FROM z2ui5_tool_t_001
@@ -83,6 +92,7 @@ CLASS z2ui5_tool_cl_file_api IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD read_all.
 
     SELECT FROM z2ui5_tool_t_001
@@ -91,11 +101,6 @@ CLASS z2ui5_tool_cl_file_api IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD delete.
-
-    DELETE FROM z2ui5_tool_t_001 WHERE id = @id.
-
-  ENDMETHOD.
 
   METHOD update_data.
 
@@ -105,6 +110,7 @@ CLASS z2ui5_tool_cl_file_api IMPLEMENTATION.
       WHERE id = @val-id.
 
   ENDMETHOD.
+
 
   METHOD update_metadata.
 
@@ -116,5 +122,4 @@ CLASS z2ui5_tool_cl_file_api IMPLEMENTATION.
       WHERE id = @val-id.
 
   ENDMETHOD.
-
 ENDCLASS.

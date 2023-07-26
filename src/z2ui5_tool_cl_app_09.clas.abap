@@ -405,7 +405,8 @@ CLASS z2ui5_tool_cl_app_09 DEFINITION
 ENDCLASS.
 
 
-CLASS z2ui5_tool_cl_app_09 IMPLEMENTATION.
+
+CLASS Z2UI5_TOOL_CL_APP_09 IMPLEMENTATION.
 
 
   METHOD add_font.
@@ -2531,6 +2532,7 @@ CLASS z2ui5_tool_cl_app_09 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD z2ui5_if_app~main.
 
     DATA: lo_pdf               TYPE REF TO z2ui5_tool_cl_app_09.
@@ -2574,5 +2576,4 @@ CLASS z2ui5_tool_cl_app_09 IMPLEMENTATION.
 
 
   ENDMETHOD.
-
 ENDCLASS.

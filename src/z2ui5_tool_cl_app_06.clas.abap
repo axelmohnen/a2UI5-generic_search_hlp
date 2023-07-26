@@ -18,7 +18,8 @@ ENDCLASS.
 
 
 
-CLASS z2ui5_tool_cl_app_06 IMPLEMENTATION.
+CLASS Z2UI5_TOOL_CL_APP_06 IMPLEMENTATION.
+
 
   METHOD z2ui5_if_app~main.
 
@@ -33,5 +34,4 @@ CLASS z2ui5_tool_cl_app_06 IMPLEMENTATION.
     z2ui5_tool_cl_view=>factory( client )->display( 'TEST_VIEW' ).
 
   ENDMETHOD.
-
 ENDCLASS.

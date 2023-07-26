@@ -20,13 +20,16 @@ CLASS z2ui5_tool_cl_app_08 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-CLASS z2ui5_tool_cl_app_08 IMPLEMENTATION.
+
+CLASS Z2UI5_TOOL_CL_APP_08 IMPLEMENTATION.
+
 
   METHOD db_load.
 
     ms_view = z2ui5_tool_cl_view=>db_read( ms_view-name ).
 
   ENDMETHOD.
+
 
   METHOD z2ui5_if_app~main.
 

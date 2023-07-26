@@ -16,7 +16,8 @@ ENDCLASS.
 
 
 
-CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
+CLASS Z2UI5_TOOL_CL_APP_00 IMPLEMENTATION.
+
 
   METHOD z2ui5_if_app~main.
 
@@ -62,9 +63,9 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
 *         subheader = ` from your Client`
 *      RECEIVING
 *        result    =
-      )->get( )->TileContent(
+      )->get( )->Tile_Content(
         footer = `Files in the System`
-        )->NumericContent( value = conv #( lv_count ) icon = 'sap-icon://documents' withMargin = abap_false
+        )->Numeric_Content( value = conv #( lv_count ) icon = 'sap-icon://documents' withMargin = abap_false
       ).
 
       page->generic_tile(
@@ -72,8 +73,8 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `File Editor`
          press     = client->_event( `z2ui5_tool_cl_app_01` )
-      )->get( )->TileContent(
-         )->imagecontent( src = 'sap-icon://edit'
+      )->get( )->Tile_Content(
+         )->image_content( src = 'sap-icon://edit'
       ).
 
       page->generic_tile(
@@ -81,8 +82,8 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `Database Viewer`
          press     = client->_event( `z2ui5_tool_cl_app_02` )
-      )->get( )->TileContent(
-         )->imagecontent( src = 'sap-icon://detail-view'
+      )->get( )->Tile_Content(
+         )->image_content( src = 'sap-icon://detail-view'
       ).
 
      page->generic_tile(
@@ -90,8 +91,8 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `CSV to Itab Editor`
          press     = client->_event( `z2ui5_tool_cl_app_07` )
-      )->get( )->TileContent(
-         )->imagecontent( src = 'sap-icon://table-view'
+      )->get( )->Tile_Content(
+         )->image_content( src = 'sap-icon://table-view'
       ).
 
      page->generic_tile(
@@ -99,8 +100,8 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `List Report Viewer`
          press     = client->_event( `z2ui5_tool_cl_app_03` )
-      )->get( )->TileContent(
-         )->imagecontent( src = 'sap-icon://my-view'
+      )->get( )->Tile_Content(
+         )->image_content( src = 'sap-icon://my-view'
       ).
 
 *      hbox = box->hbox( ).
@@ -176,10 +177,10 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
     ENDIF.
 
 
-    mv_value = z2ui5_cl_xml_view=>factory( client )->hlp_get_url_param( `q` ).
-    mv_value = mv_value && mv_value.
+*    mv_value = z2ui5_cl_xml_view=>factory( client )->hlp_get_url_param( `q` ).
+*    mv_value = mv_value && mv_value.
 
-    z2ui5_cl_xml_view=>factory( client )->hlp_set_url_param( n = `q` v = mv_value ).
+*    z2ui5_cl_xml_view=>factory( client )->hlp_set_url_param( n = `q` v = mv_value ).
 
     IF client->get( )-event IS INITIAL.
       RETURN.
@@ -201,5 +202,4 @@ CLASS z2ui5_tool_cl_app_00 IMPLEMENTATION.
 
 
   ENDMETHOD.
-
 ENDCLASS.

@@ -53,7 +53,24 @@ ENDCLASS.
 
 
 
-CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
+CLASS Z2UI5_TOOL_CL_APP_05 IMPLEMENTATION.
+
+
+  METHOD ui5_delete.
+
+    z2ui5_tool_cl_file_api=>delete( ms_file-id ).
+    COMMIT WORK AND WAIT.
+    ui5_load( ).
+    client->message_box_display( type = `success` text = `File deleted successfully` ).
+
+  ENDMETHOD.
+
+
+  METHOD ui5_load.
+
+    mt_out = CORRESPONDING #( z2ui5_tool_cl_file_api=>read_all( ) ).
+
+  ENDMETHOD.
 
 
   METHOD ui5_on_event.
@@ -322,21 +339,4 @@ CLASS z2ui5_tool_cl_app_05 IMPLEMENTATION.
     ui5_on_event( ).
 
   ENDMETHOD.
-
-  METHOD ui5_load.
-
-    mt_out = CORRESPONDING #( z2ui5_tool_cl_file_api=>read_all( ) ).
-
-  ENDMETHOD.
-
-
-  METHOD ui5_delete.
-
-    z2ui5_tool_cl_file_api=>delete( ms_file-id ).
-    COMMIT WORK AND WAIT.
-    ui5_load( ).
-    client->message_box_display( type = `success` text = `File deleted successfully` ).
-
-  ENDMETHOD.
-
 ENDCLASS.

@@ -22,7 +22,7 @@
       "7bit_ascii":false,
       "abapdoc":false,
       "align_parameters":false,
-      "allowed_object_naming":true,
+      "allowed_object_naming":false,
       "allowed_object_types":true,
       "ambiguous_statement":true,
       "avoid_use":true,
@@ -43,7 +43,7 @@
          ]
       },
       "check_abstract":true,
-      "check_comments":true,
+      "check_comments":false,
       "check_ddic":true,
       "check_include":true,
       "check_subrc":false,

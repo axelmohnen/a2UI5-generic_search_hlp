@@ -47,12 +47,12 @@ CLASS Z2UI5_TOOL_CL_APP_00 IMPLEMENTATION.
 *        </TileContent>
 *    </generic_tile>
 
-    select from z2ui5_tool_t_001
-    fields
-        count( id ) as number
-      into table @data(lt_tab).
+*    select from z2ui5_tool_t_001
+*    fields
+*        count( id ) as number
+*      into table @data(lt_tab).
 
-      data(lv_count) = value #( lt_tab[ 1 ]-number optional ).
+      data(lv_count) = 1. "value #( lt_tab[ 1 ]-number optional ).
 
       page->generic_tile(
 *      EXPORTING

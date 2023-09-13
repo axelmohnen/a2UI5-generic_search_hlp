@@ -107,7 +107,16 @@ CLASS Z2UI5_CL_TOOL_APP_00 IMPLEMENTATION.
            page->generic_tile(
 *      EXPORTING
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-        header    = `Generic Search Help Demo`
+        header    = `Generic Search Help Demo I`
+         press     = client->_event( `z2ui5_cl_tool_app_10` )
+      )->get( )->Tile_Content(
+*         )->image_content( src = 'sap-icon://my-view'
+      ).
+
+           page->generic_tile(
+*      EXPORTING
+        class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
+        header    = `Generic Search Help Demo II`
          press     = client->_event( `z2ui5_cl_tool_app_09` )
       )->get( )->Tile_Content(
 *         )->image_content( src = 'sap-icon://my-view'

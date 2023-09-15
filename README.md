@@ -1,16 +1,22 @@
 # abap2UI5 - Tools & Utility Functions
-The larger apps from demo repository are collected here and can be adjusted to cater to a broader range of use cases. <br>
+This is a collection of apps that support the everyday work of ABAP developers. Additionally, yu can find some utility functions to enhance the development process with abap2UI5.
 
-Apps:
+_If you encounter any problems or have questions, feel free to open an issue. Pull requests are welcome!_
+
+#### Apps
 * File Upload
 * File Editor
 * Database Viewer
 * List Report Viewer
 
-<br>
-🚧 This repository is under construction, issues and PRs are welcome 🚧 <br>
-<br>
+#### Utility Functions
+* Generic Search Help
 
+
+
+
+### Demos
+<br>
 <img width="700" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/300b161c-b8c7-43f2-afa2-a528bc3d77cf">
 <br>
 <img width="700" alt="image" src="https://github.com/abap2UI5/app-tools/assets/102328295/fe9df57f-1df3-4830-8a9b-2cef56ea9474">

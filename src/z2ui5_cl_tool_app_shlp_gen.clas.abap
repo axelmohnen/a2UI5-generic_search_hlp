@@ -270,6 +270,134 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD CREATE_DATA_REF.
+* -------------------------------------------------------------------------------------------------
+* Heap References and Stack References issue!
+* Internal tables are dynamic data objects and have a special role because they have their own
+* memory management. They allocate and release memory regardless of the statement CREATE and
+* Garbage Collector. This means that heap references to rows in internal tables can become invalid.
+* Therfore I had to create fix amount of reference variables (placeholders),
+* instead of ITAB with references.
+* -------------------------------------------------------------------------------------------------
+    CASE iv_index.
+      WHEN 1.
+* ---------- Create Dynamic structure and table ---------------------------------------------------
+        CREATE DATA me->mr_shlp_fields_1 TYPE HANDLE ir_struc_type.
+        CREATE DATA me->mr_shlp_result_1 TYPE HANDLE ir_table_type.
+
+      WHEN 2.
+* ---------- Create Dynamic structure and table ---------------------------------------------------
+        CREATE DATA me->mr_shlp_fields_2 TYPE HANDLE ir_struc_type.
+        CREATE DATA me->mr_shlp_result_2 TYPE HANDLE ir_table_type.
+      WHEN 3.
+* ---------- Create Dynamic structure and table ---------------------------------------------------
+        CREATE DATA me->mr_shlp_fields_3 TYPE HANDLE ir_struc_type.
+        CREATE DATA me->mr_shlp_result_3 TYPE HANDLE ir_table_type.
+
+      WHEN 4.
+* ---------- Create Dynamic structure and table ---------------------------------------------------
+        CREATE DATA me->mr_shlp_fields_4 TYPE HANDLE ir_struc_type.
+        CREATE DATA me->mr_shlp_result_4 TYPE HANDLE ir_table_type.
+
+      WHEN 5.
+* ---------- Create Dynamic structure and table ---------------------------------------------------
+        CREATE DATA me->mr_shlp_fields_5 TYPE HANDLE ir_struc_type.
+        CREATE DATA me->mr_shlp_result_5 TYPE HANDLE ir_table_type.
+
+      WHEN 6.
+* ---------- Create Dynamic structure and table ---------------------------------------------------
+        CREATE DATA me->mr_shlp_fields_6 TYPE HANDLE ir_struc_type.
+        CREATE DATA me->mr_shlp_result_6 TYPE HANDLE ir_table_type.
+
+      WHEN 7.
+* ---------- Create Dynamic structure and table ---------------------------------------------------
+        CREATE DATA me->mr_shlp_fields_7 TYPE HANDLE ir_struc_type.
+        CREATE DATA me->mr_shlp_result_7 TYPE HANDLE ir_table_type.
+
+      WHEN 8.
+* ---------- Create Dynamic structure and table ---------------------------------------------------
+        CREATE DATA me->mr_shlp_fields_8 TYPE HANDLE ir_struc_type.
+        CREATE DATA me->mr_shlp_result_8 TYPE HANDLE ir_table_type.
+
+      WHEN 9.
+* ---------- Create Dynamic structure and table ---------------------------------------------------
+        CREATE DATA me->mr_shlp_fields_9 TYPE HANDLE ir_struc_type.
+        CREATE DATA me->mr_shlp_result_9 TYPE HANDLE ir_table_type.
+
+      WHEN 10.
+* ---------- Create Dynamic structure and table ---------------------------------------------------
+        CREATE DATA me->mr_shlp_fields_10 TYPE HANDLE ir_struc_type.
+        CREATE DATA me->mr_shlp_result_10 TYPE HANDLE ir_table_type.
+    ENDCASE.
+  ENDMETHOD.
+
+
+  METHOD delete_token.
+*----------------------------------------------------------------------*
+* LOCAL DATA DEFINITION
+*----------------------------------------------------------------------*
+    FIELD-SYMBOLS: <ls_filter>      TYPE ts_filter_pop,
+                   <ls_field_token> TYPE ts_token,
+                   <lv_field>       TYPE any.
+
+    LOOP AT ct_token ASSIGNING <ls_field_token>.
+* ---------- Init loop data -----------------------------------------------------------------------
+      UNASSIGN: <lv_field>.
+
+* ---------- Get token key assignment -------------------------------------------------------------
+      ASSIGN COMPONENT 'KEY' OF STRUCTURE <ls_field_token> TO <lv_field>.
+      IF <lv_field> IS NOT ASSIGNED.
+        CONTINUE.
+      ENDIF.
+
+* ---------- Check token key to be deleted --------------------------------------------------------
+      IF <lv_field> <> IV_TOKEN_KEY.
+        CONTINUE.
+      ENDIF.
+
+* ---------- Delete token -------------------------------------------------------------------------
+      DELETE TABLE ct_token FROM <ls_field_token>.
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
+  METHOD expand_searchhelp.
+*----------------------------------------------------------------------*
+* LOCAL DATA DEFINITION
+*----------------------------------------------------------------------*
+    DATA: ls_shlp TYPE  shlp_descr.
+
+* ---------- Get searchhelp description for given ID ----------------------------------------------
+    CALL FUNCTION 'F4IF_GET_SHLP_DESCR'
+      EXPORTING
+        shlpname = iv_shlp_id
+      IMPORTING
+        shlp     = ls_shlp.
+
+    IF ls_shlp IS INITIAL.
+      RETURN.
+    ENDIF.
+
+* ---------- Get all elementary shlps for given collective shlp -----------------------------------
+    CALL FUNCTION 'F4IF_EXPAND_SEARCHHELP'
+      EXPORTING
+        shlp_top = ls_shlp
+      IMPORTING
+        shlp_tab = et_shlp_descr.
+
+* ---------- Apply blacklist (Remove unwanted searchhelp from the list) ---------------------------
+    LOOP AT it_shlp_blacklist ASSIGNING FIELD-SYMBOL(<ls_shlp_blacklist>).
+      DELETE et_shlp_descr WHERE shlpname = <ls_shlp_blacklist>-shlp_id.
+    ENDLOOP.
+
+* ---------- Set default searchhelp ---------------------------------------------------------------
+    IF line_exists( et_shlp_descr[ 1 ] ).
+      ev_shlp_selkey = et_shlp_descr[ 1 ]-shlpname.
+    ENDIF.
+  ENDMETHOD.
+
+
   METHOD factory.
 * ---------- Create new DDIC searchhelp instance --------------------------------------------------
     result = NEW #( ).
@@ -307,6 +435,98 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD FILL_FILTER.
+*----------------------------------------------------------------------*
+* LOCAL DATA DEFINITION
+*----------------------------------------------------------------------*
+    DATA: ls_range TYPE ts_range.
+
+    FIELD-SYMBOLS: <ls_filter>      TYPE ts_filter_pop,
+                   <ls_field_token> TYPE ts_token,
+                   <lv_field>       TYPE any.
+
+* ---------- Init ---------------------------------------------------------------------------------
+    CLEAR: ct_filter.
+
+* ---------- Fill filter --------------------------------------------------------------------------
+    IF it_token IS NOT INITIAL.
+      LOOP AT it_token ASSIGNING <ls_field_token>.
+* ---------- Init loop data -----------------------------------------------------------------------
+        CLEAR: ls_range.
+        UNASSIGN: <lv_field>.
+
+* ---------- Get key value from token -------------------------------------------------------------
+        ASSIGN COMPONENT 'KEY' OF STRUCTURE <ls_field_token> TO <lv_field>.
+        IF <lv_field> IS NOT ASSIGNED.
+          CONTINUE.
+        ENDIF.
+
+* ---------- Convert token into range format ------------------------------------------------------
+        ls_range = me->get_shlp_range_by_value( iv_value = <lv_field> ).
+        IF ls_range IS INITIAL.
+          CONTINUE.
+        ENDIF.
+
+* ---------- Build new filter record --------------------------------------------------------------
+        APPEND INITIAL LINE TO me->mt_filter ASSIGNING <ls_filter>.
+        <ls_filter>-key     = me->get_shlp_uuid( ).
+        <ls_filter>-option  = ls_range-option.
+        <ls_filter>-low     = ls_range-low.
+        <ls_filter>-high    = ls_range-high.
+
+      ENDLOOP.
+    ENDIF.
+  ENDMETHOD.
+
+
+  METHOD FILL_TOKEN.
+*----------------------------------------------------------------------*
+* LOCAL DATA DEFINITION
+*----------------------------------------------------------------------*
+    FIELD-SYMBOLS: <ls_filter>      TYPE ts_filter_pop,
+                   <ls_field_token> TYPE ts_token,
+                   <lv_field>       TYPE any.
+
+* ---------- Fill token ---------------------------------------------------------------------------
+    LOOP AT it_filter REFERENCE INTO DATA(lr_filter).
+      DATA(lv_value) = me->mt_mapping[ key = lr_filter->option ]-value.
+      REPLACE `{LOW}`  IN lv_value WITH lr_filter->low.
+      REPLACE `{HIGH}` IN lv_value WITH lr_filter->high.
+
+      APPEND INITIAL LINE TO ct_token ASSIGNING <ls_field_token>.
+
+      UNASSIGN: <lv_field>.
+      ASSIGN COMPONENT 'KEY' OF STRUCTURE <ls_field_token> TO <lv_field>.
+      IF <lv_field> IS NOT ASSIGNED.
+        CONTINUE.
+      ENDIF.
+      <lv_field> = lv_value.
+
+      UNASSIGN: <lv_field>.
+      ASSIGN COMPONENT 'TEXT' OF STRUCTURE <ls_field_token> TO <lv_field>.
+      IF <lv_field> IS NOT ASSIGNED.
+        CONTINUE.
+      ENDIF.
+      <lv_field> = lv_value.
+
+      UNASSIGN: <lv_field>.
+      ASSIGN COMPONENT 'VISIBLE' OF STRUCTURE <ls_field_token> TO <lv_field>.
+      IF <lv_field> IS NOT ASSIGNED.
+        CONTINUE.
+      ENDIF.
+      <lv_field> = abap_true.
+
+      UNASSIGN: <lv_field>.
+      ASSIGN COMPONENT 'EDITABLE' OF STRUCTURE <ls_field_token> TO <lv_field>.
+      IF <lv_field> IS NOT ASSIGNED.
+        CONTINUE.
+      ENDIF.
+      <lv_field> = abap_true.
+
+    ENDLOOP.
+  ENDMETHOD.
+
+
   METHOD GENERATE_DDIC_SHLP.
 *----------------------------------------------------------------------*
 * LOCAL DATA DEFINITION
@@ -328,9 +548,12 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
                    <lv_field_input>   TYPE any.
 
 * ---------- Get searchhelp data references -------------------------------------------------------
-    me->get_data_ref( EXPORTING iv_shlp_id       = iv_shlp_id
-                      IMPORTING er_shlp_fields = DATA(lr_shlp_fields)
-                                er_shlp_result = DATA(lr_shlp_result) ).
+    DATA: lr_shlp_fields TYPE REF TO data,
+          lr_shlp_result TYPE REF TO data.
+
+    me->get_data_ref( EXPORTING iv_shlp_id     = iv_shlp_id
+                      IMPORTING er_shlp_fields = lr_shlp_fields
+                                er_shlp_result = lr_shlp_result ).
 
     ASSIGN lr_shlp_fields->* TO <ls_shlp_fields>.
     ASSIGN lr_shlp_result->* TO <lt_result_itab>.
@@ -565,9 +788,11 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
         shlp     = ls_shlp.
 
 * ---------- Get field description for given searchhelp field -------------------------------------
-    SELECT SINGLE * FROM @ls_shlp-fielddescr AS fielddescr ##ITAB_KEY_IN_SELECT
-                    WHERE fieldname = @iv_fieldname
-                    INTO @ls_fielddescr.
+*    SELECT SINGLE * FROM @ls_shlp-fielddescr AS fielddescr ##ITAB_KEY_IN_SELECT
+*                    WHERE fieldname = @iv_fieldname
+*                    INTO @ls_fielddescr.
+
+    READ TABLE ls_shlp-fielddescr INTO ls_fielddescr WITH KEY fieldname = iv_fieldname.
 
     IF sy-subrc <> 0.
       RETURN.
@@ -634,6 +859,81 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 
 * ---------- Display popup window -----------------------------------------------------------------
     ir_client->popup_display( lr_popup->stringify( ) ).
+  ENDMETHOD.
+
+
+  METHOD GET_DATA_REF.
+*----------------------------------------------------------------------*
+* LOCAL DATA DEFINITION
+*----------------------------------------------------------------------*
+    DATA: lv_index TYPE i.
+
+* ---------- Check import parameter ---------------------------------------------------------------
+    IF iv_index IS NOT INITIAL.
+* ---------- Set index to local variable ----------------------------------------------------------
+      lv_index = iv_index.
+    ELSEIF iv_shlp_id IS NOT INITIAL.
+* ---------- Get searchhelp index from shlp id ----------------------------------------------------
+      lv_index = line_index( me->mt_shlp_descr[ shlpname = iv_shlp_id ] ).
+    ELSE.
+      RETURN.
+    ENDIF.
+
+* -------------------------------------------------------------------------------------------------
+* Heap References and Stack References issue!
+* Internal tables are dynamic data objects and have a special role because they have their own
+* memory management. They allocate and release memory regardless of the statement CREATE and
+* Garbage Collector. This means that heap references to rows in internal tables can become invalid.
+* Therfore I had to create fix amount of reference variables (placeholders),
+* instead of ITAB with references.
+* -------------------------------------------------------------------------------------------------
+    CASE lv_index.
+      WHEN 1.
+        er_shlp_fields = me->mr_shlp_fields_1 .
+        er_shlp_result = me->mr_shlp_result_1 .
+
+      WHEN 2.
+        er_shlp_fields = me->mr_shlp_fields_2 .
+        er_shlp_result = me->mr_shlp_result_2 .
+
+      WHEN 3.
+        er_shlp_fields = me->mr_shlp_fields_3 .
+        er_shlp_result = me->mr_shlp_result_3 .
+
+      WHEN 4.
+        er_shlp_fields = me->mr_shlp_fields_4 .
+        er_shlp_result = me->mr_shlp_result_4 .
+
+      WHEN 5.
+        er_shlp_fields = me->mr_shlp_fields_5 .
+        er_shlp_result = me->mr_shlp_result_5 .
+
+      WHEN 6.
+        er_shlp_fields = me->mr_shlp_fields_6 .
+        er_shlp_result = me->mr_shlp_result_6 .
+
+      WHEN 7.
+        er_shlp_fields = me->mr_shlp_fields_7 .
+        er_shlp_result = me->mr_shlp_result_7 .
+
+      WHEN 8.
+        er_shlp_fields = me->mr_shlp_fields_8 .
+        er_shlp_result = me->mr_shlp_result_8 .
+
+      WHEN 9.
+        er_shlp_fields = me->mr_shlp_fields_9 .
+        er_shlp_result = me->mr_shlp_result_9 .
+
+      WHEN 10.
+        er_shlp_fields = me->mr_shlp_fields_10 .
+        er_shlp_result = me->mr_shlp_result_10 .
+
+    ENDCASE.
+  ENDMETHOD.
+
+
+  METHOD GET_INPUT_FIELDNAME.
+    rv_input_fieldname = |{ iv_fieldname }_INPUT|.
   ENDMETHOD.
 
 
@@ -731,6 +1031,44 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   endmethod.
 
 
+  METHOD INIT_DATA_REF.
+* -------------------------------------------------------------------------------------------------
+* Heap References and Stack References issue!
+* Internal tables are dynamic data objects and have a special role because they have their own
+* memory management. They allocate and release memory regardless of the statement CREATE and
+* Garbage Collector. This means that heap references to rows in internal tables can become invalid.
+* Therfore I had to create fix amount of reference variables (placeholders),
+* instead of ITAB with references.
+* -------------------------------------------------------------------------------------------------
+
+* ---------- Init searchhelp field references -----------------------------------------------------
+    CLEAR:
+    mr_shlp_fields_1,
+    mr_shlp_fields_2,
+    mr_shlp_fields_3,
+    mr_shlp_fields_4,
+    mr_shlp_fields_5,
+    mr_shlp_fields_6,
+    mr_shlp_fields_7,
+    mr_shlp_fields_8,
+    mr_shlp_fields_9,
+    mr_shlp_fields_10.
+
+* ---------- Init searchhelp result references ----------------------------------------------------
+    CLEAR:
+    mr_shlp_result_1,
+    mr_shlp_result_2,
+    mr_shlp_result_3,
+    mr_shlp_result_4,
+    mr_shlp_result_5,
+    mr_shlp_result_6,
+    mr_shlp_result_7,
+    mr_shlp_result_8,
+    mr_shlp_result_9,
+    mr_shlp_result_10.
+  ENDMETHOD.
+
+
   METHOD on_event.
 *----------------------------------------------------------------------*
 * LOCAL DATA DEFINITION
@@ -752,9 +1090,12 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 * ----------- Get searchhelp record for requested searchhelp id -----------------------------------
     IF me->ms_screen-shlp_selkey IS NOT INITIAL.
 * ---------- Get searchhelp data references -------------------------------------------------------
-      me->get_data_ref( EXPORTING iv_shlp_id       = me->ms_screen-shlp_selkey
-                        IMPORTING er_shlp_fields = DATA(lr_shlp_fields)
-                                  er_shlp_result = DATA(lr_shlp_result) ).
+      DATA: lr_shlp_fields TYPE REF TO data,
+            lr_shlp_result TYPE REF TO data.
+
+      me->get_data_ref( EXPORTING iv_shlp_id     = me->ms_screen-shlp_selkey
+                        IMPORTING er_shlp_fields = lr_shlp_fields
+                                  er_shlp_result = lr_shlp_result ).
 
       ASSIGN lr_shlp_fields->* TO <ls_shlp_fields>.
       ASSIGN lr_shlp_result->* TO <ls_shlp_result>.
@@ -1047,9 +1388,12 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
                    <lt_result_itab>   TYPE STANDARD TABLE.
 
 * ---------- Get searchhelp data references -------------------------------------------------------
-    me->get_data_ref( EXPORTING iv_shlp_id       = iv_shlp_id
-                      IMPORTING er_shlp_fields = DATA(lr_shlp_fields)
-                                er_shlp_result = DATA(lr_shlp_result) ).
+    DATA: lr_shlp_fields TYPE REF TO data,
+          lr_shlp_result TYPE REF TO data.
+
+    me->get_data_ref( EXPORTING iv_shlp_id     = iv_shlp_id
+                      IMPORTING er_shlp_fields = lr_shlp_fields
+                                er_shlp_result = lr_shlp_result ).
 
     ASSIGN lr_shlp_fields->* TO <ls_shlp_fields>.
     ASSIGN lr_shlp_result->* TO <lt_result_itab>.
@@ -1309,338 +1653,5 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 
     me->on_event( ir_client = client ).
 
-  ENDMETHOD.
-
-
-  METHOD CREATE_DATA_REF.
-* -------------------------------------------------------------------------------------------------
-* Heap References and Stack References issue!
-* Internal tables are dynamic data objects and have a special role because they have their own
-* memory management. They allocate and release memory regardless of the statement CREATE and
-* Garbage Collector. This means that heap references to rows in internal tables can become invalid.
-* Therfore I had to create fix amount of reference variables (placeholders),
-* instead of ITAB with references.
-* -------------------------------------------------------------------------------------------------
-    CASE iv_index.
-      WHEN 1.
-* ---------- Create Dynamic structure and table ---------------------------------------------------
-        CREATE DATA me->mr_shlp_fields_1 TYPE HANDLE ir_struc_type.
-        CREATE DATA me->mr_shlp_result_1 TYPE HANDLE ir_table_type.
-
-      WHEN 2.
-* ---------- Create Dynamic structure and table ---------------------------------------------------
-        CREATE DATA me->mr_shlp_fields_2 TYPE HANDLE ir_struc_type.
-        CREATE DATA me->mr_shlp_result_2 TYPE HANDLE ir_table_type.
-      WHEN 3.
-* ---------- Create Dynamic structure and table ---------------------------------------------------
-        CREATE DATA me->mr_shlp_fields_3 TYPE HANDLE ir_struc_type.
-        CREATE DATA me->mr_shlp_result_3 TYPE HANDLE ir_table_type.
-
-      WHEN 4.
-* ---------- Create Dynamic structure and table ---------------------------------------------------
-        CREATE DATA me->mr_shlp_fields_4 TYPE HANDLE ir_struc_type.
-        CREATE DATA me->mr_shlp_result_4 TYPE HANDLE ir_table_type.
-
-      WHEN 5.
-* ---------- Create Dynamic structure and table ---------------------------------------------------
-        CREATE DATA me->mr_shlp_fields_5 TYPE HANDLE ir_struc_type.
-        CREATE DATA me->mr_shlp_result_5 TYPE HANDLE ir_table_type.
-
-      WHEN 6.
-* ---------- Create Dynamic structure and table ---------------------------------------------------
-        CREATE DATA me->mr_shlp_fields_6 TYPE HANDLE ir_struc_type.
-        CREATE DATA me->mr_shlp_result_6 TYPE HANDLE ir_table_type.
-
-      WHEN 7.
-* ---------- Create Dynamic structure and table ---------------------------------------------------
-        CREATE DATA me->mr_shlp_fields_7 TYPE HANDLE ir_struc_type.
-        CREATE DATA me->mr_shlp_result_7 TYPE HANDLE ir_table_type.
-
-      WHEN 8.
-* ---------- Create Dynamic structure and table ---------------------------------------------------
-        CREATE DATA me->mr_shlp_fields_8 TYPE HANDLE ir_struc_type.
-        CREATE DATA me->mr_shlp_result_8 TYPE HANDLE ir_table_type.
-
-      WHEN 9.
-* ---------- Create Dynamic structure and table ---------------------------------------------------
-        CREATE DATA me->mr_shlp_fields_9 TYPE HANDLE ir_struc_type.
-        CREATE DATA me->mr_shlp_result_9 TYPE HANDLE ir_table_type.
-
-      WHEN 10.
-* ---------- Create Dynamic structure and table ---------------------------------------------------
-        CREATE DATA me->mr_shlp_fields_10 TYPE HANDLE ir_struc_type.
-        CREATE DATA me->mr_shlp_result_10 TYPE HANDLE ir_table_type.
-    ENDCASE.
-  ENDMETHOD.
-
-
-  METHOD expand_searchhelp.
-*----------------------------------------------------------------------*
-* LOCAL DATA DEFINITION
-*----------------------------------------------------------------------*
-    DATA: ls_shlp TYPE  shlp_descr.
-
-* ---------- Get searchhelp description for given ID ----------------------------------------------
-    CALL FUNCTION 'F4IF_GET_SHLP_DESCR'
-      EXPORTING
-        shlpname = iv_shlp_id
-      IMPORTING
-        shlp     = ls_shlp.
-
-    IF ls_shlp IS INITIAL.
-      RETURN.
-    ENDIF.
-
-* ---------- Get all elementary shlps for given collective shlp -----------------------------------
-    CALL FUNCTION 'F4IF_EXPAND_SEARCHHELP'
-      EXPORTING
-        shlp_top = ls_shlp
-      IMPORTING
-        shlp_tab = et_shlp_descr.
-
-* ---------- Apply blacklist (Remove unwanted searchhelp from the list) ---------------------------
-    LOOP AT it_shlp_blacklist ASSIGNING FIELD-SYMBOL(<ls_shlp_blacklist>).
-      DELETE et_shlp_descr WHERE shlpname = <ls_shlp_blacklist>-shlp_id.
-    ENDLOOP.
-
-* ---------- Set default searchhelp ---------------------------------------------------------------
-    IF line_exists( et_shlp_descr[ 1 ] ).
-      ev_shlp_selkey = et_shlp_descr[ 1 ]-shlpname.
-    ENDIF.
-  ENDMETHOD.
-
-
-  METHOD GET_DATA_REF.
-*----------------------------------------------------------------------*
-* LOCAL DATA DEFINITION
-*----------------------------------------------------------------------*
-    DATA: lv_index TYPE i.
-
-* ---------- Check import parameter ---------------------------------------------------------------
-    IF iv_index IS NOT INITIAL.
-* ---------- Set index to local variable ----------------------------------------------------------
-      lv_index = iv_index.
-    ELSEIF iv_shlp_id IS NOT INITIAL.
-* ---------- Get searchhelp index from shlp id ----------------------------------------------------
-      lv_index = line_index( me->mt_shlp_descr[ shlpname = iv_shlp_id ] ).
-    ELSE.
-      RETURN.
-    ENDIF.
-
-* -------------------------------------------------------------------------------------------------
-* Heap References and Stack References issue!
-* Internal tables are dynamic data objects and have a special role because they have their own
-* memory management. They allocate and release memory regardless of the statement CREATE and
-* Garbage Collector. This means that heap references to rows in internal tables can become invalid.
-* Therfore I had to create fix amount of reference variables (placeholders),
-* instead of ITAB with references.
-* -------------------------------------------------------------------------------------------------
-    CASE lv_index.
-      WHEN 1.
-        er_shlp_fields = me->mr_shlp_fields_1 .
-        er_shlp_result = me->mr_shlp_result_1 .
-
-      WHEN 2.
-        er_shlp_fields = me->mr_shlp_fields_2 .
-        er_shlp_result = me->mr_shlp_result_2 .
-
-      WHEN 3.
-        er_shlp_fields = me->mr_shlp_fields_3 .
-        er_shlp_result = me->mr_shlp_result_3 .
-
-      WHEN 4.
-        er_shlp_fields = me->mr_shlp_fields_4 .
-        er_shlp_result = me->mr_shlp_result_4 .
-
-      WHEN 5.
-        er_shlp_fields = me->mr_shlp_fields_5 .
-        er_shlp_result = me->mr_shlp_result_5 .
-
-      WHEN 6.
-        er_shlp_fields = me->mr_shlp_fields_6 .
-        er_shlp_result = me->mr_shlp_result_6 .
-
-      WHEN 7.
-        er_shlp_fields = me->mr_shlp_fields_7 .
-        er_shlp_result = me->mr_shlp_result_7 .
-
-      WHEN 8.
-        er_shlp_fields = me->mr_shlp_fields_8 .
-        er_shlp_result = me->mr_shlp_result_8 .
-
-      WHEN 9.
-        er_shlp_fields = me->mr_shlp_fields_9 .
-        er_shlp_result = me->mr_shlp_result_9 .
-
-      WHEN 10.
-        er_shlp_fields = me->mr_shlp_fields_10 .
-        er_shlp_result = me->mr_shlp_result_10 .
-
-    ENDCASE.
-  ENDMETHOD.
-
-
-  METHOD INIT_DATA_REF.
-* -------------------------------------------------------------------------------------------------
-* Heap References and Stack References issue!
-* Internal tables are dynamic data objects and have a special role because they have their own
-* memory management. They allocate and release memory regardless of the statement CREATE and
-* Garbage Collector. This means that heap references to rows in internal tables can become invalid.
-* Therfore I had to create fix amount of reference variables (placeholders),
-* instead of ITAB with references.
-* -------------------------------------------------------------------------------------------------
-
-* ---------- Init searchhelp field references -----------------------------------------------------
-    CLEAR:
-    mr_shlp_fields_1,
-    mr_shlp_fields_2,
-    mr_shlp_fields_3,
-    mr_shlp_fields_4,
-    mr_shlp_fields_5,
-    mr_shlp_fields_6,
-    mr_shlp_fields_7,
-    mr_shlp_fields_8,
-    mr_shlp_fields_9,
-    mr_shlp_fields_10.
-
-* ---------- Init searchhelp result references ----------------------------------------------------
-    CLEAR:
-    mr_shlp_result_1,
-    mr_shlp_result_2,
-    mr_shlp_result_3,
-    mr_shlp_result_4,
-    mr_shlp_result_5,
-    mr_shlp_result_6,
-    mr_shlp_result_7,
-    mr_shlp_result_8,
-    mr_shlp_result_9,
-    mr_shlp_result_10.
-  ENDMETHOD.
-
-
-  METHOD delete_token.
-*----------------------------------------------------------------------*
-* LOCAL DATA DEFINITION
-*----------------------------------------------------------------------*
-    FIELD-SYMBOLS: <ls_filter>      TYPE ts_filter_pop,
-                   <ls_field_token> TYPE ts_token,
-                   <lv_field>       TYPE any.
-
-    LOOP AT ct_token ASSIGNING <ls_field_token>.
-* ---------- Init loop data -----------------------------------------------------------------------
-      UNASSIGN: <lv_field>.
-
-* ---------- Get token key assignment -------------------------------------------------------------
-      ASSIGN COMPONENT 'KEY' OF STRUCTURE <ls_field_token> TO <lv_field>.
-      IF <lv_field> IS NOT ASSIGNED.
-        CONTINUE.
-      ENDIF.
-
-* ---------- Check token key to be deleted --------------------------------------------------------
-      IF <lv_field> <> IV_TOKEN_KEY.
-        CONTINUE.
-      ENDIF.
-
-* ---------- Delete token -------------------------------------------------------------------------
-      DELETE TABLE ct_token FROM <ls_field_token>.
-    ENDLOOP.
-
-  ENDMETHOD.
-
-
-  METHOD FILL_FILTER.
-*----------------------------------------------------------------------*
-* LOCAL DATA DEFINITION
-*----------------------------------------------------------------------*
-    DATA: ls_range TYPE ts_range.
-
-    FIELD-SYMBOLS: <ls_filter>      TYPE ts_filter_pop,
-                   <ls_field_token> TYPE ts_token,
-                   <lv_field>       TYPE any.
-
-* ---------- Init ---------------------------------------------------------------------------------
-    CLEAR: ct_filter.
-
-* ---------- Fill filter --------------------------------------------------------------------------
-    IF it_token IS NOT INITIAL.
-      LOOP AT it_token ASSIGNING <ls_field_token>.
-* ---------- Init loop data -----------------------------------------------------------------------
-        CLEAR: ls_range.
-        UNASSIGN: <lv_field>.
-
-* ---------- Get key value from token -------------------------------------------------------------
-        ASSIGN COMPONENT 'KEY' OF STRUCTURE <ls_field_token> TO <lv_field>.
-        IF <lv_field> IS NOT ASSIGNED.
-          CONTINUE.
-        ENDIF.
-
-* ---------- Convert token into range format ------------------------------------------------------
-        ls_range = me->get_shlp_range_by_value( iv_value = <lv_field> ).
-        IF ls_range IS INITIAL.
-          CONTINUE.
-        ENDIF.
-
-* ---------- Build new filter record --------------------------------------------------------------
-        APPEND INITIAL LINE TO me->mt_filter ASSIGNING <ls_filter>.
-        <ls_filter>-key     = me->get_shlp_uuid( ).
-        <ls_filter>-option  = ls_range-option.
-        <ls_filter>-low     = ls_range-low.
-        <ls_filter>-high    = ls_range-high.
-
-      ENDLOOP.
-    ENDIF.
-  ENDMETHOD.
-
-
-  METHOD FILL_TOKEN.
-*----------------------------------------------------------------------*
-* LOCAL DATA DEFINITION
-*----------------------------------------------------------------------*
-    FIELD-SYMBOLS: <ls_filter>      TYPE ts_filter_pop,
-                   <ls_field_token> TYPE ts_token,
-                   <lv_field>       TYPE any.
-
-* ---------- Fill token ---------------------------------------------------------------------------
-    LOOP AT it_filter REFERENCE INTO DATA(lr_filter).
-      DATA(lv_value) = me->mt_mapping[ key = lr_filter->option ]-value.
-      REPLACE `{LOW}`  IN lv_value WITH lr_filter->low.
-      REPLACE `{HIGH}` IN lv_value WITH lr_filter->high.
-
-      APPEND INITIAL LINE TO ct_token ASSIGNING <ls_field_token>.
-
-      UNASSIGN: <lv_field>.
-      ASSIGN COMPONENT 'KEY' OF STRUCTURE <ls_field_token> TO <lv_field>.
-      IF <lv_field> IS NOT ASSIGNED.
-        CONTINUE.
-      ENDIF.
-      <lv_field> = lv_value.
-
-      UNASSIGN: <lv_field>.
-      ASSIGN COMPONENT 'TEXT' OF STRUCTURE <ls_field_token> TO <lv_field>.
-      IF <lv_field> IS NOT ASSIGNED.
-        CONTINUE.
-      ENDIF.
-      <lv_field> = lv_value.
-
-      UNASSIGN: <lv_field>.
-      ASSIGN COMPONENT 'VISIBLE' OF STRUCTURE <ls_field_token> TO <lv_field>.
-      IF <lv_field> IS NOT ASSIGNED.
-        CONTINUE.
-      ENDIF.
-      <lv_field> = abap_true.
-
-      UNASSIGN: <lv_field>.
-      ASSIGN COMPONENT 'EDITABLE' OF STRUCTURE <ls_field_token> TO <lv_field>.
-      IF <lv_field> IS NOT ASSIGNED.
-        CONTINUE.
-      ENDIF.
-      <lv_field> = abap_true.
-
-    ENDLOOP.
-  ENDMETHOD.
-
-
-  METHOD GET_INPUT_FIELDNAME.
-    rv_input_fieldname = |{ iv_fieldname }_INPUT|.
   ENDMETHOD.
 ENDCLASS.

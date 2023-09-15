@@ -1,4 +1,4 @@
-# abap2UI5 Tools
+# abap2UI5 - Tools & Utility Functions
 The larger apps from demo repository are collected here and can be adjusted to cater to a broader range of use cases. <br>
 
 Apps:

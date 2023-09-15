@@ -1,4 +1,4 @@
-class z2ui5_cl_tool_app_shlp_gen definition
+class Z2UI5_CL_TOOL_APP_SHLP_GEN definition
   public
   create public .
 
@@ -16,7 +16,7 @@ public section.
         editable TYPE abap_bool,
       END OF ts_token .
   types:
-    tt_token TYPE STANDARD TABLE OF ts_token WITH key key .
+    tt_token TYPE STANDARD TABLE OF ts_token WITH KEY key .
   types:
     tt_range TYPE RANGE OF string .
   types:
@@ -44,6 +44,12 @@ public section.
     TYPES: END OF ts_shlp_descr .
   types:
     tt_shlp_descr TYPE STANDARD TABLE OF ts_shlp_descr WITH DEFAULT KEY .
+  types:
+    BEGIN OF ts_shlp_blacklist,
+             shlp_id TYPE char30,
+           END OF ts_shlp_blacklist .
+  types:
+    tt_shlp_blacklist TYPE STANDARD TABLE OF ts_shlp_blacklist WITH KEY shlp_id .
 
   data MV_CHECK_INITIALIZED type ABAP_BOOL .
   data MV_SHLP_ID type CHAR30 .
@@ -98,12 +104,14 @@ public section.
       !IV_POPUP_TITLE type CLIKE
       !IV_RESULT_FILTER_EXIT type CLIKE optional
       !IV_SELOPT_PREFILL_EXIT type CLIKE optional
+      !IT_SHLP_BLACKLIST type TT_SHLP_BLACKLIST optional
     returning
-      value(RESULT) type ref to z2ui5_cl_tool_app_shlp_gen .
+      value(RESULT) type ref to Z2UI5_CL_TOOL_APP_SHLP_GEN .
 protected section.
 
   data MV_SELOPT_FIELDNAME type STRING .
   data MT_SHLP_DESCR type TT_SHLP_DESCR .
+  data MT_SHLP_BLACKLIST type TT_SHLP_BLACKLIST .
 
   methods ON_RENDERING
     importing
@@ -147,6 +155,7 @@ protected section.
   methods EXPAND_SEARCHHELP
     importing
       !IV_SHLP_ID type CHAR30
+      !IT_SHLP_BLACKLIST type TT_SHLP_BLACKLIST
     exporting
       value(ET_SHLP_DESCR) type TT_SHLP_DESCR
       !EV_SHLP_SELKEY type CHAR30 .
@@ -266,10 +275,13 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
     result = NEW #( ).
 
 * ---------- Set searchhelp ID --------------------------------------------------------------------
-    result->mv_shlp_id             = iv_shlp_id.
+    result->mv_shlp_id = iv_shlp_id.
 
 * ---------- Set searchhelp poup title ------------------------------------------------------------
-    result->mv_popup_title         = iv_popup_title.
+    result->mv_popup_title = iv_popup_title.
+
+* ---------- Set searchhelp blacklist -------------------------------------------------------------
+    result->mt_shlp_blacklist = it_shlp_blacklist.
 
 * -------------------------------------------------------------------------------------------------
 * Set exit optional parameters (CLASS NAME=>METHOD NAME)
@@ -929,9 +941,10 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
     IF mv_check_initialized = abap_false.
       mv_check_initialized = abap_true.
 * ---------- Get searchhelp description -----------------------------------------------------------
-      me->expand_searchhelp( EXPORTING iv_shlp_id     = me->mv_shlp_id
-                             IMPORTING et_shlp_descr  = me->mt_shlp_descr
-                                       ev_shlp_selkey = me->ms_screen-shlp_selkey ).
+      me->expand_searchhelp( EXPORTING iv_shlp_id         = me->mv_shlp_id
+                                       it_shlp_blacklist  = me->mt_shlp_blacklist
+                             IMPORTING et_shlp_descr      = me->mt_shlp_descr
+                                       ev_shlp_selkey     = me->ms_screen-shlp_selkey ).
       IF me->mt_shlp_descr IS INITIAL.
         RETURN.
       ENDIF.
@@ -1361,7 +1374,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD EXPAND_SEARCHHELP.
+  METHOD expand_searchhelp.
 *----------------------------------------------------------------------*
 * LOCAL DATA DEFINITION
 *----------------------------------------------------------------------*
@@ -1384,6 +1397,11 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
         shlp_top = ls_shlp
       IMPORTING
         shlp_tab = et_shlp_descr.
+
+* ---------- Apply blacklist (Remove unwanted searchhelp from the list) ---------------------------
+    LOOP AT it_shlp_blacklist ASSIGNING FIELD-SYMBOL(<ls_shlp_blacklist>).
+      DELETE et_shlp_descr WHERE shlpname = <ls_shlp_blacklist>-shlp_id.
+    ENDLOOP.
 
 * ---------- Set default searchhelp ---------------------------------------------------------------
     IF line_exists( et_shlp_descr[ 1 ] ).

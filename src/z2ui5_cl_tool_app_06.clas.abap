@@ -8,7 +8,6 @@ CLASS z2ui5_cl_tool_app_06 DEFINITION
     INTERFACES z2ui5_if_app.
 
     DATA quantity TYPE i.
-    DATA text TYPE string VALUE `quantity`.
     DATA check_initialized TYPE abap_bool.
     DATA href TYPE string.
 

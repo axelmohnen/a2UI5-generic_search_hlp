@@ -18,7 +18,6 @@ CLASS z2ui5_cl_tool_app_03 DEFINITION PUBLIC.
 
     DATA mt_token            TYPE STANDARD TABLE OF ty_S_token WITH EMPTY KEY.
 
-*    DATA mt_table TYPE STANDARD TABLE OF z2ui5_t_draft.
     DATA ms_detail TYPE z2ui5_t_draft.
     DATA mv_check_columns TYPE abap_bool.
     DATA mv_check_sort TYPE abap_bool.
@@ -29,24 +28,12 @@ CLASS z2ui5_cl_tool_app_03 DEFINITION PUBLIC.
 
     DATA mv_check_download_csv TYPE abap_bool.
 
-*    TYPES:
-*      BEGIN OF ty_S_out,
-*        selkz               TYPE abap_bool,
-*        uuid                TYPE string,
-*        uuid_prev           TYPE string,
-*        uuid_prev_app       TYPE string,
-*        uuid_prev_app_stack TYPE string,
-*        timestampl          TYPE string,
-*        uname               TYPE string,
-*      END OF ty_s_out.
-
     DATA:
       BEGIN OF ms_view,
         headerpinned   TYPE abap_bool,
         headerexpanded TYPE abap_bool,
         search_val     TYPE string,
         title          TYPE string,
-*        t_tab          TYPE STANDARD TABLE OF ty_S_out WITH EMPTY KEY,
       END OF ms_view.
 
     TYPES:

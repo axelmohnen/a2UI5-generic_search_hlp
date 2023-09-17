@@ -5,14 +5,7 @@ CLASS z2ui5_cl_tool_app_08 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     DATA ms_view TYPE z2ui5_cl_tool_view=>ty_s_file.
-
-    DATA mv_type TYPE string.
-    DATA mv_path TYPE string.
-    DATA mv_editor TYPE string.
-    DATA mv_check_editable TYPE abap_bool.
     DATA check_initialized TYPE abap_bool.
-
-    DATA mv_name TYPE string.
 
     METHODS db_load.
   PROTECTED SECTION.

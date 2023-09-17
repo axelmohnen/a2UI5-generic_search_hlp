@@ -1,33 +1,33 @@
-class Z2UI5_CL_TOOL_APP_09 definition
-  public
-  create public .
+CLASS z2ui5_cl_tool_app_09 DEFINITION
+  PUBLIC
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  interfaces IF_SERIALIZABLE_OBJECT .
-  interfaces Z2UI5_IF_APP .
+    INTERFACES if_serializable_object .
+    INTERFACES z2ui5_if_app .
 
-  data:
-    BEGIN OF ms_screen,
-            partner TYPE string,
-          END OF ms_screen .
-  data MV_CHECK_POPUP type ABAP_BOOL .
-  data MV_CHECK_INITIALIZED type ABAP_BOOL .
-protected section.
+    DATA:
+      BEGIN OF ms_screen,
+        partner TYPE string,
+      END OF ms_screen .
+    DATA mv_check_popup TYPE abap_bool .
+    DATA mv_check_initialized TYPE abap_bool .
+  PROTECTED SECTION.
 
-  methods Z2UI5_ON_INIT .
-  methods Z2UI5_ON_EVENT
-    importing
-      !IR_CLIENT type ref to Z2UI5_IF_CLIENT .
-  methods Z2UI5_ON_RENDER
-    importing
-      !IR_CLIENT type ref to Z2UI5_IF_CLIENT .
+    METHODS z2ui5_on_init .
+    METHODS z2ui5_on_event
+      IMPORTING
+        !ir_client TYPE REF TO z2ui5_if_client .
+    METHODS z2ui5_on_render
+      IMPORTING
+        !ir_client TYPE REF TO z2ui5_if_client .
   PRIVATE SECTION.
 ENDCLASS.
 
 
 
-CLASS Z2UI5_CL_TOOL_APP_09 IMPLEMENTATION.
+CLASS z2ui5_cl_tool_app_09 IMPLEMENTATION.
 
 
   METHOD z2ui5_if_app~main.
@@ -39,7 +39,7 @@ CLASS Z2UI5_CL_TOOL_APP_09 IMPLEMENTATION.
 
     IF mv_check_popup = abap_true.
       mv_check_popup = abap_false.
-      DATA(app) = CAST z2ui5_cl_tool_APP_SHLP_GEN( client->get_app( client->get( )-s_draft-id_prev_app )  ).
+      DATA(app) = CAST z2ui5_cl_tool_app_shlp_gen( client->get_app( client->get( )-s_draft-id_prev_app )  ).
       client->message_toast_display( app->mv_shlp_result ).
       me->ms_screen-partner = app->mv_shlp_result.
       "client->view_model_update( ).
@@ -57,7 +57,7 @@ CLASS Z2UI5_CL_TOOL_APP_09 IMPLEMENTATION.
     CASE ir_client->get( )-event.
       WHEN `FILTER_VALUE_HELP`.
         mv_check_popup = abap_true.
-        ir_client->nav_app_call( z2ui5_cl_tool_APP_SHLP_GEN=>factory(
+        ir_client->nav_app_call( z2ui5_cl_tool_app_shlp_gen=>factory(
           iv_popup_title = 'THIS is the DDIC SHLP title'
           iv_shlp_id = 'F4SHLP_ACMDTUI_DDLSOURCE' ) ).
 
@@ -68,7 +68,7 @@ CLASS Z2UI5_CL_TOOL_APP_09 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD Z2UI5_ON_INIT.
+  METHOD z2ui5_on_init.
 
   ENDMETHOD.
 
@@ -89,7 +89,7 @@ CLASS Z2UI5_CL_TOOL_APP_09 IMPLEMENTATION.
                   showvaluehelp                = abap_true
                   valuehelprequest             = ir_client->_event( 'FILTER_VALUE_HELP' ) ).
 
-    IR_client->view_display( view->stringify( ) ).
+    ir_client->view_display( view->stringify( ) ).
 
   ENDMETHOD.
 ENDCLASS.

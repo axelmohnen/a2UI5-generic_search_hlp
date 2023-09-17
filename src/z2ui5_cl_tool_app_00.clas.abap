@@ -6,9 +6,6 @@ CLASS z2ui5_cl_tool_app_00 DEFINITION
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-
-    DATA mv_value TYPE string.
-
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -16,7 +13,7 @@ ENDCLASS.
 
 
 
-CLASS Z2UI5_CL_TOOL_APP_00 IMPLEMENTATION.
+CLASS z2ui5_cl_tool_app_00 IMPLEMENTATION.
 
 
   METHOD z2ui5_if_app~main.
@@ -30,175 +27,57 @@ CLASS Z2UI5_CL_TOOL_APP_00 IMPLEMENTATION.
               navbuttonpress = client->_event( 'BACK' )
               shownavbutton  = abap_true ).
 
-*      DATA(box) = page->vbox( ).
-*      DATA(hbox) = box->hbox( ).
-*      hbox->title( text = `Files` ).
-
-*    page->title( text = `Files` ).
-*      data(form) =  page->simple_form( title = 'Files' editable = abap_true )->content( 'form' ).
-*
-*    DATA(grid) = page->grid( 'L3 M6 S12'
-*        )->content( 'layout' ).
-
-*      hbox = box->hbox( ).
-*    <generic_tile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Cumulative Totals" subheader="Expenses" press="onPress" >
-*        <TileContent unit="Unit" footer="Footer Text">
-*            <NumericContent value="1762" icon="sap-icon://line-charts" withMargin="false" />
-*        </TileContent>
-*    </generic_tile>
-
-*    select from z2ui5_tool_t_001
-*    fields
-*        count( id ) as number
-*      into table @data(lt_tab).
-
-      data(lv_count) = 1. "value #( lt_tab[ 1 ]-number optional ).
-
       page->generic_tile(
-*      EXPORTING
          class     = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
          header    = `Upload`
          press     = client->_event( `z2ui5_tool_cl_app_05` )
-*        frametype =
-*         subheader = ` from your Client`
-*      RECEIVING
-*        result    =
-      )->get( )->Tile_Content(
+      )->get( )->tile_content(
         footer = `Files in the System`
-        )->Numeric_Content( value = conv #( lv_count ) icon = 'sap-icon://documents' withMargin = abap_false
-      ).
+        )->numeric_content( value = `1` icon = 'sap-icon://documents' withmargin = abap_false ).
 
       page->generic_tile(
-*      EXPORTING
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `File Editor`
          press     = client->_event( `z2ui5_tool_cl_app_01` )
-      )->get( )->Tile_Content(
-         )->image_content( src = 'sap-icon://edit'
-      ).
+      )->get( )->tile_content(
+         )->image_content( src = 'sap-icon://edit' ).
 
       page->generic_tile(
-*      EXPORTING
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `Database Viewer`
          press     = client->_event( `z2ui5_tool_cl_app_02` )
-      )->get( )->Tile_Content(
-         )->image_content( src = 'sap-icon://detail-view'
-      ).
+      )->get( )->tile_content(
+         )->image_content( src = 'sap-icon://detail-view' ).
 
-     page->generic_tile(
-*      EXPORTING
-        class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-        header    = `CSV to Itab Editor`
-         press     = client->_event( `z2ui5_tool_cl_app_07` )
-      )->get( )->Tile_Content(
-         )->image_content( src = 'sap-icon://table-view'
-      ).
+      page->generic_tile(
+         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
+         header    = `CSV to Itab Editor`
+          press     = client->_event( `z2ui5_tool_cl_app_07` )
+       )->get( )->tile_content(
+          )->image_content( src = 'sap-icon://table-view' ).
 
-     page->generic_tile(
-*      EXPORTING
-        class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-        header    = `List Report Viewer`
-         press     = client->_event( `z2ui5_tool_cl_app_03` )
-      )->get( )->Tile_Content(
-         )->image_content( src = 'sap-icon://my-view'
-      ).
+      page->generic_tile(
+         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
+         header    = `List Report Viewer`
+          press     = client->_event( `z2ui5_tool_cl_app_03` )
+        )->get( )->tile_content(
+          )->image_content( src = 'sap-icon://my-view' ).
 
-           page->generic_tile(
-*      EXPORTING
+      page->generic_tile(
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `Generic Search Help Demo I`
-         press     = client->_event( `z2ui5_cl_tool_app_10` )
-      )->get( )->Tile_Content(
-*         )->image_content( src = 'sap-icon://my-view'
-      ).
+        press     = client->_event( `z2ui5_cl_tool_app_10` )
+        )->get( )->tile_content( ).
 
-           page->generic_tile(
-*      EXPORTING
+      page->generic_tile(
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `Generic Search Help Demo II`
-         press     = client->_event( `z2ui5_cl_tool_app_09` )
-      )->get( )->Tile_Content(
-*         )->image_content( src = 'sap-icon://my-view'
-      ).
-
-*      hbox = box->hbox( ).
-*      hbox->title( text = `Transformation` ).
-*      hbox = box->hbox( ).
-*
-*
-*      hbox->generic_tile(
-**      EXPORTING
-*        class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-*        header    = `csv -> itab`
-*        press     = client->_event( `z2ui5_tool_cl_app_07` )
-**        frametype =
-**        subheader =
-**      RECEIVING
-**        result    =
-*).
-*
-*      hbox->generic_tile(
-**      EXPORTING
-*        class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-*        header    = `db table -> csv`
-*        press     = client->_event( `z2ui5_tool_cl_app_06` )
-**        frametype =
-**        subheader =
-**      RECEIVING
-**        result    =
-*).
-*
-*      hbox = box->hbox( ).
-*      hbox->title( text = `Maintenance` ).
-*      hbox = box->hbox( ).
-*
-*      hbox->generic_tile(
-**      EXPORTING
-*  class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-*       header    = `tab`
-**         press     =
-**        frametype =
-**        subheader =
-**      RECEIVING
-**        result    =
-*  ).
-*
-*      hbox->generic_tile(
-**      EXPORTING
-*      class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-*       header    = `tab edit`
-**         press     =
-**        frametype =
-**        subheader =
-**      RECEIVING
-**        result    =
-*  ).
-*
-*      hbox = box->hbox( ).
-*      hbox->title( text = `XML` ).
-*      hbox = box->hbox( ).
-*
-*      page->generic_tile(
-**      EXPORTING
-*  class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
-*   header    = `validator`
-**         press     =
-**        frametype =
-**        subheader =
-**      RECEIVING
-**        result    =
-*).
+        press     = client->_event( `z2ui5_cl_tool_app_09` )
+        )->get( )->tile_content( ).
 
       client->view_display( view->stringify( ) ).
 
     ENDIF.
-
-
-*    mv_value = z2ui5_cl_xml_view=>factory( client )->hlp_get_url_param( `q` ).
-*    mv_value = mv_value && mv_value.
-
-*    z2ui5_cl_xml_view=>factory( client )->hlp_set_url_param( n = `q` v = mv_value ).
 
     IF client->get( )-event IS INITIAL.
       RETURN.

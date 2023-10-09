@@ -55,6 +55,8 @@ public section.
   data MV_SHLP_ID type CHAR30 .
   data MV_POPUP_TITLE type STRING .
   data MV_SHLP_RESULT type STRING .
+  data MV_SHLP_RESULT2 type STRING .
+  data MV_SHLP_RESULT3 type STRING .
   data MT_FILTER type TT_FILTER_PROP .
   data MT_MAPPING type TT_SELOPT_MAPPING .
   data:
@@ -1110,6 +1112,12 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 * ---------- Set search field value ---------------------------------------------------------------
         IF line_exists( lt_event_arg[ 1 ] ).
           me->mv_shlp_result = lt_event_arg[ 1 ].
+        ENDIF.
+        IF line_exists( lt_event_arg[ 2 ] ).
+          me->mv_shlp_result2 = lt_event_arg[ 2 ].
+        ENDIF.
+        IF line_exists( lt_event_arg[ 3 ] ).
+          me->mv_shlp_result3 = lt_event_arg[ 3 ].
         ENDIF.
 
         ir_client->popup_destroy( ).

@@ -1,5 +1,5 @@
 # abap2UI5 - Tools & Utility Functions
-This is a collection of apps that support the everyday work of ABAP developers. Additionally, yu can find some utility functions to enhance the development process with abap2UI5.
+This is a collection of apps that support the everyday work of ABAP developers. You can also find some utility functions to enhance the development process with abap2UI5.
 
 _If you encounter any problems or have questions, feel free to open an issue. Pull requests are welcome!_
 

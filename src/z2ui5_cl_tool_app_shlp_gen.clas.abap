@@ -1,208 +1,208 @@
-class Z2UI5_CL_TOOL_APP_SHLP_GEN definition
-  public
-  create public .
+CLASS z2ui5_cl_tool_app_shlp_gen DEFINITION
+  PUBLIC
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  interfaces IF_SERIALIZABLE_OBJECT .
-  interfaces Z2UI5_IF_APP .
+    INTERFACES if_serializable_object .
+    INTERFACES z2ui5_if_app .
 
-  types:
-    BEGIN OF ts_token,
+    TYPES:
+      BEGIN OF ts_token,
         key      TYPE string,
         text     TYPE string,
         visible  TYPE abap_bool,
         selkz    TYPE abap_bool,
         editable TYPE abap_bool,
       END OF ts_token .
-  types:
-    tt_token TYPE STANDARD TABLE OF ts_token WITH KEY key .
-  types:
-    tt_range TYPE RANGE OF string .
-  types:
-    ts_range TYPE LINE OF tt_range .
-  types:
-    BEGIN OF ts_filter_pop,
+    TYPES:
+      tt_token TYPE STANDARD TABLE OF ts_token WITH KEY key .
+    TYPES:
+      tt_range TYPE RANGE OF string .
+    TYPES:
+      ts_range TYPE LINE OF tt_range .
+    TYPES:
+      BEGIN OF ts_filter_pop,
         option TYPE string,
         low    TYPE string,
         high   TYPE string,
         key    TYPE string,
       END OF ts_filter_pop .
-  types:
-    tt_filter_prop TYPE STANDARD TABLE OF ts_filter_pop WITH EMPTY KEY .
-  types:
-    BEGIN OF ts_selopt_mapping,
+    TYPES:
+      tt_filter_prop TYPE STANDARD TABLE OF ts_filter_pop WITH EMPTY KEY .
+    TYPES:
+      BEGIN OF ts_selopt_mapping,
         key   TYPE string,
         text  TYPE string,
         value TYPE string,
       END OF ts_selopt_mapping .
-  types:
-    tt_selopt_mapping TYPE STANDARD TABLE OF ts_selopt_mapping WITH KEY key .
-  types:
-    BEGIN OF ts_shlp_descr.
+    TYPES:
+      tt_selopt_mapping TYPE STANDARD TABLE OF ts_selopt_mapping WITH KEY key .
+    TYPES:
+      BEGIN OF ts_shlp_descr.
         INCLUDE TYPE shlp_descr. "Can be replaced by local def. for downport
-    TYPES: END OF ts_shlp_descr .
-  types:
-    tt_shlp_descr TYPE STANDARD TABLE OF ts_shlp_descr WITH DEFAULT KEY .
-  types:
-    BEGIN OF ts_shlp_blacklist,
-             shlp_id TYPE char30,
-           END OF ts_shlp_blacklist .
-  types:
-    tt_shlp_blacklist TYPE STANDARD TABLE OF ts_shlp_blacklist WITH KEY shlp_id .
+      TYPES: END OF ts_shlp_descr .
+    TYPES:
+      tt_shlp_descr TYPE STANDARD TABLE OF ts_shlp_descr WITH DEFAULT KEY .
+    TYPES:
+      BEGIN OF ts_shlp_blacklist,
+        shlp_id TYPE char30,
+      END OF ts_shlp_blacklist .
+    TYPES:
+      tt_shlp_blacklist TYPE STANDARD TABLE OF ts_shlp_blacklist WITH KEY shlp_id .
 
-  data MV_CHECK_INITIALIZED type ABAP_BOOL .
-  data MV_SHLP_ID type CHAR30 .
-  data MV_POPUP_TITLE type STRING .
-  data MV_SHLP_RESULT type STRING .
-  data MV_SHLP_RESULT2 type STRING .
-  data MV_SHLP_RESULT3 type STRING .
-  data MT_FILTER type TT_FILTER_PROP .
-  data MT_MAPPING type TT_SELOPT_MAPPING .
-  data:
-    BEGIN OF ms_screen,
+    DATA mv_check_initialized TYPE abap_bool .
+    DATA mv_shlp_id TYPE char30 .
+    DATA mv_popup_title TYPE string .
+    DATA mv_shlp_result TYPE string .
+    DATA mv_shlp_result2 TYPE string .
+    DATA mv_shlp_result3 TYPE string .
+    DATA mt_filter TYPE tt_filter_prop .
+    DATA mt_mapping TYPE tt_selopt_mapping .
+    DATA:
+      BEGIN OF ms_screen,
         shlp_selkey TYPE char30,
       END OF ms_screen .
-  data MR_SHLP_FIELDS_1 type ref to DATA .
-  data MR_SHLP_FIELDS_2 type ref to DATA .
-  data MR_SHLP_FIELDS_3 type ref to DATA .
-  data MR_SHLP_FIELDS_4 type ref to DATA .
-  data MR_SHLP_FIELDS_5 type ref to DATA .
-  data MR_SHLP_FIELDS_6 type ref to DATA .
-  data MR_SHLP_FIELDS_7 type ref to DATA .
-  data MR_SHLP_FIELDS_8 type ref to DATA .
-  data MR_SHLP_FIELDS_9 type ref to DATA .
-  data MR_SHLP_FIELDS_10 type ref to DATA .
-  data MR_SHLP_RESULT_1 type ref to DATA .
-  data MR_SHLP_RESULT_2 type ref to DATA .
-  data MR_SHLP_RESULT_3 type ref to DATA .
-  data MR_SHLP_RESULT_4 type ref to DATA .
-  data MR_SHLP_RESULT_5 type ref to DATA .
-  data MR_SHLP_RESULT_6 type ref to DATA .
-  data MR_SHLP_RESULT_7 type ref to DATA .
-  data MR_SHLP_RESULT_8 type ref to DATA .
-  data MR_SHLP_RESULT_9 type ref to DATA .
-  data MR_SHLP_RESULT_10 type ref to DATA .
-  constants MC_EVT_SHLP_CLOSE type STRING value 'EVT_SHLP_CLOSE' ##NO_TEXT.
-  constants MC_EVT_SHLP_GO type STRING value 'EVT_SHLP_GO' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELECT type STRING value 'EVT_SHLP_SELECT' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_OPEN type STRING value 'EVT_SHLP_SELOPT_OPEN' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_TOKEN_UPD type STRING value 'EVT_SHLP_SELOPT_TOKEN_UPD' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_ADD type STRING value 'EVT_SHLP_SELOPT_ADD' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_CANCEL type STRING value 'EVT_SHLP_SELOPT_CANCEL' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_OK type STRING value 'EVT_SHLP_SELOPT_OK' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_DELETE type STRING value 'EVT_SHLP_SELOPT_DELETE' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_DELETE_ALL type STRING value 'EVT_SHLP_SELOPT_DELETE_ALL' ##NO_TEXT.
-  constants MC_SHLP_FIELDS_REF_NAME type STRING value 'MR_SHLP_FIELDS_' ##NO_TEXT.
-  constants MC_SHLP_RESULT_REF_NAME type STRING value 'MR_SHLP_FIELDS_' ##NO_TEXT.
-  data MV_RESULT_FILTER_EXIT type STRING .
-  data MV_SELOPT_PREFILL_EXIT type STRING .
-  constants MC_EVT_SHLP_SELOPT_CHANGE type STRING value 'EVT_SHLP_SELOPT_CHANGE' ##NO_TEXT.
-  constants MC_TOKEN_UPD_TYPE_REMOVE type STRING value 'removed' ##NO_TEXT.
+    DATA mr_shlp_fields_1 TYPE REF TO data .
+    DATA mr_shlp_fields_2 TYPE REF TO data .
+    DATA mr_shlp_fields_3 TYPE REF TO data .
+    DATA mr_shlp_fields_4 TYPE REF TO data .
+    DATA mr_shlp_fields_5 TYPE REF TO data .
+    DATA mr_shlp_fields_6 TYPE REF TO data .
+    DATA mr_shlp_fields_7 TYPE REF TO data .
+    DATA mr_shlp_fields_8 TYPE REF TO data .
+    DATA mr_shlp_fields_9 TYPE REF TO data .
+    DATA mr_shlp_fields_10 TYPE REF TO data .
+    DATA mr_shlp_result_1 TYPE REF TO data .
+    DATA mr_shlp_result_2 TYPE REF TO data .
+    DATA mr_shlp_result_3 TYPE REF TO data .
+    DATA mr_shlp_result_4 TYPE REF TO data .
+    DATA mr_shlp_result_5 TYPE REF TO data .
+    DATA mr_shlp_result_6 TYPE REF TO data .
+    DATA mr_shlp_result_7 TYPE REF TO data .
+    DATA mr_shlp_result_8 TYPE REF TO data .
+    DATA mr_shlp_result_9 TYPE REF TO data .
+    DATA mr_shlp_result_10 TYPE REF TO data .
+    CONSTANTS mc_evt_shlp_close TYPE string VALUE 'EVT_SHLP_CLOSE' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_go TYPE string VALUE 'EVT_SHLP_GO' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_select TYPE string VALUE 'EVT_SHLP_SELECT' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_open TYPE string VALUE 'EVT_SHLP_SELOPT_OPEN' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_token_upd TYPE string VALUE 'EVT_SHLP_SELOPT_TOKEN_UPD' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_add TYPE string VALUE 'EVT_SHLP_SELOPT_ADD' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_cancel TYPE string VALUE 'EVT_SHLP_SELOPT_CANCEL' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_ok TYPE string VALUE 'EVT_SHLP_SELOPT_OK' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_delete TYPE string VALUE 'EVT_SHLP_SELOPT_DELETE' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_delete_all TYPE string VALUE 'EVT_SHLP_SELOPT_DELETE_ALL' ##NO_TEXT.
+    CONSTANTS mc_shlp_fields_ref_name TYPE string VALUE 'MR_SHLP_FIELDS_' ##NO_TEXT.
+    CONSTANTS mc_shlp_result_ref_name TYPE string VALUE 'MR_SHLP_FIELDS_' ##NO_TEXT.
+    DATA mv_result_filter_exit TYPE string .
+    DATA mv_selopt_prefill_exit TYPE string .
+    CONSTANTS mc_evt_shlp_selopt_change TYPE string VALUE 'EVT_SHLP_SELOPT_CHANGE' ##NO_TEXT.
+    CONSTANTS mc_token_upd_type_remove TYPE string VALUE 'removed' ##NO_TEXT.
 
-  class-methods FACTORY
-    importing
-      !IV_SHLP_ID type CLIKE
-      !IV_POPUP_TITLE type CLIKE
-      !IV_RESULT_FILTER_EXIT type CLIKE optional
-      !IV_SELOPT_PREFILL_EXIT type CLIKE optional
-      !IT_SHLP_BLACKLIST type TT_SHLP_BLACKLIST optional
-    returning
-      value(RESULT) type ref to Z2UI5_CL_TOOL_APP_SHLP_GEN .
-protected section.
+    CLASS-METHODS factory
+      IMPORTING
+        !iv_shlp_id             TYPE clike
+        !iv_popup_title         TYPE clike
+        !iv_result_filter_exit  TYPE clike OPTIONAL
+        !iv_selopt_prefill_exit TYPE clike OPTIONAL
+        !it_shlp_blacklist      TYPE tt_shlp_blacklist OPTIONAL
+      RETURNING
+        VALUE(result)           TYPE REF TO z2ui5_cl_tool_app_shlp_gen .
+  PROTECTED SECTION.
 
-  data MV_SELOPT_FIELDNAME type STRING .
-  data MT_SHLP_DESCR type TT_SHLP_DESCR .
-  data MT_SHLP_BLACKLIST type TT_SHLP_BLACKLIST .
+    DATA mv_selopt_fieldname TYPE string .
+    DATA mt_shlp_descr TYPE tt_shlp_descr .
+    DATA mt_shlp_blacklist TYPE tt_shlp_blacklist .
 
-  methods ON_RENDERING
-    importing
-      !IR_CLIENT type ref to Z2UI5_IF_CLIENT .
-  methods ON_EVENT
-    importing
-      !IR_CLIENT type ref to Z2UI5_IF_CLIENT .
-  methods GENERATE_DDIC_SHLP
-    importing
-      !IR_PARENT type ref to Z2UI5_CL_XML_VIEW
-      !IR_CLIENT type ref to Z2UI5_IF_CLIENT
-      !IV_SHLP_ID type CHAR30 .
-  methods SELECT_DDIC_SHLP
-    importing
-      !IR_CONTROLLER type ref to OBJECT
-      !IV_SHLP_ID type CHAR30
-      !IV_MAXROWS type I default 150 .
-  methods BUILD_DATA_REF
-    importing
-      !IR_CLIENT type ref to Z2UI5_IF_CLIENT
-      !IT_SHLP_DESCR type TT_SHLP_DESCR .
-  methods GENERATE_DDIC_SHLP_SELOPT
-    importing
-      !IR_CLIENT type ref to Z2UI5_IF_CLIENT
-      !IV_FIELDNAME type CLIKE
-      !IV_SHLP_ID type CHAR30 .
-  methods GET_SHLP_RANGE_BY_VALUE
-    importing
-      !IV_VALUE type STRING
-    returning
-      value(RS_RESULT) type TS_RANGE .
-  methods GET_SHLP_UUID
-    returning
-      value(RV_RESULT) type STRING .
-  methods GET_SELOPT_MAPPING
-    returning
-      value(RT_MAPPING) type TT_SELOPT_MAPPING .
-  methods ON_INIT
-    importing
-      !IR_CLIENT type ref to Z2UI5_IF_CLIENT .
-  methods EXPAND_SEARCHHELP
-    importing
-      !IV_SHLP_ID type CHAR30
-      !IT_SHLP_BLACKLIST type TT_SHLP_BLACKLIST
-    exporting
-      value(ET_SHLP_DESCR) type TT_SHLP_DESCR
-      !EV_SHLP_SELKEY type CHAR30 .
-  methods GET_DATA_REF
-    importing
-      !IV_INDEX type I optional
-      !IV_SHLP_ID type CHAR30 optional
-    exporting
-      !ER_SHLP_FIELDS type ref to DATA
-      !ER_SHLP_RESULT type ref to DATA .
-  methods CREATE_DATA_REF
-    importing
-      !IV_INDEX type I
-      !IR_STRUC_TYPE type ref to CL_ABAP_STRUCTDESCR
-      !IR_TABLE_TYPE type ref to CL_ABAP_TABLEDESCR .
-  methods INIT_DATA_REF .
-  methods FILL_TOKEN
-    importing
-      !IT_FILTER type TT_FILTER_PROP
-    changing
-      !CT_TOKEN type TT_TOKEN .
-  methods FILL_FILTER
-    importing
-      !IT_TOKEN type TT_TOKEN
-    changing
-      !CT_FILTER type TT_FILTER_PROP .
-  methods GET_INPUT_FIELDNAME
-    importing
-      !IV_FIELDNAME type CHAR30
-    returning
-      value(RV_INPUT_FIELDNAME) type CHAR30 .
-  methods DELETE_TOKEN
-    importing
-      !IV_TOKEN_KEY type CLIKE
-    changing
-      !CT_TOKEN type TT_TOKEN .
-private section.
+    METHODS on_rendering
+      IMPORTING
+        !ir_client TYPE REF TO z2ui5_if_client .
+    METHODS on_event
+      IMPORTING
+        !ir_client TYPE REF TO z2ui5_if_client .
+    METHODS generate_ddic_shlp
+      IMPORTING
+        !ir_parent  TYPE REF TO z2ui5_cl_xml_view
+        !ir_client  TYPE REF TO z2ui5_if_client
+        !iv_shlp_id TYPE char30 .
+    METHODS select_ddic_shlp
+      IMPORTING
+        !ir_controller TYPE REF TO object
+        !iv_shlp_id    TYPE char30
+        !iv_maxrows    TYPE i DEFAULT 150 .
+    METHODS build_data_ref
+      IMPORTING
+        !ir_client     TYPE REF TO z2ui5_if_client
+        !it_shlp_descr TYPE tt_shlp_descr .
+    METHODS generate_ddic_shlp_selopt
+      IMPORTING
+        !ir_client    TYPE REF TO z2ui5_if_client
+        !iv_fieldname TYPE clike
+        !iv_shlp_id   TYPE char30 .
+    METHODS get_shlp_range_by_value
+      IMPORTING
+        !iv_value        TYPE string
+      RETURNING
+        VALUE(rs_result) TYPE ts_range .
+    METHODS get_shlp_uuid
+      RETURNING
+        VALUE(rv_result) TYPE string .
+    METHODS get_selopt_mapping
+      RETURNING
+        VALUE(rt_mapping) TYPE tt_selopt_mapping .
+    METHODS on_init
+      IMPORTING
+        !ir_client TYPE REF TO z2ui5_if_client .
+    METHODS expand_searchhelp
+      IMPORTING
+        !iv_shlp_id          TYPE char30
+        !it_shlp_blacklist   TYPE tt_shlp_blacklist
+      EXPORTING
+        VALUE(et_shlp_descr) TYPE tt_shlp_descr
+        !ev_shlp_selkey      TYPE char30 .
+    METHODS get_data_ref
+      IMPORTING
+        !iv_index       TYPE i OPTIONAL
+        !iv_shlp_id     TYPE char30 OPTIONAL
+      EXPORTING
+        !er_shlp_fields TYPE REF TO data
+        !er_shlp_result TYPE REF TO data .
+    METHODS create_data_ref
+      IMPORTING
+        !iv_index      TYPE i
+        !ir_struc_type TYPE REF TO cl_abap_structdescr
+        !ir_table_type TYPE REF TO cl_abap_tabledescr .
+    METHODS init_data_ref .
+    METHODS fill_token
+      IMPORTING
+        !it_filter TYPE tt_filter_prop
+      CHANGING
+        !ct_token  TYPE tt_token .
+    METHODS fill_filter
+      IMPORTING
+        !it_token  TYPE tt_token
+      CHANGING
+        !ct_filter TYPE tt_filter_prop .
+    METHODS get_input_fieldname
+      IMPORTING
+        !iv_fieldname             TYPE char30
+      RETURNING
+        VALUE(rv_input_fieldname) TYPE char30 .
+    METHODS delete_token
+      IMPORTING
+        !iv_token_key TYPE clike
+      CHANGING
+        !ct_token     TYPE tt_token .
+  PRIVATE SECTION.
 ENDCLASS.
 
 
 
-CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
+CLASS z2ui5_cl_tool_app_shlp_gen IMPLEMENTATION.
 
 
-  METHOD BUILD_DATA_REF.
+  METHOD build_data_ref.
 *----------------------------------------------------------------------*
 * LOCAL DATA DEFINITION
 *----------------------------------------------------------------------*
@@ -272,7 +272,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD CREATE_DATA_REF.
+  METHOD create_data_ref.
 * -------------------------------------------------------------------------------------------------
 * Heap References and Stack References issue!
 * Internal tables are dynamic data objects and have a special role because they have their own
@@ -353,7 +353,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
       ENDIF.
 
 * ---------- Check token key to be deleted --------------------------------------------------------
-      IF <lv_field> <> IV_TOKEN_KEY.
+      IF <lv_field> <> iv_token_key.
         CONTINUE.
       ENDIF.
 
@@ -431,13 +431,13 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 *    changing
 *      !CT_SELOPT type TABLE .
 * -------------------------------------------------------------------------------------------------
-    result->mv_selopt_prefill_exit = iV_SELOPT_PREFILL_EXIT.
+    result->mv_selopt_prefill_exit = iv_selopt_prefill_exit.
     result->mv_result_filter_exit  = iv_result_filter_exit.
 
   ENDMETHOD.
 
 
-  METHOD FILL_FILTER.
+  METHOD fill_filter.
 *----------------------------------------------------------------------*
 * LOCAL DATA DEFINITION
 *----------------------------------------------------------------------*
@@ -481,7 +481,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD FILL_TOKEN.
+  METHOD fill_token.
 *----------------------------------------------------------------------*
 * LOCAL DATA DEFINITION
 *----------------------------------------------------------------------*
@@ -529,7 +529,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD GENERATE_DDIC_SHLP.
+  METHOD generate_ddic_shlp.
 *----------------------------------------------------------------------*
 * LOCAL DATA DEFINITION
 *----------------------------------------------------------------------*
@@ -538,8 +538,8 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
           lt_arg            TYPE TABLE OF stringval,
           lv_arg_fieldname  TYPE stringval,
           lv_cell_fieldname TYPE stringval,
-          lt_FIELDPROP_SEL  TYPE ddshfprops,
-          lt_FIELDPROP_LIS  TYPE ddshfprops.
+          lt_fieldprop_sel  TYPE ddshfprops,
+          lt_fieldprop_lis  TYPE ddshfprops.
 
     FIELD-SYMBOLS: <ls_fielddescr>    TYPE dfies,
                    <ls_fieldprop_sel> TYPE ddshfprop,
@@ -632,14 +632,14 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
           lr_form_shlp_1->multi_input(  tokens            = ir_client->_bind( <lv_field_token> )
                                         value             = ir_client->_bind_edit( <lv_field_input> )
                                         showclearicon     = abap_false
-                                        tokenUpdate       = ir_client->_event( val    = mc_evt_shlp_selopt_token_upd
-                                                                               t_arg  = value #( (  CONV #( <ls_fieldprop_sel>-fieldname ) )
+                                        tokenupdate       = ir_client->_event( val    = mc_evt_shlp_selopt_token_upd
+                                                                               t_arg  = VALUE #( (  CONV #( <ls_fieldprop_sel>-fieldname ) )
                                                                                                  ( `$event.mParameters.type` )
                                                                                                  ( `$event.mParameters.removedTokens[0].mProperties.key` ) ) )
 
                                         change            = ir_client->_event( val    = mc_evt_shlp_selopt_change
                                                                                t_arg  = VALUE #( (  CONV #( <ls_fieldprop_sel>-fieldname ) ) ) )
-                                        valueHelpRequest  = ir_client->_event( val    = mc_evt_shlp_selopt_open
+                                        valuehelprequest  = ir_client->_event( val    = mc_evt_shlp_selopt_open
                                                                                t_arg  = VALUE #( (  CONV #( <ls_fieldprop_sel>-fieldname ) ) ) )
                                         )->item(  key  = `{KEY}`
                                                   text = `{TEXT}`
@@ -657,14 +657,14 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
           lr_form_shlp_2->multi_input(  tokens            = ir_client->_bind( <lv_field_token> )
                                         value             = ir_client->_bind_edit( <lv_field_input> )
                                         showclearicon     = abap_false
-                                        tokenUpdate       = ir_client->_event( val    = mc_evt_shlp_selopt_token_upd
-                                                                               t_arg  = value #( (  CONV #( <ls_fieldprop_sel>-fieldname ) )
+                                        tokenupdate       = ir_client->_event( val    = mc_evt_shlp_selopt_token_upd
+                                                                               t_arg  = VALUE #( (  CONV #( <ls_fieldprop_sel>-fieldname ) )
                                                                                                  ( `$event.mParameters.type` )
                                                                                                  ( `$event.mParameters.removedTokens[0].mProperties.key` ) ) )
 
                                         change            = ir_client->_event( val    = mc_evt_shlp_selopt_change
                                                                                t_arg  = VALUE #( (  CONV #( <ls_fieldprop_sel>-fieldname ) ) ) )
-                                        valueHelpRequest  = ir_client->_event( val    = mc_evt_shlp_selopt_open
+                                        valuehelprequest  = ir_client->_event( val    = mc_evt_shlp_selopt_open
                                                                                t_arg  = VALUE #( (  CONV #( <ls_fieldprop_sel>-fieldname ) ) ) )
                                         )->item(  key  = `{KEY}`
                                                   text = `{TEXT}`
@@ -683,14 +683,14 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
           lr_form_shlp_3->multi_input(  tokens            = ir_client->_bind( <lv_field_token> )
                                         value             = ir_client->_bind_edit( <lv_field_input> )
                                         showclearicon     = abap_false
-                                        tokenUpdate       = ir_client->_event( val    = mc_evt_shlp_selopt_token_upd
-                                                                               t_arg  = value #( (  CONV #( <ls_fieldprop_sel>-fieldname ) )
+                                        tokenupdate       = ir_client->_event( val    = mc_evt_shlp_selopt_token_upd
+                                                                               t_arg  = VALUE #( (  CONV #( <ls_fieldprop_sel>-fieldname ) )
                                                                                                  ( `$event.mParameters.type` )
                                                                                                  ( `$event.mParameters.removedTokens[0].mProperties.key` ) ) )
 
                                         change            = ir_client->_event( val    = mc_evt_shlp_selopt_change
                                                                                t_arg  = VALUE #( (  CONV #( <ls_fieldprop_sel>-fieldname ) ) ) )
-                                        valueHelpRequest  = ir_client->_event( val    = mc_evt_shlp_selopt_open
+                                        valuehelprequest  = ir_client->_event( val    = mc_evt_shlp_selopt_open
                                                                                t_arg  = VALUE #( (  CONV #( <ls_fieldprop_sel>-fieldname ) ) ) )
                                         )->item(  key  = `{KEY}`
                                                   text = `{TEXT}`
@@ -709,14 +709,14 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
           lr_form_shlp_4->multi_input(  tokens            = ir_client->_bind( <lv_field_token> )
                                         value             = ir_client->_bind_edit( <lv_field_input> )
                                         showclearicon     = abap_false
-                                        tokenUpdate       = ir_client->_event( val    = mc_evt_shlp_selopt_token_upd
-                                                                               t_arg  = value #( (  CONV #( <ls_fieldprop_sel>-fieldname ) )
+                                        tokenupdate       = ir_client->_event( val    = mc_evt_shlp_selopt_token_upd
+                                                                               t_arg  = VALUE #( (  CONV #( <ls_fieldprop_sel>-fieldname ) )
                                                                                                  ( `$event.mParameters.type` )
                                                                                                  ( `$event.mParameters.removedTokens[0].mProperties.key` ) ) )
 
                                         change            = ir_client->_event( val    = mc_evt_shlp_selopt_change
                                                                                t_arg  = VALUE #( (  CONV #( <ls_fieldprop_sel>-fieldname ) ) ) )
-                                        valueHelpRequest  = ir_client->_event( val    = mc_evt_shlp_selopt_open
+                                        valuehelprequest  = ir_client->_event( val    = mc_evt_shlp_selopt_open
                                                                                t_arg  = VALUE #( (  CONV #( <ls_fieldprop_sel>-fieldname ) ) ) )
                                         )->item(  key  = `{KEY}`
                                                   text = `{TEXT}`
@@ -780,7 +780,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 * LOCAL DATA DEFINITION
 *----------------------------------------------------------------------*
     DATA: ls_shlp       TYPE  shlp_descr,
-          ls_FIELDDESCR TYPE dfies.
+          ls_fielddescr TYPE dfies.
 
 * ---------- Get searchhelp description -----------------------------------------------------------
     CALL FUNCTION 'F4IF_GET_SHLP_DESCR'
@@ -809,7 +809,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
                                   title = TEXT-t02 && ` ` && ls_fielddescr-scrtext_l ).
 
 * ---------- Create Vbox --------------------------------------------------------------------------
-    DATA(lr_vbox) = lr_dialog->content( )->vbox( height = `100%` justifyContent = 'SpaceBetween' ).
+    DATA(lr_vbox) = lr_dialog->content( )->vbox( height = `100%` justifycontent = 'SpaceBetween' ).
 
 * ---------- Create Panel -------------------------------------------------------------------------
     DATA(lr_panel)  = lr_vbox->panel( expandable = abap_false
@@ -818,7 +818,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 
 * ---------- Create List item ---------------------------------------------------------------------
     DATA(lr_item) = lr_panel->list(
-              noData = `no conditions defined`
+              nodata = `no conditions defined`
              items           = ir_client->_bind_edit( me->mt_filter )
                 )->custom_list_item( ).
 
@@ -828,7 +828,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 * ---------- Create Combobox ----------------------------------------------------------------------
     lr_grid->combobox(
                  selectedkey = `{OPTION}`
-                 items       = ir_client->_bind_Edit( me->mt_mapping )
+                 items       = ir_client->_bind_edit( me->mt_mapping )
              )->item( key = '{KEY}'
                       text = '{TEXT}' ).
 
@@ -864,7 +864,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD GET_DATA_REF.
+  METHOD get_data_ref.
 *----------------------------------------------------------------------*
 * LOCAL DATA DEFINITION
 *----------------------------------------------------------------------*
@@ -934,43 +934,43 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD GET_INPUT_FIELDNAME.
+  METHOD get_input_fieldname.
     rv_input_fieldname = |{ iv_fieldname }_INPUT|.
   ENDMETHOD.
 
 
-  METHOD GET_SELOPT_MAPPING.
+  METHOD get_selopt_mapping.
     rt_mapping = VALUE #(
   (   key = 'EQ'
-      text = text-l01
+      text = TEXT-l01
       value = `={LOW}`    )
 
   (   key = 'LT'
-      text = text-l02
+      text = TEXT-l02
       value = `<{LOW}`   )
 
   (   key = 'LE'
-      text = text-l03
+      text = TEXT-l03
       value = `<={LOW}`  )
 
   (   key = 'GT'
-      text = text-l04
+      text = TEXT-l04
       value = `>{LOW}`   )
 
   (   key = 'GE'
-      text = text-l05
+      text = TEXT-l05
       value = `>={LOW}`  )
 
   (   key = 'CP'
-      text = text-l06
+      text = TEXT-l06
       value = `{LOW}`  )
 
   (   key = 'BT'
-      text = text-l07
+      text = TEXT-l07
       value = `{LOW}...{HIGH}` )
 
   (   key = 'NE'
-      text = text-l08
+      text = TEXT-l08
       value = `!(={LOW})`    )
   ).
   ENDMETHOD.
@@ -1011,7 +1011,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   ENDMETHOD.
 
 
-  method GET_SHLP_UUID.
+  METHOD get_shlp_uuid.
 *----------------------------------------------------------------------*
 * LOCAL DATA DEFINITION
 *----------------------------------------------------------------------*
@@ -1030,10 +1030,10 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
     ENDTRY.
 
     rv_result = uuid.
-  endmethod.
+  ENDMETHOD.
 
 
-  METHOD INIT_DATA_REF.
+  METHOD init_data_ref.
 * -------------------------------------------------------------------------------------------------
 * Heap References and Stack References issue!
 * Internal tables are dynamic data objects and have a special role because they have their own
@@ -1286,7 +1286,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD ON_INIT.
+  METHOD on_init.
     IF mv_check_initialized = abap_false.
       mv_check_initialized = abap_true.
 * ---------- Get searchhelp description -----------------------------------------------------------
@@ -1313,7 +1313,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD ON_RENDERING.
+  METHOD on_rendering.
 *----------------------------------------------------------------------*
 * LOCAL DATA DEFINITION
 *----------------------------------------------------------------------*
@@ -1370,13 +1370,13 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 * LOCAL DATA DEFINITION
 *----------------------------------------------------------------------*
     DATA: ls_shlp          TYPE shlp_descr,
-          lt_RETURN_VALUES TYPE TABLE OF ddshretval,
+          lt_return_values TYPE TABLE OF ddshretval,
           lt_record_tab    TYPE TABLE OF seahlpres,
           lv_convexit_name TYPE rs38l_fnam,
           lv_offset        TYPE i,
           lv_length        TYPE i,
-          lt_FIELDPROP_SEL TYPE ddshfprops,
-          lt_FIELDPROP_LIS TYPE ddshfprops,
+          lt_fieldprop_sel TYPE ddshfprops,
+          lt_fieldprop_lis TYPE ddshfprops,
           ls_range         TYPE ts_range,
           lv_date_out      TYPE sy-datum,
           lv_time_out      TYPE sy-uzeit,
@@ -1557,7 +1557,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
     CALL FUNCTION 'F4IF_SELECT_VALUES'
       EXPORTING
         shlp           = ls_shlp
-        maxrows        = iv_MAXROWS
+        maxrows        = iv_maxrows
         call_shlp_exit = abap_true
       TABLES
         record_tab     = lt_record_tab
@@ -1655,7 +1655,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD Z2UI5_IF_APP~MAIN.
+  METHOD z2ui5_if_app~main.
 
     me->on_init( ir_client = client ).
 

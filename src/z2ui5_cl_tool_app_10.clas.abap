@@ -480,7 +480,8 @@ CLASS Z2UI5_CL_TOOL_APP_10 IMPLEMENTATION.
 
 
 *        lr_toolbar1 = lr_toolbar1->generate_ddic_shlp( irparent = lr_dialog_content1
-        DATA(popup_f4) = lr_dialog1->zfc_ddic_search_help( irparent = lr_dialog1
+*        DATA(popup_f4) = lr_dialog1->zfc_ddic_search_help( irparent = lr_dialog1
+        DATA(popup_f4) = z2ui5_cl_tool_shlp_gen=>zfc_ddic_search_help( irparent = lr_dialog1
                                                       irclient = client
                                                       resultitabevent = 'F4_POPUP_CLOSE_XML_VIEW'
                                                       resultitabname = 'MT_SHLP_RESULT_XML'

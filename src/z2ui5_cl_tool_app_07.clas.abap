@@ -81,7 +81,7 @@ CLASS Z2UI5_CL_TOOL_APP_07 IMPLEMENTATION.
   METHOD ui5_view_init_display.
 
     client->view_display( z2ui5_cl_xml_view=>factory( client
-         )->_cc( )->file_api( )->get_js(
+         )->_cc( )->ui5_file_uploader( )->load_cc(
 *         )->zcc_file_uploader_js(
          )->stringify( ) ).
 
@@ -145,7 +145,7 @@ CLASS Z2UI5_CL_TOOL_APP_07 IMPLEMENTATION.
 
     DATA(footer) = page->footer( )->overflow_toolbar( ).
 
-    footer->_cc( )->file_api( )->control_upload_button(
+    footer->_cc( )->ui5_file_uploader( )->control(
       value       = client->_bind_edit( mv_value )
       path        = client->_bind_edit( mv_path )
       placeholder = 'filepath here...'

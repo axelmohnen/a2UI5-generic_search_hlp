@@ -30,7 +30,7 @@ CLASS z2ui5_cl_tool_app_00 IMPLEMENTATION.
       page->generic_tile(
          class     = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
          header    = `Upload`
-         press     = client->_event( `z2ui5_tool_cl_app_05` )
+         press     = client->_event( `z2ui5_cl_tool_app_05` )
       )->get( )->tile_content(
         footer = `Files in the System`
         )->numeric_content( value = `1` icon = 'sap-icon://documents' withmargin = abap_false ).
@@ -38,28 +38,28 @@ CLASS z2ui5_cl_tool_app_00 IMPLEMENTATION.
       page->generic_tile(
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `File Editor`
-         press     = client->_event( `z2ui5_tool_cl_app_01` )
+         press     = client->_event( `z2ui5_cl_tool_app_01` )
       )->get( )->tile_content(
          )->image_content( src = 'sap-icon://edit' ).
 
       page->generic_tile(
         class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
         header    = `Database Viewer`
-         press     = client->_event( `z2ui5_tool_cl_app_02` )
+         press     = client->_event( `z2ui5_cl_tool_app_02` )
       )->get( )->tile_content(
          )->image_content( src = 'sap-icon://detail-view' ).
 
       page->generic_tile(
          class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
          header    = `CSV to Itab Editor`
-          press     = client->_event( `z2ui5_tool_cl_app_07` )
+          press     = client->_event( `z2ui5_cl_tool_app_07` )
        )->get( )->tile_content(
           )->image_content( src = 'sap-icon://table-view' ).
 
       page->generic_tile(
          class = 'sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout'
          header    = `List Report Viewer`
-          press     = client->_event( `z2ui5_tool_cl_app_03` )
+          press     = client->_event( `z2ui5_cl_tool_app_03` )
         )->get( )->tile_content(
           )->image_content( src = 'sap-icon://my-view' ).
 

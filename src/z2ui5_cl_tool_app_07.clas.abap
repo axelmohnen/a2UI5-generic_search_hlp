@@ -81,7 +81,8 @@ CLASS Z2UI5_CL_TOOL_APP_07 IMPLEMENTATION.
   METHOD ui5_view_init_display.
 
     client->view_display( z2ui5_cl_xml_view=>factory( client
-         )->zcc_file_uploader_js(
+         )->_cc( )->ui5_file_uploader( )->load_cc(
+*         )->zcc_file_uploader_js(
          )->stringify( ) ).
 
   ENDMETHOD.
@@ -107,7 +108,7 @@ CLASS Z2UI5_CL_TOOL_APP_07 IMPLEMENTATION.
       DATA(lv_csv) = z2ui5_cl_tool_utility=>get_csv_by_table( <tab> ).
       DATA(lv_xcsv) = z2ui5_cl_tool_utility=>get_xstring_by_string( lv_csv ).
       DATA(LV_base) = z2ui5_cl_tool_utility=>encode_x_base64( lv_xcsv ).
-      view->zcc_plain_xml( '<html:iframe src="data:text/csv;base64,' && LV_base && '" height="0%" width="0%"/>' ).
+      view->_cc_plain_xml( '<html:iframe src="data:text/csv;base64,' && LV_base && '" height="0%" width="0%"/>' ).
     ENDIF.
 
     IF mr_table IS NOT INITIAL.
@@ -144,7 +145,7 @@ CLASS Z2UI5_CL_TOOL_APP_07 IMPLEMENTATION.
 
     DATA(footer) = page->footer( )->overflow_toolbar( ).
 
-    footer->zcc_file_uploader(
+    footer->_cc( )->ui5_file_uploader( )->control(
       value       = client->_bind_edit( mv_value )
       path        = client->_bind_edit( mv_path )
       placeholder = 'filepath here...'

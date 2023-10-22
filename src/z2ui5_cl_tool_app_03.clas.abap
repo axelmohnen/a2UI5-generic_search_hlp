@@ -925,7 +925,7 @@ init_table_output( ).
     DATA(lv_xcsv) = z2ui5_cl_tool_utility=>get_xstring_by_string( lv_csv ).
     DATA(LV_base) = z2ui5_cl_tool_utility=>encode_x_base64( lv_xcsv ).
 
-    i_view->zcc_plain_xml( `<html:iframe src="data:text/csv;base64,` && LV_base && `" hidden="hidden" />`).
+    i_view->_cc_plain_xml( `<html:iframe src="data:text/csv;base64,` && LV_base && `" hidden="hidden" />`).
 
     mv_check_download_csv = abap_false.
 

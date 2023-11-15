@@ -97,7 +97,7 @@ CLASS Z2UI5_CL_TOOL_APP_07 IMPLEMENTATION.
             shownavbutton  = abap_true
         )->header_content(
             )->toolbar_spacer(
-            )->link( text = 'Source_Code' target = '_blank' href = view->hlp_get_source_code_url(  )
+*            )->link( text = 'Source_Code' target = '_blank' href = view->hlp_get_source_code_url(  )
         )->get_parent( ).
 
     IF mv_check_download = abap_true.

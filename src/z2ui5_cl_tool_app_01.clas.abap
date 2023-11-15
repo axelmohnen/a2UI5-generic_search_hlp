@@ -64,7 +64,7 @@ CLASS Z2UI5_CL_TOOL_APP_01 IMPLEMENTATION.
     shownavbutton = abap_true
             )->header_content(
 *                )->link( text = 'Demo'        target = '_blank' href = 'https://twitter.com/abap2UI5/status/1631562906570575875'
-                )->link( text = 'Source_Code' target = '_blank' href = view->hlp_get_source_code_url(  )
+*                )->link( text = 'Source_Code' target = '_blank' href = view->hlp_get_source_code_url(  )
         )->get_parent( ).
 
     DATA(grid) = page->grid( 'L7 M12 S12' )->content( 'layout' ).

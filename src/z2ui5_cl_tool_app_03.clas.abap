@@ -408,7 +408,7 @@ CLASS Z2UI5_CL_TOOL_APP_03 IMPLEMENTATION.
                 text = 'Demo' target = '_blank'
                 href = 'https://twitter.com/abap2UI5/status/1637163852264624139'
             )->link(
-                text = 'Source_Code' target = '_blank' href = view->hlp_get_source_code_url( )
+*                text = 'Source_Code' target = '_blank' href = view->hlp_get_source_code_url( )
        )->get_parent( ).
 
     DATA(page) = view2->object_page_layout(

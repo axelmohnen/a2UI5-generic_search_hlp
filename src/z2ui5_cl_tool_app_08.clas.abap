@@ -29,7 +29,7 @@ CLASS Z2UI5_CL_TOOL_APP_08 IMPLEMENTATION.
     IF check_initialized = abap_false.
       check_initialized = abap_true.
 
-      ms_view-name = z2ui5_cl_xml_view=>factory( client )->hlp_get_url_param( `view`).
+*      ms_view-name = z2ui5_cl_xml_view=>factory( client )->hlp_get_url_param( `view`).
 
       IF ms_view-name IS NOT INITIAL.
         db_load( ).
@@ -61,7 +61,7 @@ CLASS Z2UI5_CL_TOOL_APP_08 IMPLEMENTATION.
     navbuttonpress = client->_event( 'BACK' )
     shownavbutton = abap_true
             )->header_content(
-            )->link( text = 'Source_Code' target = '_blank' href = view->hlp_get_source_code_url(  )
+*            )->link( text = 'Source_Code' target = '_blank' href = view->hlp_get_source_code_url(  )
         )->get_parent( ).
 
     DATA(grid) = page->grid( 'L7 M12 S12' )->content( 'layout' ).

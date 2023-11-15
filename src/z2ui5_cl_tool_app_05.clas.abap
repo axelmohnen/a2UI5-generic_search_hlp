@@ -240,7 +240,7 @@ CLASS Z2UI5_CL_TOOL_APP_05 IMPLEMENTATION.
             showHeader     = xsdbool( client->get( )-check_launchpad_active = abap_false )
         )->header_content(
             )->toolbar_spacer(
-            )->link( text = 'Source_Code' href = view->hlp_get_source_code_url(  )
+*            )->link( text = 'Source_Code' href = view->hlp_get_source_code_url(  )
         )->get_parent( ).
 
     DATA(tab) = page->table(

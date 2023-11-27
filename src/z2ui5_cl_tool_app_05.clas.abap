@@ -222,10 +222,12 @@ CLASS Z2UI5_CL_TOOL_APP_05 IMPLEMENTATION.
 
   METHOD ui5_view_init_display.
 
-    client->view_display( z2ui5_cl_xml_view=>factory( client
-         )->_cc( )->timer( )->control( client->_event( `START` )
-         )->_cc( )->ui5_file_uploader( )->load_cc(
-         )->stringify( ) ).
+    ui5_view_main_display( ).
+*    client->view_display( z2ui5_cl_xml_view=>factory( client
+*         )->_z2ui5( )->timer( client->_event( `START` )
+**         )->_cc( )->ui5_file_uploader( )->load_cc(
+*         )->_generic( ns = `html` name = `script` )->_cc_plain_xml( z2ui5_cl_cc_file_uploader=>get_js( )
+*         )->stringify( ) ).
 
   ENDMETHOD.
 

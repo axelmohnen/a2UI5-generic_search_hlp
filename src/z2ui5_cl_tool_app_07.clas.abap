@@ -146,7 +146,7 @@ CLASS Z2UI5_CL_TOOL_APP_07 IMPLEMENTATION.
 
     DATA(footer) = page->footer( )->overflow_toolbar( ).
 
-    footer->_cc( )->ui5_file_uploader( )->control(
+    footer->_z2ui5( )->file_uploader(
       value       = client->_bind_edit( mv_value )
       path        = client->_bind_edit( mv_path )
       placeholder = 'filepath here...'

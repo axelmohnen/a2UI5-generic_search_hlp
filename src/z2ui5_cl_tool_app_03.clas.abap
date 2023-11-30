@@ -18,7 +18,7 @@ CLASS z2ui5_cl_tool_app_03 DEFINITION PUBLIC.
 
     DATA mt_token            TYPE STANDARD TABLE OF ty_S_token WITH EMPTY KEY.
 
-    DATA ms_detail TYPE z2ui5_t_draft.
+    DATA ms_detail TYPE z2ui5_t_fw_01.
     DATA mv_check_columns TYPE abap_bool.
     DATA mv_check_sort TYPE abap_bool.
     DATA mv_check_table TYPE abap_bool.
@@ -439,12 +439,12 @@ CLASS Z2UI5_CL_TOOL_APP_03 IMPLEMENTATION.
        )->avatar( src = `` class = 'sapUiSmallMarginEnd' displaySize = 'layout'
         )->vertical_layout( class = 'sapUiSmallMarginBeginEnd'
             )->label(  text    = `UUID`
-            )->label(  text    = ms_detail-uuid
+            )->label(  text    = ms_detail-id
         )->get_parent(
         )->horizontal_layout( class = 'sapUiSmallMarginBeginEnd'
          )->vertical_layout(
             )->label( text    = 'UUID PRevious'
-            )->label( text    = ms_detail-uuid_prev
+            )->label( text    = ms_detail-id_prev
           )->get_parent(
         )->get_parent(
         )->vertical_layout( class = 'sapUiSmallMarginBeginEnd'

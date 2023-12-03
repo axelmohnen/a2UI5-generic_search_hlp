@@ -73,17 +73,18 @@ CLASS Z2UI5_CL_TOOL_APP_07 IMPLEMENTATION.
   METHOD ui5_on_init.
 
     ui5_view_init_display( ).
-    client->timer_set( event_finished = client->_event( `START` ) interval_ms = `0` ).
 
   ENDMETHOD.
 
 
   METHOD ui5_view_init_display.
 
-    client->view_display( z2ui5_cl_xml_view=>factory( client
-         )->_cc( )->ui5_file_uploader( )->load_cc(
-*         )->zcc_file_uploader_js(
-         )->stringify( ) ).
+  ui5_view_main_display( ).
+
+*    client->view_display( z2ui5_cl_xml_view=>factory( client
+*         )->_z2ui5( )->timer(  client->_event( `START` )
+*         )->_generic( ns = `html` name = `script` )->_cc_plain_xml( z2ui5_cl_cc_file_uploader=>get_js( )
+*         )->stringify( ) ).
 
   ENDMETHOD.
 
@@ -145,7 +146,7 @@ CLASS Z2UI5_CL_TOOL_APP_07 IMPLEMENTATION.
 
     DATA(footer) = page->footer( )->overflow_toolbar( ).
 
-    footer->_cc( )->ui5_file_uploader( )->control(
+    footer->_z2ui5( )->file_uploader(
       value       = client->_bind_edit( mv_value )
       path        = client->_bind_edit( mv_path )
       placeholder = 'filepath here...'

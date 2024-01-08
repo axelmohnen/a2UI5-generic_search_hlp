@@ -289,8 +289,8 @@ CLASS Z2UI5_CL_TOOL_APP_04 IMPLEMENTATION.
 
     grid = page->grid( 'L12 M12 S12' )->content( 'layout' ).
 
-    grid->scroll_container( '75%'
-        )->code_editor(
+*    grid->scroll_container( '75%'
+       page->code_editor(
              type     = COND #( WHEN ms_export-segment_key = 'csv' THEN |plain_text| ELSE ms_import-segment_key )
              value    = client->_bind( ms_export-editor )
              editable = abap_false ).
@@ -353,8 +353,8 @@ CLASS Z2UI5_CL_TOOL_APP_04 IMPLEMENTATION.
 
     grid = page->grid( 'L12 M12 S12' )->content( 'layout' ).
 
-    grid->scroll_container( '75%'
-        )->code_editor(
+*    grid->scroll_container( '75%'
+        page->code_editor(
             type     = COND #( WHEN ms_import-segment_key = 'csv' THEN |plain_text| ELSE ms_import-segment_key )
             value    = client->_bind( ms_import-editor )
             editable = abap_true ).

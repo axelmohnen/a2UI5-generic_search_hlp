@@ -77,7 +77,7 @@ CLASS Z2UI5_CL_TOOL_APP_01 IMPLEMENTATION.
 *         )->input( client->_bind( ms_file-name )
           )->input(
                 value           = client->_bind_edit( mv_type )
-                suggestionitems = client->_bind( z2ui5_cl_tool_file_api=>get_editor_type( ) ) )->get(
+                suggestionitems = client->_bind_local( z2ui5_cl_tool_file_api=>get_editor_type( ) ) )->get(
             )->suggestion_items(
                 )->list_item( text = '{N}' additionaltext = '{V}'
                  )->get_parent( )->get_parent(
@@ -85,11 +85,10 @@ CLASS Z2UI5_CL_TOOL_APP_01 IMPLEMENTATION.
 *         )->input( client->_bind( ms_file-descr )
         ).
 
-    grid = page->grid( 'L12 M12 S12' )->content( 'layout' ).
+*    grid = page->grid( 'L12 M12 S12' )->content( 'layout' ).
 
-    grid->simple_form( 'Editor' )->content( 'form'
-            )->scroll_container( '75%'
-                )->code_editor(
+*    grid->simple_form( 'Editor' )->content( 'form'
+        page->code_editor(
                     type  = mv_type
 *                    editable = mv_check_editable
                     value = client->_bind_edit( ms_file-data ) ).

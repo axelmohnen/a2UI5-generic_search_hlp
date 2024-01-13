@@ -70,9 +70,6 @@ CLASS Z2UI5_CL_TOOL_APP_01 IMPLEMENTATION.
     DATA(grid) = page->grid( 'L7 M12 S12' )->content( 'layout' ).
 
     grid->simple_form( title = 'File' editable = abap_true )->content( 'form'
-*         )->label( 'ID / Size'
-*         )->input( value = client->_bind( ms_file-id ) enabled = abap_false
-*         )->input( value = client->_bind( ms_file-file_size ) enabled = abap_false
          )->label( 'Format'
 *         )->input( client->_bind( ms_file-name )
           )->input(

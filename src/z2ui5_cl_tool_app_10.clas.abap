@@ -422,7 +422,7 @@ CLASS Z2UI5_CL_TOOL_APP_10 IMPLEMENTATION.
 * RENDERING
 * -------------------------------------------------------------------------------------------------
 * ---------- Set view -----------------------------------------------------------------------------
-      DATA(lr_view) = Z2UI5_cl_xml_view=>factory( client = client ).
+      DATA(lr_view) = Z2UI5_cl_xml_view=>factory( ).
 
       DATA(lr_page) = lr_view->page(
             title          = 'abap2UI5 - DDIC Searchhelp generator'
@@ -500,7 +500,7 @@ CLASS Z2UI5_CL_TOOL_APP_10 IMPLEMENTATION.
 
       WHEN 'F4_POPUP_OPEN'.
 * ---------- Create Popup -------------------------------------------------------------------------
-        DATA(lr_popup) = Z2UI5_cl_xml_view=>factory_popup( client ).
+        DATA(lr_popup) = Z2UI5_cl_xml_view=>factory_popup( ).
 
 * ---------- Create Dialog ------------------------------------------------------------------------
         DATA(lr_dialog) = lr_popup->dialog( title     = 'DDIC SHLP Generator'

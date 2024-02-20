@@ -801,7 +801,7 @@ CLASS z2ui5_cl_tool_app_shlp_gen IMPLEMENTATION.
     ENDIF.
 
 * ---------- Create Popup -------------------------------------------------------------------------
-    DATA(lr_popup) = z2ui5_cl_xml_view=>factory_popup( ir_client ).
+    DATA(lr_popup) = z2ui5_cl_xml_view=>factory_popup( ).
 
 * ---------- Create Dialog ------------------------------------------------------------------------
     DATA(lr_dialog) = lr_popup->dialog( contentheight = `50%`
@@ -1320,7 +1320,7 @@ CLASS z2ui5_cl_tool_app_shlp_gen IMPLEMENTATION.
     FIELD-SYMBOLS: <ls_shlp_descr> TYPE ts_shlp_descr.
 
 * ---------- Create Popup -------------------------------------------------------------------------
-    DATA(lr_popup) = z2ui5_cl_xml_view=>factory_popup( ir_client ).
+    DATA(lr_popup) = z2ui5_cl_xml_view=>factory_popup( ).
 
 * ---------- Create Dialog ------------------------------------------------------------------------
     DATA(lr_dialog) = lr_popup->dialog( title     = me->mv_popup_title

@@ -1,13 +1,15 @@
-# abap2UI5 - Tools / Demo Functions
+# a2UI5 Apps - Generic Search Help
 
-Most of the functionalities of this repository are now here: <br>
-[1. Table Loader ](https://github.com/oblomov-dev/a2UI5-db_table_loader) <br>
-[2. MIME Faker](https://github.com/oblomov-dev/a2UI5-mime_faker)
+Popups with Search Helps, dynamically created based on imported values.
 
-_If you encounter any problems or have questions, feel free to open an issue. Pull requests are welcome!_
+#### Demo
 
-#### Utility Functions
-* Generic Search Help
+<img width="800" alt="image" src="https://github.com/oblomov-dev/a2UI5-generic_search_help/assets/102328295/17768c33-34f4-4369-a63e-e153b64cdacf">
 
+<img width="800" alt="image" src="https://github.com/oblomov-dev/a2UI5-generic_search_help/assets/102328295/a43d8fc2-c0a9-49e3-b49a-a319fd578f96">
+
+<img width="800" alt="image" src="https://github.com/oblomov-dev/a2UI5-generic_search_help/assets/102328295/46a56965-3dcc-4fdf-add1-7a5c198fb1e6">
+
+<img width="800" alt="image" src="https://github.com/oblomov-dev/a2UI5-generic_search_help/assets/102328295/2d98b117-eac7-4383-bad9-35e6eaddaa17">
 
 

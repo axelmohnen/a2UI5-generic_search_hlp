@@ -74,7 +74,7 @@ CLASS z2ui5_cl_tool_app_09 IMPLEMENTATION.
 
 
   METHOD z2ui5_on_render.
-    DATA(view) = z2ui5_cl_xml_view=>factory( ).
+    DATA(view) = z2ui5_cl_xml_view=>factory( ir_client ).
 
     DATA(page) = view->page( id = `page_main`
              title          = 'abap2UI5 - Run generic DDIC searchelp'

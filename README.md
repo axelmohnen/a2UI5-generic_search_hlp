@@ -1,6 +1,13 @@
-# a2UI5 Apps - Generic Search Help
+# a2UI5 Apps - Generic Search Help / Generic Value Help
 
 Popups with Search Helps, dynamically created based on imported values.
+
+1) Generic DDIC Search help generator
+2) Generic Value help generator
+   
+## 1) Generic DDIC Search help generator
+
+## 2) Generic Value help generator
 
 #### Demo
 

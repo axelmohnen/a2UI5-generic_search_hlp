@@ -7,7 +7,8 @@ Popups with Search Helps, dynamically created based on imported values.
    
 ## 1) Generic DDIC Search help generator
 ### 1.1) Description
-This app will generate a popup window based on the given DDIC searchelp ID. The popup renders all selection fields flagged for "selection" (Selection position). The result list gets rendered based on the fields flagged for "Display" (Display position). With the "Go" button you will run the serach with the provide selection criteria. Selecting a record in result list will close the popup. The value flagged for "exporting" will be returned to the calling application.
+This app will generate a popup window based on the given DDIC searchelp ID. The popup renders all selection fields flagged for "selection" (Selection position). The result list gets rendered based on the fields flagged for "Display" (Display position). With the "Go" button you will run the search with the provide selection criteria. Selecting a record in result list will close the popup. The value flagged for "exporting" will be returned to the calling application.
+By default each selection criteria contains a popup window in order to enter one or more logical expressions. 
 ### 1.2) App name (Class name)
 Class: Z2UI5_CL_TOOL_APP_SHLP_GEN
 

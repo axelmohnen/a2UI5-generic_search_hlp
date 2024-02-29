@@ -6,10 +6,12 @@ Popups with Search Helps, dynamically created based on imported values.
 2) Generic Value help generator
    
 ## 1) Generic DDIC Search help generator
-### 1.1) App name (Class name)
+### 1.1) Description
+This app will generate a popup window based on the given DDIC searchelp ID. The popup renders all selection fields flagged for "selection" (Selection position). The result list gets rendered based on the fields flagged for "Display" (Display position). With the "Go" button you will run the serach with the provide selection criteria. Selecting a record in result list will close the popup. The value flagged for "exporting" will be returned to the calling application.
+### 1.2) App name (Class name)
 Class: Z2UI5_CL_TOOL_APP_SHLP_GEN
 
-### 1.2) Parameters
+### 1.3) Parameters
 | Parameter Name          | Type       | Optional | Description                                                                              |
 | ----------------------- | ---------- | -------- | ---------------------------------------------------------------------------------------- |
 | IV_SHLP_ID              | Importing  |          | This is the ID of the DDIC searchhelp. It could be an elementary or collective searchelp |
@@ -21,6 +23,8 @@ Class: Z2UI5_CL_TOOL_APP_SHLP_GEN
 | IT_SHLP_EXIT            | Importing  | Yes      | User-Exit in order to created your own deep value help on top of the seachhelp fields. For more details, please refer to the comments in the "FACTORY" method |
 | IV_USE_DEEP_SHLP        | Importing  | Yes      | This parameter will active a deep searchhelp generator. This means, if the DDIC seachhelp field has a searchhelp assigned on data element level or the corresponding domain contains fix value, it will either generate a generic searchhelp (searchhelp assigned on data element) or value help (domain fix value) | 
 | RESULT                  | Returning  |          | Returning instance of the Searchhelp app |
+
+### 1.4 Demo
 
 ## 2) Generic Value help generator
 

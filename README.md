@@ -9,6 +9,7 @@ Popups with Search Helps, dynamically created based on imported values.
 ### 1.1) Description
 This app will generate a popup window based on the given DDIC searchelp ID. The popup renders all selection fields flagged for "selection" (Selection position). The result list gets rendered based on the fields flagged for "Display" (Display position). With the "Go" button you will run the search with the provide selection criteria. Selecting a record in result list will close the popup. The value flagged for "exporting" will be returned to the calling application.
 By default each selection criteria contains a popup window in order to enter one or more logical expressions. 
+
 ### 1.2) App name (Class name)
 Class: Z2UI5_CL_TOOL_APP_SHLP_GEN
 
@@ -34,10 +35,19 @@ Demo app: Z2UI5_CL_TOOL_APP_09
 <img width="800" alt="image" src="https://github.com/axelmohnen/a2UI5-generic_search_hlp/blob/dev/src/images/2ui5_gen_shlp_pic3.png">
 
 ## 2) Generic Value help generator
+### 2.1) Description
+This app will generate a popup window with value help. The value help popup contains a free text filter field and a result list. The result list can contain maximum 10 columns. The value help configuration is done via a "config" import parameter. Selecting a record in result list will close the popup. The value flagged for "returning" will be returned to the calling application.
 
-#### Demo
+### 2.2) App name (Class name)
+Class: Z2UI5_CL_TOOL_APP_VH_GEN
 
+### 2.3) Parameters
+| Parameter Name          | Type       | Optional | Description                                                                              |
+| ----------------------- | ---------- | -------- | ---------------------------------------------------------------------------------------- |
+| IT_DATA                 | Importing  |          | Data table for the value help list. Its of type Z2UI5_CL_TOOL_APP_VH_GEN=>TT_DATA. It contains up to 10 fields (COL01 - COL10 |
+| IS_CONFIG               | Importing  |          | This contains the value help configuration. For more details, please refer to the comments in the "FACTORY" method |
+| RESULT                  | Returning  |          | Returning instance of the value help app |
 
-
-
-
+### 1.4 Demo
+Demo app: Z2UI5_CL_TOOL_APP_11
+<img width="800" alt="image" src="https://github.com/axelmohnen/a2UI5-generic_search_hlp/blob/dev/src/images/2ui5_gen_vh_pic1.png">

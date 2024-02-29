@@ -26,6 +26,7 @@ Class: Z2UI5_CL_TOOL_APP_SHLP_GEN
 | RESULT                  | Returning  |          | Returning instance of the Searchhelp app |
 
 ### 1.4 Demo
+Demo app: Z2UI5_CL_TOOL_APP_09
 
 ## 2) Generic Value help generator
 

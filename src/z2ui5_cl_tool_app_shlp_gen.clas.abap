@@ -122,6 +122,7 @@ public section.
       !IT_SHLP_BLACKLIST type TT_SHLP_BLACKLIST optional
       !IV_DEFAULT_SHLP_INDEX type I default 1
       !IT_SHLP_EXIT type TT_SHLP_EXIT optional
+      !IV_USE_DEEP_SHLP type BOOLE_D optional
     returning
       value(RESULT) type ref to Z2UI5_CL_TOOL_APP_SHLP_GEN .
   class-methods TEMPLATE_VH_USER_EXIT
@@ -143,6 +144,7 @@ protected section.
   constants MC_SHLP_TYPE_SHLP_EXIT type STRING value 'SHLP_EXIT' ##NO_TEXT.
   data MV_DEFAULT_SHLP_INDEX type I .
   data MT_SHLP_EXIT type TT_SHLP_EXIT .
+  data MV_USE_DEEP_SHLP type BOOLE_D .
 
   methods ON_RENDERING
     importing
@@ -532,6 +534,13 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 * -------------------------------------------------------------------------------------------------
     result->mt_shlp_exit = it_shlp_exit.
 
+* -------------------------------------------------------------------------------------------------
+* Use deep searchhelp
+*  -> If true and the seachhelp field contains a searchhelp (SHLP in data element or fix values on
+*     domain level), it will generate another DDIC searchhelp or value help on top of the existing
+*     searchhelp.
+* -------------------------------------------------------------------------------------------------
+    result->mv_use_deep_shlp = iv_use_deep_shlp.
   ENDMETHOD.
 
 
@@ -1920,6 +1929,11 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 * ---------- Check if standard searchhelp (on Data element or domain) exists ----------------------
     IF ls_field_descr-datatype <> 'CHAR' OR
        ls_field_descr-f4availabl = abap_false.
+      RETURN.
+    ENDIF.
+
+* ---------- Check if deep searchelp has been requested -------------------------------------------
+    IF me->mv_use_deep_shlp = abap_false.
       RETURN.
     ENDIF.
 

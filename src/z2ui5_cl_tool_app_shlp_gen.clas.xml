@@ -96,12 +96,120 @@
      <ENTRY>OK</ENTRY>
      <LENGTH>50</LENGTH>
     </item>
+    <item>
+     <ID>I</ID>
+     <KEY>T06</KEY>
+     <ENTRY>Description</ENTRY>
+     <LENGTH>50</LENGTH>
+    </item>
    </TPOOL>
+   <I18N_TPOOL>
+    <item>
+     <LANGUAGE>F</LANGUAGE>
+     <TEXTPOOL>
+      <item>
+       <ID>I</ID>
+       <KEY>L01</KEY>
+       <ENTRY>égal à</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>L02</KEY>
+       <ENTRY>inférieur à</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>L03</KEY>
+       <ENTRY>inférieur/égal à</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>L04</KEY>
+       <ENTRY>supérieur à</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>L05</KEY>
+       <ENTRY>supérieur/égal à</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>L06</KEY>
+       <ENTRY>contient</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>L07</KEY>
+       <ENTRY>entre</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>L08</KEY>
+       <ENTRY>différent de</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>T00</KEY>
+       <ENTRY>Annuler</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>T01</KEY>
+       <ENTRY>Go</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>T02</KEY>
+       <ENTRY>Définir des conditions:</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>T03</KEY>
+       <ENTRY>Ajouter</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>T04</KEY>
+       <ENTRY>Supprimer tout</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>T05</KEY>
+       <ENTRY>OK</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>T06</KEY>
+       <ENTRY>La description</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+     </TEXTPOOL>
+    </item>
+   </I18N_TPOOL>
    <DESCRIPTIONS>
     <SEOCOMPOTX>
      <CMPNAME>BUILD_DATA_REF</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Build data reference dynamically</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONVERT_RESULT_TO_TOKEN</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Convert SHLP/VH result to token table for given field</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>GENERATE_DDIC_SHLP</CMPNAME>
@@ -114,6 +222,16 @@
      <DESCRIPT>Select-option popup rendering</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>GENERATE_VH_DOMAIN_FIX_VAL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Generate a value help popup for domain fix values</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GENERATE_VH_USER_EXIT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Generate a value help popup for user exit</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>GET_SELOPT_MAPPING</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Get select-option mapping table</DESCRIPT>
@@ -124,14 +242,44 @@
      <DESCRIPT>Get searchhelp range by value</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>GET_SHLP_TYPE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get  Searchhelp type (SHLP, Fix value, Check table,...)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>GET_SHLP_UUID</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Generate UUID</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>HANDLE_POPUP_RETURN</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Handle popup returning</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>MV_CHECK_POPUP_FIX_VAL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Data element for domain BOOLE: TRUE (=&apos;X&apos;) and FALSE (=&apos; &apos;)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>MV_CHECK_POPUP_SHLP</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Data element for domain BOOLE: TRUE (=&apos;X&apos;) and FALSE (=&apos; &apos;)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>MV_CHECK_POPUP_SHLP_EXIT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Data element for domain BOOLE: TRUE (=&apos;X&apos;) and FALSE (=&apos; &apos;)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>MV_SHLP_ID</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>30 Characters</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>MV_USE_DEEP_SHLP</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Boolean variable</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>ON_EVENT</CMPNAME>
@@ -153,6 +301,11 @@
      <LANGU>E</LANGU>
      <DESCRIPT>Fetch data from DDIC searchhelp</DESCRIPT>
     </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TEMPLATE_VH_USER_EXIT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Template for value help user-exit</DESCRIPT>
+    </SEOCOMPOTX>
    </DESCRIPTIONS>
    <DESCRIPTIONS_SUB>
     <SEOSUBCOTX>
@@ -160,6 +313,18 @@
      <SCONAME>IR_CLIENT</SCONAME>
      <LANGU>E</LANGU>
      <DESCRIPT>abap2UI5 - client</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>CONVERT_RESULT_TO_TOKEN</CMPNAME>
+     <SCONAME>IR_CLIENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>abap2UI5 - client</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>FACTORY</CMPNAME>
+     <SCONAME>IV_USE_DEEP_SHLP</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Boolean variable</DESCRIPT>
     </SEOSUBCOTX>
     <SEOSUBCOTX>
      <CMPNAME>FACTORY</CMPNAME>
@@ -198,10 +363,46 @@
      <DESCRIPT>30 Characters</DESCRIPT>
     </SEOSUBCOTX>
     <SEOSUBCOTX>
+     <CMPNAME>GENERATE_VH_DOMAIN_FIX_VAL</CMPNAME>
+     <SCONAME>IR_CLIENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>abap2UI5 - client</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>GENERATE_VH_USER_EXIT</CMPNAME>
+     <SCONAME>IR_CLIENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>abap2UI5 - client</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
      <CMPNAME>GET_SHLP_RANGE_BY_VALUE</CMPNAME>
      <SCONAME>IV_VALUE</SCONAME>
      <LANGU>E</LANGU>
      <DESCRIPT>String</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>GET_SHLP_TYPE</CMPNAME>
+     <SCONAME>IV_FIELDNAME</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>String</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>GET_SHLP_TYPE</CMPNAME>
+     <SCONAME>IV_SHLP_ID</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>30 Characters</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>GET_SHLP_TYPE</CMPNAME>
+     <SCONAME>RS_SHLP_TYPE</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>String</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>HANDLE_POPUP_RETURN</CMPNAME>
+     <SCONAME>IR_CLIENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>abap2UI5 - client</DESCRIPT>
     </SEOSUBCOTX>
     <SEOSUBCOTX>
      <CMPNAME>ON_EVENT</CMPNAME>
@@ -226,6 +427,12 @@
      <SCONAME>IV_SHLP_ID</SCONAME>
      <LANGU>E</LANGU>
      <DESCRIPT>30 Characters</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>TEMPLATE_VH_USER_EXIT</CMPNAME>
+     <SCONAME>IV_ROLLNAME</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Data element (semantic domain)</DESCRIPT>
     </SEOSUBCOTX>
    </DESCRIPTIONS_SUB>
   </asx:values>

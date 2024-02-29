@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>Z2UI5_CL_TOOL_APP_VH_GEN</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>Generic Value help</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <TPOOL>
+    <item>
+     <ID>I</ID>
+     <KEY>E00</KEY>
+     <ENTRY>The value help field configuration is missing</ENTRY>
+     <LENGTH>100</LENGTH>
+    </item>
+   </TPOOL>
+   <I18N_TPOOL>
+    <item>
+     <LANGUAGE>F</LANGUAGE>
+     <TEXTPOOL>
+      <item>
+       <ID>I</ID>
+       <KEY>E00</KEY>
+       <ENTRY>La configuration du champ d&apos;aide à la saisie est manquante</ENTRY>
+       <LENGTH>100</LENGTH>
+      </item>
+     </TEXTPOOL>
+    </item>
+   </I18N_TPOOL>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>FACTORY</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>factory</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>ON_EVENT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>on event</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>ON_INIT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>on init</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>ON_RENDERING</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>on rendering</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>FACTORY</CMPNAME>
+     <SCONAME>RESULT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Generic Value help</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>ON_EVENT</CMPNAME>
+     <SCONAME>IR_CLIENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>abap2UI5 - client</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>ON_INIT</CMPNAME>
+     <SCONAME>IR_CLIENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>abap2UI5 - client</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>ON_RENDERING</CMPNAME>
+     <SCONAME>IR_CLIENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>abap2UI5 - client</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,45 +1,45 @@
-CLASS z2ui5_cl_tool_app_shlp_gen DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+class Z2UI5_CL_TOOL_APP_SHLP_GEN definition
+  public
+  create public .
 
-  PUBLIC SECTION.
+public section.
 
-    INTERFACES if_serializable_object .
-    INTERFACES z2ui5_if_app .
+  interfaces IF_SERIALIZABLE_OBJECT .
+  interfaces Z2UI5_IF_APP .
 
-    TYPES:
-      BEGIN OF ts_token,
+  types:
+    BEGIN OF ts_token,
         key      TYPE string,
         text     TYPE string,
         visible  TYPE abap_bool,
         selkz    TYPE abap_bool,
         editable TYPE abap_bool,
       END OF ts_token .
-    TYPES:
-      tt_token TYPE STANDARD TABLE OF ts_token WITH KEY key .
-    TYPES:
-      tt_range TYPE RANGE OF string .
-    TYPES:
-      ts_range TYPE LINE OF tt_range .
-    TYPES:
-      BEGIN OF ts_filter_pop,
+  types:
+    tt_token TYPE STANDARD TABLE OF ts_token WITH KEY key .
+  types:
+    tt_range TYPE RANGE OF string .
+  types:
+    ts_range TYPE LINE OF tt_range .
+  types:
+    BEGIN OF ts_filter_pop,
         option TYPE string,
         low    TYPE string,
         high   TYPE string,
         key    TYPE string,
       END OF ts_filter_pop .
-    TYPES:
-      tt_filter_prop TYPE STANDARD TABLE OF ts_filter_pop WITH EMPTY KEY .
-    TYPES:
-      BEGIN OF ts_selopt_mapping,
+  types:
+    tt_filter_prop TYPE STANDARD TABLE OF ts_filter_pop WITH EMPTY KEY .
+  types:
+    BEGIN OF ts_selopt_mapping,
         key   TYPE string,
         text  TYPE string,
         value TYPE string,
       END OF ts_selopt_mapping .
-    TYPES:
-      tt_selopt_mapping TYPE STANDARD TABLE OF ts_selopt_mapping WITH KEY key .
-    TYPES:
-      BEGIN OF ts_shlp_descr.
+  types:
+    tt_selopt_mapping TYPE STANDARD TABLE OF ts_selopt_mapping WITH KEY key .
+  types:
+    BEGIN OF ts_shlp_descr.
         INCLUDE TYPE shlp_descr. "Can be replaced by local def. for downport
     TYPES: END OF ts_shlp_descr .
     TYPES:
@@ -56,6 +56,7 @@ CLASS z2ui5_cl_tool_app_shlp_gen DEFINITION
         id    TYPE string,
         label TYPE string,
       END OF ts_shlp_type .
+
     TYPES:
       BEGIN OF ts_shlp_exit,
         rollname TYPE rollname,
@@ -134,6 +135,7 @@ CLASS z2ui5_cl_tool_app_shlp_gen DEFINITION
       EXPORTING
         !es_config   TYPE z2ui5_cl_tool_app_vh_gen=>ts_config
         !et_data     TYPE z2ui5_cl_tool_app_vh_gen=>tt_data .
+
 protected section.
 
   data MV_SELOPT_FIELDNAME type STRING .
@@ -1470,7 +1472,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
     FIELD-SYMBOLS: <ls_shlp_descr> TYPE ts_shlp_descr.
 
 * ---------- Create Popup -------------------------------------------------------------------------
-    DATA(lr_popup) = z2ui5_cl_xml_view=>factory_popup( ).
+    DATA(lr_popup) = z2ui5_cl_xml_view=>factory_popup( ir_client ).
 
 * ---------- Create Dialog ------------------------------------------------------------------------
     DATA(lr_dialog) = lr_popup->dialog( title     = me->mv_popup_title
@@ -1719,6 +1721,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
                       input  = ls_range-high
                     IMPORTING
                       output = <lv_conv_out>.
+                      
                   IF sy-subrc = 0.
                     ls_range-high = <lv_conv_out>.
                   ELSE.
@@ -2109,7 +2112,6 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
     ir_client->nav_app_call( z2ui5_cl_tool_app_vh_gen=>factory( it_data   = lt_vh
                                                                 is_config = ls_config ) ).
   ENDMETHOD.
-
 
   METHOD generate_vh_user_exit.
 *----------------------------------------------------------------------*

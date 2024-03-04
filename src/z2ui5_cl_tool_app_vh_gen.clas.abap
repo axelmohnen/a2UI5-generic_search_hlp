@@ -251,7 +251,7 @@ CLASS Z2UI5_CL_TOOL_APP_VH_GEN IMPLEMENTATION.
     FIELD-SYMBOLS: <ls_config_fields> TYPE ts_config_fields.
 
 * ---------- Create Popup -------------------------------------------------------------------------
-    DATA(lr_popup) = z2ui5_cl_xml_view=>factory_popup( ir_client ).
+    DATA(lr_popup) = z2ui5_cl_xml_view=>factory_popup( ).
 
 * ---------- Build "ITEMS" parameter string -------------------------------------------------------
     IF me->ms_config-sortby IS INITIAL.

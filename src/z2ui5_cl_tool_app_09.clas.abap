@@ -27,7 +27,7 @@ ENDCLASS.
 
 
 
-CLASS z2ui5_cl_tool_app_09 IMPLEMENTATION.
+CLASS Z2UI5_CL_TOOL_APP_09 IMPLEMENTATION.
 
 
   METHOD z2ui5_if_app~main.
@@ -74,7 +74,7 @@ CLASS z2ui5_cl_tool_app_09 IMPLEMENTATION.
 
 
   METHOD z2ui5_on_render.
-    DATA(view) = z2ui5_cl_xml_view=>factory( ir_client ).
+    DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     DATA(page) = view->page( id = `page_main`
              title          = 'abap2UI5 - Run generic DDIC searchelp'

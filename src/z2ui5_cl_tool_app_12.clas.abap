@@ -9,7 +9,7 @@ public section.
 
   data:
     BEGIN OF ms_screen,
-        langu TYPE spras,
+        bukrs TYPE string,
       END OF ms_screen .
   data MV_CHECK_POPUP type ABAP_BOOL .
   data MV_CHECK_INITIALIZED type ABAP_BOOL .
@@ -41,7 +41,7 @@ CLASS Z2UI5_CL_TOOL_APP_12 IMPLEMENTATION.
       mv_check_popup = abap_false.
       DATA(app) = CAST z2ui5_cl_tool_app_shlp_gen( client->get_app( client->get( )-s_draft-id_prev_app )  ).
       client->message_toast_display( app->mv_shlp_result ).
-      me->ms_screen-langu = app->mv_shlp_result.
+      me->ms_screen-bukrs = app->mv_shlp_result.
       z2ui5_on_render( ir_client = client ).
     ENDIF.
 
@@ -58,7 +58,7 @@ CLASS Z2UI5_CL_TOOL_APP_12 IMPLEMENTATION.
         mv_check_popup = abap_true.
         ir_client->nav_app_call( z2ui5_cl_tool_app_shlp_gen=>factory(
           iv_popup_title = 'SHLP DEMO - using deep search'
-          iv_shlp_id = 'H_T002'
+          iv_shlp_id = 'H_T001_ME'
           iv_use_deep_shlp = abap_true ) ).
 
       WHEN 'BACK'.
@@ -74,7 +74,7 @@ CLASS Z2UI5_CL_TOOL_APP_12 IMPLEMENTATION.
 
 
   METHOD Z2UI5_ON_RENDER.
-    DATA(view) = z2ui5_cl_xml_view=>factory( ir_client ).
+    DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     DATA(page) = view->page( id = `page_main`
              title          = 'abap2UI5 - Run generic DDIC searchelp'
@@ -84,8 +84,8 @@ CLASS Z2UI5_CL_TOOL_APP_12 IMPLEMENTATION.
 
     DATA(grid) = page->grid( 'L7 M12 S12' )->content( 'layout'
         )->simple_form( 'run DDIC searchhelp in new app' )->content( 'form'
-            )->label( `Language`
-            )->input(  value = ir_client->_bind_edit( ms_screen-langu )
+            )->label( `Company Code`
+            )->input(  value = ir_client->_bind_edit( ms_screen-bukrs )
                   showvaluehelp                = abap_true
                   valuehelprequest             = ir_client->_event( 'FILTER_VALUE_HELP' ) ).
 

@@ -118,7 +118,7 @@ CLASS Z2UI5_CL_TOOL_APP_11 IMPLEMENTATION.
 
 
   METHOD Z2UI5_ON_RENDER.
-    DATA(view) = z2ui5_cl_xml_view=>factory( ir_client ).
+    DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     DATA(page) = view->page( id = `page_main`
              title          = 'abap2UI5 - Run generic value help'

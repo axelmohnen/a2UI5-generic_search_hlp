@@ -18,6 +18,18 @@
      <ENTRY>The value help field configuration is missing</ENTRY>
      <LENGTH>100</LENGTH>
     </item>
+    <item>
+     <ID>I</ID>
+     <KEY>T00</KEY>
+     <ENTRY>Description</ENTRY>
+     <LENGTH>50</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>T01</KEY>
+     <ENTRY>Domain fix value</ENTRY>
+     <LENGTH>50</LENGTH>
+    </item>
    </TPOOL>
    <I18N_TPOOL>
     <item>
@@ -28,6 +40,18 @@
        <KEY>E00</KEY>
        <ENTRY>La configuration du champ d&apos;aide à la saisie est manquante</ENTRY>
        <LENGTH>100</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>T00</KEY>
+       <ENTRY>La description</ENTRY>
+       <LENGTH>50</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>T01</KEY>
+       <ENTRY>Constantes de domaine</ENTRY>
+       <LENGTH>50</LENGTH>
       </item>
      </TEXTPOOL>
     </item>
@@ -52,6 +76,11 @@
      <CMPNAME>ON_RENDERING</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>on rendering</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>RENDER_VH_DOMAIN_FIX_VALUES</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Render domain fix values value help</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
    <DESCRIPTIONS_SUB>
@@ -78,6 +107,18 @@
      <SCONAME>IR_CLIENT</SCONAME>
      <LANGU>E</LANGU>
      <DESCRIPT>abap2UI5 - client</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>RENDER_VH_DOMAIN_FIX_VALUES</CMPNAME>
+     <SCONAME>IR_CLIENT</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>abap2UI5 - client</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>RENDER_VH_DOMAIN_FIX_VALUES</CMPNAME>
+     <SCONAME>IV_DOMNAME</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Domain name</DESCRIPT>
     </SEOSUBCOTX>
    </DESCRIPTIONS_SUB>
   </asx:values>

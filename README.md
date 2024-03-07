@@ -27,7 +27,7 @@ Class: Z2UI5_CL_TOOL_APP_SHLP_GEN
 | RESULT                  | Returning  |          | Returning instance of the Searchhelp app |
 
 ### 1.4 Demo
-Demo app: Z2UI5_CL_TOOL_APP_09
+Demo app: Z2UI5_CL_TOOL_APP_09, Z2UI5_CL_TOOL_APP_12 (deep search demo)
 <img width="800" alt="image" src="https://github.com/axelmohnen/a2UI5-generic_search_hlp/blob/dev/src/images/2ui5_gen_shlp_pic1.png">
 
 <img width="800" alt="image" src="https://github.com/axelmohnen/a2UI5-generic_search_hlp/blob/dev/src/images/2ui5_gen_shlp_pic2.png">
@@ -51,3 +51,6 @@ Class: Z2UI5_CL_TOOL_APP_VH_GEN
 ### 1.4 Demo
 Demo app: Z2UI5_CL_TOOL_APP_11
 <img width="800" alt="image" src="https://github.com/axelmohnen/a2UI5-generic_search_hlp/blob/dev/src/images/2ui5_gen_vh_pic1.png">
+
+Demo app: Z2UI5_CL_TOOL_APP_13 (Domain fix value helper)
+ - Helper Method: Z2UI5_CL_TOOL_APP_VH_GEN=>RENDER_VH_DOMAIN_FIX_VALUES()

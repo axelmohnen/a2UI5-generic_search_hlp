@@ -58,6 +58,13 @@ public section.
       !IS_CONFIG type TS_CONFIG
     returning
       value(RESULT) type ref to Z2UI5_CL_TOOL_APP_VH_GEN .
+  class-methods RENDER_VH_DOMAIN_FIX_VALUES
+    importing
+      !IR_CLIENT type ref to Z2UI5_IF_CLIENT
+      !IV_DOMNAME type DOMNAME
+      !IV_POPUP_TITLE type CLIKE optional
+      !IV_CONTENTHEIGHT type CLIKE default '25%'
+      !IV_CONTENTWIDTH type CLIKE default '25%' .
 protected section.
 
   data MT_DATA_BAK type TT_DATA .
@@ -72,7 +79,7 @@ protected section.
   methods ON_INIT
     importing
       !IR_CLIENT type ref to Z2UI5_IF_CLIENT .
-  PRIVATE SECTION.
+private section.
 ENDCLASS.
 
 
@@ -308,5 +315,73 @@ CLASS Z2UI5_CL_TOOL_APP_VH_GEN IMPLEMENTATION.
 
     me->on_event( ir_client = client ).
 
+  ENDMETHOD.
+
+
+  METHOD render_vh_domain_fix_values.
+*----------------------------------------------------------------------*
+* LOCAL DATA DEFINITION
+*----------------------------------------------------------------------*
+    DATA: lt_data        TYPE z2ui5_cl_tool_app_vh_gen=>tt_data,
+          ls_config      TYPE z2ui5_cl_tool_app_vh_gen=>ts_config,
+          lt_dd07v       TYPE z2ui5_cl_tool_app_shlp_gen=>tt_dd07v,
+          lv_dom_label   TYPE string.
+
+    FIELD-SYMBOLS: <ls_dd07v> TYPE dd07v,
+                   <ls_data>  TYPE z2ui5_cl_tool_app_vh_gen=>ts_data.
+
+* ---------- Check required import parameter ------------------------------------------------------
+    IF iv_domname IS INITIAL.
+      RETURN.
+    ENDIF.
+
+* ---------- Get Domain Fix Values ----------------------------------------------------------------
+    SELECT * FROM dd07v INTO TABLE lt_dd07v WHERE domname     = iv_domname
+                                            AND   ddlanguage  = sy-langu.
+
+* ---------- Sort domain fix values by domain value key -------------------------------------------
+    SORT lt_dd07v BY valpos.
+
+* ---------- Map domain fix values into generic value help structure ------------------------------
+    LOOP AT lt_dd07v ASSIGNING <ls_dd07v>.
+      APPEND INITIAL LINE TO lt_data ASSIGNING <ls_data>.
+      <ls_data>-col01 = <ls_dd07v>-domvalue_l.
+      <ls_data>-col02 = <ls_dd07v>-ddtext.
+    ENDLOOP.
+
+* ---------- Get domain description ---------------------------------------------------------------
+    SELECT SINGLE ddtext FROM dd01t INTO lv_dom_label WHERE domname = iv_domname
+                                                      AND ddlanguage = sy-langu.
+
+    IF sy-subrc <> 0 OR
+       lv_dom_label IS INITIAL.
+* ---------- Set domain description ---------------------------------------------------------------
+      lv_dom_label = text-t01.
+    ENDIF.
+
+* ---------- Set value help title -----------------------------------------------------------------
+    IF iv_popup_title IS NOT INITIAL.
+      ls_config-popup_title = iv_popup_title.
+    ELSE.
+      ls_config-popup_title = lv_dom_label.
+    ENDIF.
+
+* ---------- Set value help window content size ---------------------------------------------------
+    ls_config-contentheight = iv_contentheight.
+    ls_config-contentwidth  = iv_contentwidth.
+
+* ---------- Set field configuration --------------------------------------------------------------
+    ls_config-fields = VALUE #( ( fieldname = 'COL01'
+                                  label     = lv_dom_label
+                                  width     = '10%'
+                                  retval    = abap_true )
+
+                                ( fieldname = 'COL02'
+                                  label     = TEXT-t00
+                                  width     = '10%' ) ).
+
+* ---------- Open value help popup window ---------------------------------------------------------
+    ir_client->nav_app_call( z2ui5_cl_tool_app_vh_gen=>factory( it_data   = lt_data
+                                                                is_config = ls_config ) ).
   ENDMETHOD.
 ENDCLASS.

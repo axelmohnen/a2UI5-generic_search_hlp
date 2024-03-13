@@ -1701,6 +1701,9 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 * ---------- Assign pointer -----------------------------------------------------------------------
                   ASSIGN lr_conv_out->* TO <lv_conv_out>.
 
+* ---------- Limit the input to max length --------------------------------------------------------
+                  ls_range-low = ls_range-low(<ls_fielddescr>-leng).
+
 * ---------- Execute conversion exit for low value ------------------------------------------------
                   CALL FUNCTION lv_convexit_name
                     EXPORTING

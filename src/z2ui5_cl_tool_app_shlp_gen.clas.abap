@@ -1,45 +1,45 @@
-class Z2UI5_CL_TOOL_APP_SHLP_GEN definition
-  public
-  create public .
+CLASS z2ui5_cl_tool_app_shlp_gen DEFINITION
+  PUBLIC
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  interfaces IF_SERIALIZABLE_OBJECT .
-  interfaces Z2UI5_IF_APP .
+    INTERFACES if_serializable_object .
+    INTERFACES z2ui5_if_app .
 
-  types:
-    BEGIN OF ts_token,
+    TYPES:
+      BEGIN OF ts_token,
         key      TYPE string,
         text     TYPE string,
         visible  TYPE abap_bool,
         selkz    TYPE abap_bool,
         editable TYPE abap_bool,
       END OF ts_token .
-  types:
-    tt_token TYPE STANDARD TABLE OF ts_token WITH KEY key .
-  types:
-    tt_range TYPE RANGE OF string .
-  types:
-    ts_range TYPE LINE OF tt_range .
-  types:
-    BEGIN OF ts_filter_pop,
+    TYPES:
+      tt_token TYPE STANDARD TABLE OF ts_token WITH KEY key .
+    TYPES:
+      tt_range TYPE RANGE OF string .
+    TYPES:
+      ts_range TYPE LINE OF tt_range .
+    TYPES:
+      BEGIN OF ts_filter_pop,
         option TYPE string,
         low    TYPE string,
         high   TYPE string,
         key    TYPE string,
       END OF ts_filter_pop .
-  types:
-    tt_filter_prop TYPE STANDARD TABLE OF ts_filter_pop WITH EMPTY KEY .
-  types:
-    BEGIN OF ts_selopt_mapping,
+    TYPES:
+      tt_filter_prop TYPE STANDARD TABLE OF ts_filter_pop WITH EMPTY KEY .
+    TYPES:
+      BEGIN OF ts_selopt_mapping,
         key   TYPE string,
         text  TYPE string,
         value TYPE string,
       END OF ts_selopt_mapping .
-  types:
-    tt_selopt_mapping TYPE STANDARD TABLE OF ts_selopt_mapping WITH KEY key .
-  types:
-    BEGIN OF ts_shlp_descr.
+    TYPES:
+      tt_selopt_mapping TYPE STANDARD TABLE OF ts_selopt_mapping WITH KEY key .
+    TYPES:
+      BEGIN OF ts_shlp_descr.
         INCLUDE TYPE shlp_descr. "Can be replaced by local def. for downport
     TYPES: END OF ts_shlp_descr .
     TYPES:
@@ -56,7 +56,6 @@ public section.
         id    TYPE string,
         label TYPE string,
       END OF ts_shlp_type .
-
     TYPES:
       BEGIN OF ts_shlp_exit,
         rollname TYPE rollname,
@@ -135,7 +134,6 @@ public section.
       EXPORTING
         !es_config   TYPE z2ui5_cl_tool_app_vh_gen=>ts_config
         !et_data     TYPE z2ui5_cl_tool_app_vh_gen=>tt_data .
-
 protected section.
 
   data MV_SELOPT_FIELDNAME type STRING .
@@ -905,10 +903,6 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
         shlp     = ls_shlp.
 
 * ---------- Get field description for given searchhelp field -------------------------------------
-*    SELECT SINGLE * FROM @ls_shlp-fielddescr AS fielddescr ##ITAB_KEY_IN_SELECT
-*                    WHERE fieldname = @iv_fieldname
-*                    INTO @ls_fielddescr.
-
     READ TABLE ls_shlp-fielddescr INTO ls_fielddescr WITH KEY fieldname = iv_fieldname.
 
     IF sy-subrc <> 0.
@@ -1701,13 +1695,13 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 * ---------- Assign pointer -----------------------------------------------------------------------
                   ASSIGN lr_conv_out->* TO <lv_conv_out>.
 
-* ---------- Limit the input to max length --------------------------------------------------------
-                  ls_range-low = ls_range-low(<ls_fielddescr>-leng).
+* ---------- Map input value to the right data type -----------------------------------------------
+                  <lv_conv_out> = ls_range-low.
 
 * ---------- Execute conversion exit for low value ------------------------------------------------
                   CALL FUNCTION lv_convexit_name
                     EXPORTING
-                      input  = ls_range-low
+                      input  = <lv_conv_out>
                     IMPORTING
                       output = <lv_conv_out>.
 
@@ -1717,14 +1711,17 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 * ---------- Keep format --------------------------------------------------------------------------
                   ENDIF.
 
-* ---------- Execute conversion exit for high value -----------------------------------------------
+* ---------- Map input value to the right data type -----------------------------------------------
                   CLEAR: <lv_conv_out>.
+                  <lv_conv_out> = ls_range-high.
+
+* ---------- Execute conversion exit for high value -----------------------------------------------
                   CALL FUNCTION lv_convexit_name
                     EXPORTING
-                      input  = ls_range-high
+                      input  = <lv_conv_out>
                     IMPORTING
                       output = <lv_conv_out>.
-                      
+
                   IF sy-subrc = 0.
                     ls_range-high = <lv_conv_out>.
                   ELSE.
@@ -2115,6 +2112,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
     ir_client->nav_app_call( z2ui5_cl_tool_app_vh_gen=>factory( it_data   = lt_vh
                                                                 is_config = ls_config ) ).
   ENDMETHOD.
+
 
   METHOD generate_vh_user_exit.
 *----------------------------------------------------------------------*

@@ -7,17 +7,12 @@ public section.
   interfaces IF_SERIALIZABLE_OBJECT .
   interfaces Z2UI5_IF_APP .
 
-  types TS_T001 type T001 .
-  types:
-    tt_t001 type STANDARD TABLE OF ts_t001 WITH DEFAULT KEY .
-
   data:
     BEGIN OF ms_screen,
         selopt TYPE string,
       END OF ms_screen .
   data MV_CHECK_POPUP type ABAP_BOOL .
   data MV_CHECK_INITIALIZED type ABAP_BOOL .
-  data MT_T001 type TT_T001 .
   PROTECTED SECTION.
 
     METHODS z2ui5_on_init .
@@ -58,47 +53,9 @@ CLASS Z2UI5_CL_TOOL_APP_13 IMPLEMENTATION.
 
 
   METHOD Z2UI5_ON_EVENT.
-*----------------------------------------------------------------------*
-* LOCAL DATA DEFINITION
-*----------------------------------------------------------------------*
-    DATA: lt_data   TYPE z2ui5_cl_tool_app_vh_gen=>tt_data,
-          ls_config TYPE z2ui5_cl_tool_app_vh_gen=>ts_config,
-          lt_t001   TYPE TABLE OF t001.
-
-    FIELD-SYMBOLS: <ls_t001> TYPE t001,
-                   <ls_data> TYPE z2ui5_cl_tool_app_vh_gen=>ts_data.
 
     CASE ir_client->get( )-event.
       WHEN `FILTER_VALUE_HELP`.
-** ---------- Map value help data ------------------------------------------------------------------
-*        LOOP AT me->mt_t001 ASSIGNING <ls_t001>.
-*          APPEND INITIAL LINE TO lt_data ASSIGNING <ls_data>.
-*          <ls_data>-col01 = <ls_t001>-bukrs.
-*          <ls_data>-col02 = <ls_t001>-butxt.
-*          <ls_data>-col03 = <ls_t001>-ort01.
-*        ENDLOOP.
-*
-** ---------- Set value help title -----------------------------------------------------------------
-*        ls_config-popup_title = 'Generic value help for company code'.
-*
-** ---------- Set value help window content size ---------------------------------------------------
-*        ls_config-contentheight = '25%'.
-*        ls_config-contentwidth = '25%'.
-*
-** ---------- Set field configuration --------------------------------------------------------------
-*        ls_config-fields = VALUE #( ( fieldname = 'COL01'
-*                                      label     = 'Company Code'
-*                                      width     = '10%'
-*                                      retval    = abap_true )
-*
-*                                    ( fieldname = 'COL02'
-*                                      label     = 'Company Name'
-*                                      width     = '10%' )
-*
-*                                    ( fieldname = 'COL03'
-*                                      label = 'City'
-*                                      width = '10%' ) ).
-
 * ---------- Open value help popup window ---------------------------------------------------------
         mv_check_popup = abap_true.
 
@@ -118,9 +75,6 @@ CLASS Z2UI5_CL_TOOL_APP_13 IMPLEMENTATION.
 
 
   METHOD Z2UI5_ON_INIT.
-
-* ---------- Read company codes for value help ----------------------------------------------------
-    SELECT * FROM t001 INTO TABLE me->mt_t001.
   ENDMETHOD.
 
 

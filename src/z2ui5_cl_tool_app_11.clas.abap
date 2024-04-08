@@ -1,22 +1,27 @@
-class Z2UI5_CL_TOOL_APP_11 definition
-  public
-  create public .
+CLASS z2ui5_cl_tool_app_11 DEFINITION
+  PUBLIC
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  interfaces IF_SERIALIZABLE_OBJECT .
-  interfaces Z2UI5_IF_APP .
+    INTERFACES if_serializable_object .
+    INTERFACES z2ui5_if_app .
 
-types: ts_t001 type t001.
-types: tt_t001 type STANDARD TABLE OF ts_t001 WITH DEFAULT KEY.
+    TYPES: BEGIN OF ts_t001,
+             bukrs TYPE string,
+             butxt TYPE string,
+             ort01 TYPE string,
+           END OF ts_t001.
 
-  data:
-    BEGIN OF ms_screen,
+    TYPES: tt_t001 TYPE STANDARD TABLE OF ts_t001 WITH DEFAULT KEY.
+
+    DATA:
+      BEGIN OF ms_screen,
         company_code TYPE string,
       END OF ms_screen .
-  data MV_CHECK_POPUP type ABAP_BOOL .
-  data MV_CHECK_INITIALIZED type ABAP_BOOL .
-  data mt_t001 type tt_t001.
+    DATA mv_check_popup TYPE abap_bool .
+    DATA mv_check_initialized TYPE abap_bool .
+    DATA mt_t001 TYPE tt_t001.
   PROTECTED SECTION.
 
     METHODS z2ui5_on_init .
@@ -64,7 +69,7 @@ CLASS Z2UI5_CL_TOOL_APP_11 IMPLEMENTATION.
           ls_config TYPE z2ui5_cl_tool_app_vh_gen=>ts_config,
           lt_t001   TYPE TABLE OF t001.
 
-    FIELD-SYMBOLS: <ls_t001> TYPE t001,
+    FIELD-SYMBOLS: <ls_t001> TYPE ts_t001,
                    <ls_data> TYPE z2ui5_cl_tool_app_vh_gen=>ts_data.
 
     CASE ir_client->get( )-event.
@@ -113,7 +118,11 @@ CLASS Z2UI5_CL_TOOL_APP_11 IMPLEMENTATION.
   METHOD z2ui5_on_init.
 
 * ---------- Read company codes for value help ----------------------------------------------------
-    SELECT * FROM t001 INTO TABLE me->mt_t001.
+*    SELECT * FROM t001 INTO TABLE me->mt_t001.
+      me->mt_t001 = value #(  ( bukrs = 'US01' butxt = 'Umbrella Corp'      ort01 = 'NY' )
+                              ( bukrs = 'US02' butxt = 'Zorg'               ort01 = 'LA' )
+                              ( bukrs = 'US03' butxt = 'Cyberdyne Systems'  ort01 = 'DC' ) ).
+
   ENDMETHOD.
 
 

@@ -14,6 +14,11 @@
     <item>/.gitlab-ci.yml</item>
     <item>/abaplint.json</item>
     <item>/azure-pipelines.yml</item>
+    <item>/src/images/2ui5_gen_shlp_pic1.png</item>
+    <item>/src/images/2ui5_gen_shlp_pic2.png</item>
+    <item>/src/images/2ui5_gen_shlp_pic3.png</item>
+    <item>/src/images/2ui5_gen_vh_pic1.png</item>
+    <item>/src/images/d</item>
    </IGNORE>
   </DATA>
  </asx:values>

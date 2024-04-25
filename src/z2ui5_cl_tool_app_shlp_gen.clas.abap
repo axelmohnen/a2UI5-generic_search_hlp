@@ -601,6 +601,12 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 
 * ---------- Fill token ---------------------------------------------------------------------------
     LOOP AT it_filter REFERENCE INTO DATA(lr_filter).
+
+      " ignore empty filter
+      IF lr_filter->option IS INITIAL.
+        CONTINUE.
+      ENDIF.
+
       DATA(lv_value) = me->mt_mapping[ key = lr_filter->option ]-value.
       REPLACE `{LOW}`  IN lv_value WITH lr_filter->low.
       REPLACE `{HIGH}` IN lv_value WITH lr_filter->high.

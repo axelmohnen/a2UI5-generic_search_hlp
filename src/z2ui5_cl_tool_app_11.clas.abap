@@ -66,8 +66,8 @@ CLASS Z2UI5_CL_TOOL_APP_11 IMPLEMENTATION.
 * LOCAL DATA DEFINITION
 *----------------------------------------------------------------------*
     DATA: lt_data   TYPE z2ui5_cl_tool_app_vh_gen=>tt_data,
-          ls_config TYPE z2ui5_cl_tool_app_vh_gen=>ts_config,
-          lt_t001   TYPE TABLE OF t001.
+          ls_config TYPE z2ui5_cl_tool_app_vh_gen=>ts_config.
+*          lt_t001   TYPE TABLE OF t001.
 
     FIELD-SYMBOLS: <ls_t001> TYPE ts_t001,
                    <ls_data> TYPE z2ui5_cl_tool_app_vh_gen=>ts_data.

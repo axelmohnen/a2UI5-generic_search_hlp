@@ -4,6 +4,7 @@ Popups with Search Helps, dynamically created based on imported values.
 
 1) Generic DDIC Search help generator
 2) Generic Value help generator
+3) Generic multi input value help generator
    
 ## 1) Generic DDIC Search help generator
 ### 1.1) Description
@@ -48,9 +49,23 @@ Class: Z2UI5_CL_TOOL_APP_VH_GEN
 | IS_CONFIG               | Importing  |          | This contains the value help configuration. For more details, please refer to the comments in the "FACTORY" method |
 | RESULT                  | Returning  |          | Returning instance of the value help app |
 
-### 1.4 Demo
+### 2.4 Demo
 Demo app: Z2UI5_CL_TOOL_APP_11
 <img width="800" alt="image" src="https://github.com/axelmohnen/a2UI5-generic_search_hlp/blob/dev/src/images/2ui5_gen_vh_pic1.png">
+
+## 3) Generic multi input value help generator
+### 3.1) Description
+This app will generate a popup window with multi input (token) value help. The value help popup contains multi filter input fields based on the configuration. The value help configuration is done via a "config" import parameter. The filter values (Token) will be returned to the calling application.
+
+### 3.2) App name (Class name)
+Class: Z2UI5_CL_TOOL_APP_SELOPT_GEN
+
+### 3.3) Parameters
+| Parameter Name          | Type       | Optional | Description                                                                              |
+| ----------------------- | ---------- | -------- | ---------------------------------------------------------------------------------------- |
+| IS_CONFIG               | Importing  |          | This contains the value help configuration. For more details, please refer to the comments in the "FACTORY" method |
+| IT_TOKEN                | Importing  |  Yes     | Filter values which will prefill the filter list
+| RESULT                  | Returning  |          | Returning instance of the value help app |
 
 Demo app: Z2UI5_CL_TOOL_APP_13 (Domain fix value helper)
  - Helper Method: Z2UI5_CL_TOOL_APP_VH_GEN=>RENDER_VH_DOMAIN_FIX_VALUES()

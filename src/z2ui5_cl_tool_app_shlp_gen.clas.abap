@@ -655,12 +655,16 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
           lv_arg_fieldname  TYPE stringval,
           lv_cell_fieldname TYPE stringval,
           lt_fieldprop_sel  TYPE ddshfprops,
-          lt_fieldprop_lis  TYPE ddshfprops.
+          lt_fieldprop_lis  TYPE ddshfprops,
+          ls_range          TYPE ts_range,
+          lv_memory         TYPE xuvalue,
+          lt_filter         TYPE tt_filter_prop.
 
     FIELD-SYMBOLS: <ls_fielddescr>    TYPE dfies,
                    <ls_fieldprop_sel> TYPE ddshfprop,
                    <ls_fieldprop_lis> TYPE ddshfprop,
                    <lt_result_itab>   TYPE STANDARD TABLE,
+                   <ls_filter>        TYPE ts_filter_pop,
                    <ls_shlp_fields>   TYPE any,
                    <lv_field_token>   TYPE any,
                    <lv_field_input>   TYPE any.
@@ -735,6 +739,30 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
         lv_grid_form_no = 1.
       ELSE.
         lv_grid_form_no = lv_grid_form_no + 1.
+      ENDIF.
+
+** ---------- Get Default value from Memory-ID -----------------------------------------------------
+      IF <ls_fielddescr>-memoryid IS NOT INITIAL
+      AND <lv_field_token> IS INITIAL.
+
+        GET PARAMETER ID <ls_fielddescr>-memoryid FIELD lv_memory.
+        IF sy-subrc = 0.
+
+          ls_range = me->get_shlp_range_by_value( CONV #( lv_memory ) ).
+          APPEND INITIAL LINE TO lt_filter ASSIGNING <ls_filter>.
+          <ls_filter>-key     = me->get_shlp_uuid( ).
+          <ls_filter>-option  = ls_range-option.
+          <ls_filter>-low     = ls_range-low.
+          <ls_filter>-high    = ls_range-high.
+
+* ---------- Fill token ---------------------------------------------------------------------------
+          me->fill_token( EXPORTING it_filter = lt_filter
+                          CHANGING ct_token  = <lv_field_token> ).
+
+          CLEAR lt_filter.
+
+        ENDIF.
+
       ENDIF.
 
       CASE lv_grid_form_no.

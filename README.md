@@ -5,6 +5,7 @@ Popups with Search Helps, dynamically created based on imported values.
 1) Generic DDIC Search help generator
 2) Generic Value help generator
 3) Generic multi input value help generator
+4) Generic CDS based (DDL) Search help generator
    
 ## 1) Generic DDIC Search help generator
 ### 1.1) Description

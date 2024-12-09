@@ -1704,6 +1704,11 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
             ENDIF.
 
           WHEN 'CHAR'.
+* ---------- Auto Convert to UPPER CASE -----------------------------------------------------------
+            IF <ls_fielddescr>-lowercase = abap_false.
+              ls_range-low = to_upper( ls_range-low ).
+              ls_range-high = to_upper( ls_range-high ).
+            ENDIF.
 * ---------- Check for conversion exits -----------------------------------------------------------
             IF <ls_fielddescr>-convexit IS NOT INITIAL.
 * ---------- Build conversion exit name ------------------------------------------------------------

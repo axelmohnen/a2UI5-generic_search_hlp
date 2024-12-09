@@ -25,6 +25,7 @@ Class: Z2UI5_CL_TOOL_APP_SHLP_GEN
 | IV_DEFAULT_SHLP_INDEX   | Importing  | Yes      | By default the first searchhelp of an collective searchhelp will be shown. With this parameter you can select another searchhelp to be shown first (Index: 1-x) |
 | IT_SHLP_EXIT            | Importing  | Yes      | User-Exit in order to created your own deep value help on top of the seachhelp fields. For more details, please refer to the comments in the "FACTORY" method |
 | IV_USE_DEEP_SHLP        | Importing  | Yes      | This parameter will active a deep searchhelp generator. This means, if the DDIC seachhelp field has a searchhelp assigned on data element level or the corresponding domain contains fix value, it will either generate a generic searchhelp (searchhelp assigned on data element) or value help (domain fix value) | 
+| IT_SHLP_FV_DEFAULT      | Importing  | Yes      | With this parameter you can prefill your searchhelp fields with values retrieved from the calling application. Searchelp ID, fieldname and fieldvalues are the fields to be provided
 | RESULT                  | Returning  |          | Returning instance of the Searchhelp app |
 
 ### 1.4 Demo

@@ -1,46 +1,46 @@
-CLASS z2ui5_cl_tool_app_selopt_gen DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+class Z2UI5_CL_TOOL_APP_SELOPT_GEN definition
+  public
+  final
+  create public .
 
-  PUBLIC SECTION.
+public section.
 
-    INTERFACES if_serializable_object .
-    INTERFACES z2ui5_if_app .
+  interfaces IF_SERIALIZABLE_OBJECT .
+  interfaces Z2UI5_IF_APP .
 
-    TYPES:
-      BEGIN OF ts_token,
+  types:
+    BEGIN OF ts_token,
         key      TYPE string,
         text     TYPE string,
         visible  TYPE abap_bool,
         selkz    TYPE abap_bool,
         editable TYPE abap_bool,
       END OF ts_token .
-    TYPES:
-      tt_token TYPE STANDARD TABLE OF ts_token WITH KEY key .
-    TYPES:
-      tt_range TYPE RANGE OF string .
-    TYPES:
-      ts_range TYPE LINE OF tt_range .
-    TYPES:
-      BEGIN OF ts_filter_pop,
+  types:
+    tt_token TYPE STANDARD TABLE OF ts_token WITH KEY key .
+  types:
+    tt_range TYPE RANGE OF string .
+  types:
+    ts_range TYPE LINE OF tt_range .
+  types:
+    BEGIN OF ts_filter_pop,
         option TYPE string,
         low    TYPE string,
         high   TYPE string,
         key    TYPE string,
       END OF ts_filter_pop .
-    TYPES:
-      tt_filter_prop TYPE STANDARD TABLE OF ts_filter_pop WITH EMPTY KEY .
-    TYPES:
-      BEGIN OF ts_selopt_mapping,
+  types:
+    tt_filter_prop TYPE STANDARD TABLE OF ts_filter_pop WITH EMPTY KEY .
+  types:
+    BEGIN OF ts_selopt_mapping,
         key   TYPE string,
         text  TYPE string,
         value TYPE string,
       END OF ts_selopt_mapping .
-    TYPES:
-      tt_selopt_mapping TYPE STANDARD TABLE OF ts_selopt_mapping WITH KEY key .
-    TYPES:
-      BEGIN OF ts_config,
+  types:
+    tt_selopt_mapping TYPE STANDARD TABLE OF ts_selopt_mapping WITH KEY key .
+  types:
+    BEGIN OF ts_config,
         popup_title         TYPE string,
         header_text         TYPE string,
         contentheight       TYPE string,
@@ -52,27 +52,49 @@ CLASS z2ui5_cl_tool_app_selopt_gen DEFINITION
         time_value_format   TYPE string,
       END OF ts_config .
 
-    DATA mt_token_result TYPE tt_token .
-    CONSTANTS mc_sort_dir_asc TYPE string VALUE 'ASCENDING' ##NO_TEXT.
-    CONSTANTS mc_sort_dir_desc TYPE string VALUE 'DESCENDING' ##NO_TEXT.
-    CONSTANTS mc_evt_search TYPE string VALUE 'EVT_SEARCH' ##NO_TEXT.
-    CONSTANTS mc_evt_cancel TYPE string VALUE 'EVT_CANCEL' ##NO_TEXT.
-    CONSTANTS mc_evt_confirm TYPE string VALUE 'EVT_CONFIRM' ##NO_TEXT.
-    DATA ms_config TYPE ts_config .
-    DATA mt_filter TYPE tt_filter_prop .
-    DATA mt_mapping TYPE tt_selopt_mapping .
-    CONSTANTS mc_evt_shlp_selopt_delete TYPE string VALUE 'EVT_SHLP_SELOPT_DELETE' ##NO_TEXT.
-    CONSTANTS mc_evt_shlp_selopt_delete_all TYPE string VALUE 'EVT_SHLP_SELOPT_DELETE_ALL' ##NO_TEXT.
-    CONSTANTS mc_evt_shlp_selopt_add TYPE string VALUE 'EVT_SHLP_SELOPT_ADD' ##NO_TEXT.
-    CONSTANTS mc_evt_shlp_selopt_cancel TYPE string VALUE 'EVT_SHLP_SELOPT_CANCEL' ##NO_TEXT.
-    CONSTANTS mc_evt_shlp_selopt_ok TYPE string VALUE 'EVT_SHLP_SELOPT_OK' ##NO_TEXT.
+  data MT_TOKEN_RESULT type TT_TOKEN .
+  constants MC_SORT_DIR_ASC type STRING value 'ASCENDING' ##NO_TEXT.
+  constants MC_SORT_DIR_DESC type STRING value 'DESCENDING' ##NO_TEXT.
+  constants MC_EVT_SEARCH type STRING value 'EVT_SEARCH' ##NO_TEXT.
+  constants MC_EVT_CANCEL type STRING value 'EVT_CANCEL' ##NO_TEXT.
+  constants MC_EVT_CONFIRM type STRING value 'EVT_CONFIRM' ##NO_TEXT.
+  data MS_CONFIG type TS_CONFIG .
+  data MT_FILTER type TT_FILTER_PROP .
+  class-data MT_MAPPING type TT_SELOPT_MAPPING .
+  constants MC_EVT_SHLP_SELOPT_DELETE type STRING value 'EVT_SHLP_SELOPT_DELETE' ##NO_TEXT.
+  constants MC_EVT_SHLP_SELOPT_DELETE_ALL type STRING value 'EVT_SHLP_SELOPT_DELETE_ALL' ##NO_TEXT.
+  constants MC_EVT_SHLP_SELOPT_ADD type STRING value 'EVT_SHLP_SELOPT_ADD' ##NO_TEXT.
+  constants MC_EVT_SHLP_SELOPT_CANCEL type STRING value 'EVT_SHLP_SELOPT_CANCEL' ##NO_TEXT.
+  constants MC_EVT_SHLP_SELOPT_OK type STRING value 'EVT_SHLP_SELOPT_OK' ##NO_TEXT.
 
-    CLASS-METHODS factory
-      IMPORTING
-        !is_config    TYPE ts_config
-        !it_token     TYPE tt_token OPTIONAL
-      RETURNING
-        VALUE(result) TYPE REF TO z2ui5_cl_tool_app_selopt_gen .
+  class-methods CLASS_CONSTRUCTOR .
+  class-methods FACTORY
+    importing
+      !IS_CONFIG type TS_CONFIG
+      !IT_TOKEN type TT_TOKEN optional
+    returning
+      value(RESULT) type ref to Z2UI5_CL_TOOL_APP_SELOPT_GEN .
+  class-methods GET_SELOPT_MAPPING
+    returning
+      value(RT_MAPPING) type TT_SELOPT_MAPPING .
+  class-methods FILL_TOKEN
+    importing
+      !IT_FILTER type TT_FILTER_PROP
+    changing
+      !CT_TOKEN type TT_TOKEN .
+  class-methods GET_SHLP_RANGE_BY_VALUE
+    importing
+      !IV_VALUE type STRING
+    returning
+      value(RS_RESULT) type TS_RANGE .
+  class-methods FILL_FILTER
+    importing
+      !IT_TOKEN type TT_TOKEN
+    changing
+      !CT_FILTER type TT_FILTER_PROP .
+  class-methods GET_SHLP_UUID
+    returning
+      value(RV_RESULT) type STRING .
 protected section.
 
   data MV_CHECK_INITIALIZED type ABAP_BOOL .
@@ -87,27 +109,6 @@ protected section.
   methods ON_INIT
     importing
       !IR_CLIENT type ref to Z2UI5_IF_CLIENT .
-  methods FILL_TOKEN
-    importing
-      !IT_FILTER type TT_FILTER_PROP
-    changing
-      !CT_TOKEN type TT_TOKEN .
-  methods FILL_FILTER
-    importing
-      !IT_TOKEN type TT_TOKEN
-    changing
-      !CT_FILTER type TT_FILTER_PROP .
-  methods GET_SHLP_RANGE_BY_VALUE
-    importing
-      !IV_VALUE type STRING
-    returning
-      value(RS_RESULT) type TS_RANGE .
-  methods GET_SHLP_UUID
-    returning
-      value(RV_RESULT) type STRING .
-  methods GET_SELOPT_MAPPING
-    returning
-      value(RT_MAPPING) type TT_SELOPT_MAPPING .
 private section.
 ENDCLASS.
 
@@ -163,14 +164,14 @@ CLASS Z2UI5_CL_TOOL_APP_SELOPT_GEN IMPLEMENTATION.
         ENDIF.
 
 * ---------- Convert token into range format ------------------------------------------------------
-        ls_range = me->get_shlp_range_by_value( iv_value = <lv_field> ).
+        ls_range = get_shlp_range_by_value( iv_value = <lv_field> ).
         IF ls_range IS INITIAL.
           CONTINUE.
         ENDIF.
 
 * ---------- Build new filter record --------------------------------------------------------------
-        APPEND INITIAL LINE TO me->mt_filter ASSIGNING <ls_filter>.
-        <ls_filter>-key     = me->get_shlp_uuid( ).
+        APPEND INITIAL LINE TO ct_filter ASSIGNING <ls_filter>.
+        <ls_filter>-key     = get_shlp_uuid( ).
         <ls_filter>-option  = ls_range-option.
         <ls_filter>-low     = ls_range-low.
         <ls_filter>-high    = ls_range-high.
@@ -191,7 +192,7 @@ CLASS Z2UI5_CL_TOOL_APP_SELOPT_GEN IMPLEMENTATION.
 * ---------- Fill token ---------------------------------------------------------------------------
     LOOP AT it_filter REFERENCE INTO DATA(lr_filter).
 
-      DATA(lv_value) = me->mt_mapping[ key = lr_filter->option ]-value.
+      DATA(lv_value) = mt_mapping[ key = lr_filter->option ]-value.
       REPLACE `{LOW}`  IN lv_value WITH lr_filter->low.
       REPLACE `{HIGH}` IN lv_value WITH lr_filter->high.
 
@@ -360,8 +361,8 @@ CLASS Z2UI5_CL_TOOL_APP_SELOPT_GEN IMPLEMENTATION.
         ENDLOOP.
 
 * ---------- Fill token ---------------------------------------------------------------------------
-        me->fill_token( EXPORTING it_filter = me->mt_filter
-                        CHANGING  ct_token  = me->mt_token ).
+        fill_token( EXPORTING it_filter = me->mt_filter
+                    CHANGING  ct_token  = me->mt_token ).
 
 * ---------- Set token result ---------------------------------------------------------------------
         me->mt_token_result = me->mt_token.
@@ -408,13 +409,10 @@ CLASS Z2UI5_CL_TOOL_APP_SELOPT_GEN IMPLEMENTATION.
         me->ms_config-contentwidth = '50%'.
       ENDIF.
 
-* ---------- Prefill select-option mapping table --------------------------------------------------
-      me->mt_mapping = me->get_selopt_mapping( ).
-
 * ---------- Import tokens from calling application -----------------------------------------------
       IF me->mt_token IS NOT INITIAL.
-        me->fill_filter( EXPORTING it_token  = me->mt_token
-                        CHANGING   ct_filter = me->mt_filter ).
+        fill_filter( EXPORTING it_token  = me->mt_token
+                     CHANGING   ct_filter = me->mt_filter ).
         CLEAR: me->mt_token.
       ENDIF.
 
@@ -457,7 +455,7 @@ CLASS Z2UI5_CL_TOOL_APP_SELOPT_GEN IMPLEMENTATION.
 * ---------- Create Combobox ----------------------------------------------------------------------
     lr_grid->combobox(
                  selectedkey = `{OPTION}`
-                 items       = ir_client->_bind_edit( me->mt_mapping )
+                 items       = ir_client->_bind_edit( mt_mapping )
              )->item( key = '{KEY}'
                       text = '{TEXT}' ).
 
@@ -500,5 +498,11 @@ CLASS Z2UI5_CL_TOOL_APP_SELOPT_GEN IMPLEMENTATION.
 
     me->on_event( ir_client = client ).
 
+  ENDMETHOD.
+
+
+  METHOD class_constructor.
+* ---------- Prefill select-option mapping table --------------------------------------------------
+    mt_mapping = get_selopt_mapping( ).
   ENDMETHOD.
 ENDCLASS.

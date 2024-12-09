@@ -71,3 +71,22 @@ Class: Z2UI5_CL_TOOL_APP_SELOPT_GEN
 | IT_TOKEN                | Importing  |  Yes     | Filter values which will prefill the filter list
 | RESULT                  | Returning  |          | Returning instance of the value help app |
 
+## 4) Generic CDS based (DDL) Search help generator
+### 4.1) Description
+This app will generate a popup window based on the given CDS View (DDL) ID.
+
+### 4.2) App name (Class name)
+Class: Z2UI5_CL_TOOL_APP_SELOPT_GEN
+
+### 4.3) Parameters
+| Parameter Name          | Type       | Optional | Description                                                                              |
+| ----------------------- | ---------- | -------- | ---------------------------------------------------------------------------------------- |
+| IV_DDL_ID               | Importing  |          | This is the ID of the CDS View (DDL source).                                             |
+| IV_POPUP_TITLE          | Importing  |          | This is the popop window title |
+| IV_RESULT_FILTER_EXIT   | Importing  | Yes      | User-Exit in order to filter, restrict or enrich the searchhelp result. For more details, please refer to the comments in the "FACTORY" method |
+| IV_SELOPT_PREFILL_EXIT  | Importing  | Yes      | User-Exit in order to prefill or adapt the searchhelp selection criteria. For more details, please refer to the comments in the "FACTORY" method |
+| IT_SHLP_EXIT            | Importing  | Yes      | User-Exit in order to created your own deep value help on top of the seachhelp fields. For more details, please refer to the comments in the "FACTORY" method |
+| IV_USE_DEEP_SHLP        | Importing  | Yes      | This parameter will active a deep searchhelp generator. This means, if the DDIC seachhelp field has a searchhelp assigned on data element level or the corresponding domain contains fix value, it will either generate a generic searchhelp (searchhelp assigned on data element) or value help (domain fix value) | 
+| IT_SHLP_FV_DEFAULT      | Importing  | Yes      | With this parameter you can prefill your searchhelp fields with values retrieved from the calling application. Searchelp ID, fieldname and fieldvalues are the fields to be provided
+| RESULT                  | Returning  |          | Returning instance of the Searchhelp app |
+

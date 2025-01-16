@@ -59,7 +59,8 @@ CLASS Z2UI5_CL_TOOL_APP_09 IMPLEMENTATION.
         mv_check_popup = abap_true.
         ir_client->nav_app_call( z2ui5_cl_tool_app_shlp_gen=>factory(
           iv_popup_title = 'THIS is the DDIC SHLP title'
-          iv_shlp_id = 'F4SHLP_ACMDTUI_DDLSOURCE' ) ).
+          iv_shlp_id = 'F4SHLP_ACMDTUI_DDLSOURCE'
+          iv_autoexec = abap_true ) ).
 
       WHEN 'BACK'.
         ir_client->nav_app_leave( ir_client->get_app( ir_client->get( )-s_draft-id_prev_app_stack ) ).

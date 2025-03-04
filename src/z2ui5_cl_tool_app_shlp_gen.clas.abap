@@ -135,6 +135,7 @@ CLASS z2ui5_cl_tool_app_shlp_gen DEFINITION
         !it_shlp_exit           TYPE tt_shlp_exit OPTIONAL
         !iv_use_deep_shlp       TYPE boole_d OPTIONAL
         !it_shlp_fv_default     TYPE tt_shlp_fv_default OPTIONAL
+        !iv_autoexec            TYPE boole_d OPTIONAL
       RETURNING
         VALUE(result)           TYPE REF TO z2ui5_cl_tool_app_shlp_gen .
     CLASS-METHODS template_vh_user_exit
@@ -158,6 +159,7 @@ protected section.
   data MT_SHLP_EXIT type TT_SHLP_EXIT .
   data MV_USE_DEEP_SHLP type BOOLE_D .
   data MT_SHLP_FV_DEFAULT type TT_SHLP_FV_DEFAULT .
+  data mv_autoexec type abap_bool.
 
   methods ON_RENDERING
     importing
@@ -446,7 +448,7 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
     DATA: ls_shlp       TYPE  shlp_descr,
           lt_shlp_descr TYPE tt_shlp_descr.
 
-    FIELD-SYMBOLS: <ls_shlp_descr> 	TYPE ts_shlp_descr.
+    FIELD-SYMBOLS: <ls_shlp_descr>   TYPE ts_shlp_descr.
 
 * ---------- Get searchhelp description for given ID ----------------------------------------------
     CALL FUNCTION 'F4IF_GET_SHLP_DESCR'
@@ -563,6 +565,9 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 * Set searchhelp default filter values
 * -------------------------------------------------------------------------------------------------
     result->mt_shlp_fv_default = it_shlp_fv_default.
+
+* ---------- Set autoexec --------------------------------------------------------------------------
+    result->mv_autoexec = iv_autoexec.
 
   ENDMETHOD.
 
@@ -1508,6 +1513,14 @@ CLASS Z2UI5_CL_TOOL_APP_SHLP_GEN IMPLEMENTATION.
 * ---------- Set searchhelp filter values default -------------------------------------------------
       me->set_shlp_fv_default( it_shlp_fv_default = me->mt_shlp_fv_default
                                it_shlp_descr      = me->mt_shlp_descr ).
+
+* ---------- Fetch searchhelp result --------------------------------------------------------------
+      IF mv_autoexec = abap_true.
+
+        me->select_ddic_shlp( ir_controller  = me
+                              iv_shlp_id     = me->ms_screen-shlp_selkey ).
+
+      ENDIF.
 
 * ---------- Perform searchhelp popup rendering ---------------------------------------------------
       me->on_rendering( ir_client = ir_client ).

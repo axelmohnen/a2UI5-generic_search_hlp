@@ -1,118 +1,123 @@
-class Z2UI5_CL_TOOL_APP_VH_CDS_GEN definition
-  public
-  create public .
+CLASS z2ui5_cl_tool_app_vh_cds_gen DEFINITION
+  PUBLIC
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  interfaces IF_SERIALIZABLE_OBJECT .
-  interfaces Z2UI5_IF_APP .
+    INTERFACES if_serializable_object .
+    INTERFACES z2ui5_if_app .
 
-  types:
-    BEGIN OF ts_token,
+    TYPES:
+      BEGIN OF ts_token,
         key      TYPE string,
         text     TYPE string,
         visible  TYPE abap_bool,
         selkz    TYPE abap_bool,
         editable TYPE abap_bool,
       END OF ts_token .
-  types:
-    tt_token TYPE STANDARD TABLE OF ts_token WITH KEY key .
-  types:
-    tt_range TYPE RANGE OF string .
-  types:
-    ts_range TYPE LINE OF tt_range .
-  types:
-    BEGIN OF ts_filter_pop,
+    TYPES:
+      tt_token TYPE STANDARD TABLE OF ts_token WITH KEY key .
+    TYPES:
+      tt_range TYPE RANGE OF string .
+    TYPES:
+      ts_range TYPE LINE OF tt_range .
+    TYPES:
+      BEGIN OF ts_filter_pop,
         option TYPE string,
         low    TYPE string,
         high   TYPE string,
         key    TYPE string,
       END OF ts_filter_pop .
-  types:
-    tt_filter_prop TYPE STANDARD TABLE OF ts_filter_pop WITH EMPTY KEY .
-  types:
-    BEGIN OF ts_selopt_mapping,
+    TYPES:
+      tt_filter_prop TYPE STANDARD TABLE OF ts_filter_pop WITH EMPTY KEY .
+    TYPES:
+      BEGIN OF ts_selopt_mapping,
         key   TYPE string,
         text  TYPE string,
         value TYPE string,
       END OF ts_selopt_mapping .
-  types:
-    tt_selopt_mapping TYPE STANDARD TABLE OF ts_selopt_mapping WITH KEY key .
-  types:
-    BEGIN OF ts_ddl_descr.
-        INCLUDE TYPE DFIES.
+    TYPES:
+      tt_selopt_mapping TYPE STANDARD TABLE OF ts_selopt_mapping WITH KEY key .
+    TYPES:
+      BEGIN OF ts_ddl_descr.
+        INCLUDE TYPE dfies.
     TYPES: END OF ts_ddl_descr .
-  types:
-    tt_ddl_descr TYPE STANDARD TABLE OF ts_ddl_descr WITH DEFAULT KEY .
-  types:
-    BEGIN OF ts_shlp_type,
+    TYPES:
+      tt_ddl_descr TYPE STANDARD TABLE OF ts_ddl_descr WITH DEFAULT KEY .
+    TYPES:
+      BEGIN OF ts_shlp_type,
         type  TYPE string,
         id    TYPE string,
         label TYPE string,
       END OF ts_shlp_type .
-  types:
-    BEGIN OF ts_shlp_exit,
+    TYPES:
+      BEGIN OF ts_shlp_exit,
         rollname TYPE rollname,
         exit     TYPE string,
       END OF ts_shlp_exit .
-  types:
-    tt_shlp_exit TYPE STANDARD TABLE OF ts_shlp_exit WITH KEY rollname .
-  types TS_DD07V type DD07V .
-  types:
-    tt_dd07v TYPE STANDARD TABLE OF dd07v WITH DEFAULT KEY .
-  types:
-    BEGIN OF ts_shlp_fv_default,
+    TYPES:
+      tt_shlp_exit TYPE STANDARD TABLE OF ts_shlp_exit WITH KEY rollname .
+    TYPES ts_dd07v TYPE dd07v .
+    TYPES:
+      tt_dd07v TYPE STANDARD TABLE OF dd07v WITH DEFAULT KEY .
+    TYPES:
+      BEGIN OF ts_shlp_fv_default,
         fieldname  TYPE string,
         fieldvalue TYPE string,
       END OF ts_shlp_fv_default .
-  types:
-    tt_shlp_fv_default TYPE STANDARD TABLE OF ts_shlp_fv_default WITH KEY fieldname .
+    TYPES:
+      tt_shlp_fv_default TYPE STANDARD TABLE OF ts_shlp_fv_default WITH KEY fieldname .
 
-  data MV_CHECK_INITIALIZED type ABAP_BOOL .
-  data MV_DDL_ID type DDLNAME .
-  data MV_POPUP_TITLE type STRING .
-  data MV_SHLP_RESULT type STRING .
-  data MV_SHLP_RESULT2 type STRING .
-  data MV_SHLP_RESULT3 type STRING .
-  data MT_FILTER type TT_FILTER_PROP .
-  data MT_MAPPING type TT_SELOPT_MAPPING .
-  data MR_SHLP_FIELDS type ref to DATA .
-  data MR_SHLP_RESULT type ref to DATA .
+    TYPES: BEGIN OF ts_where_clause,
+             line(72) TYPE c,
+           END OF ts_where_clause.
+    TYPES: tt_where_clause TYPE STANDARD TABLE OF ts_where_clause WITH DEFAULT KEY.
 
-  constants MC_EVT_SHLP_CLOSE type STRING value 'EVT_SHLP_CLOSE' ##NO_TEXT.
-  constants MC_EVT_SHLP_GO type STRING value 'EVT_SHLP_GO' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELECT type STRING value 'EVT_SHLP_SELECT' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_OPEN type STRING value 'EVT_SHLP_SELOPT_OPEN' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_TOKEN_UPD type STRING value 'EVT_SHLP_SELOPT_TOKEN_UPD' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_ADD type STRING value 'EVT_SHLP_SELOPT_ADD' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_CANCEL type STRING value 'EVT_SHLP_SELOPT_CANCEL' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_OK type STRING value 'EVT_SHLP_SELOPT_OK' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_DELETE type STRING value 'EVT_SHLP_SELOPT_DELETE' ##NO_TEXT.
-  constants MC_EVT_SHLP_SELOPT_DELETE_ALL type STRING value 'EVT_SHLP_SELOPT_DELETE_ALL' ##NO_TEXT.
-  constants MC_SHLP_FIELDS_REF_NAME type STRING value 'MR_SHLP_FIELDS_' ##NO_TEXT.
-  constants MC_SHLP_RESULT_REF_NAME type STRING value 'MR_SHLP_FIELDS_' ##NO_TEXT.
-  data MV_RESULT_FILTER_EXIT type STRING .
-  data MV_SELOPT_PREFILL_EXIT type STRING .
-  constants MC_EVT_SHLP_SELOPT_CHANGE type STRING value 'EVT_SHLP_SELOPT_CHANGE' ##NO_TEXT.
-  constants MC_TOKEN_UPD_TYPE_REMOVE type STRING value 'removed' ##NO_TEXT.
+    DATA mv_check_initialized TYPE abap_bool .
+    DATA mv_ddl_id TYPE ddlname .
+    DATA mv_popup_title TYPE string .
+    DATA mv_shlp_result TYPE string .
+    DATA mv_shlp_result2 TYPE string .
+    DATA mv_shlp_result3 TYPE string .
+    DATA mt_filter TYPE tt_filter_prop .
+    DATA mt_mapping TYPE tt_selopt_mapping .
+    DATA mr_shlp_fields TYPE REF TO data .
+    DATA mr_shlp_result TYPE REF TO data .
 
-  class-methods FACTORY
-    importing
-      !IV_DDL_ID type CLIKE
-      !IV_POPUP_TITLE type CLIKE
-      !IV_RESULT_FILTER_EXIT type CLIKE optional
-      !IV_SELOPT_PREFILL_EXIT type CLIKE optional
-      !IT_SHLP_EXIT type TT_SHLP_EXIT optional
-      !IV_USE_DEEP_SHLP type BOOLE_D optional
-      !IT_SHLP_FV_DEFAULT type TT_SHLP_FV_DEFAULT optional
-    returning
-      value(RESULT) type ref to Z2UI5_CL_TOOL_APP_VH_CDS_GEN .
-  class-methods TEMPLATE_VH_USER_EXIT
-    importing
-      !IV_ROLLNAME type ROLLNAME
-    exporting
-      !ES_CONFIG type Z2UI5_CL_TOOL_APP_VH_GEN=>TS_CONFIG
-      !ET_DATA type Z2UI5_CL_TOOL_APP_VH_GEN=>TT_DATA .
+    CONSTANTS mc_evt_shlp_close TYPE string VALUE 'EVT_SHLP_CLOSE' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_go TYPE string VALUE 'EVT_SHLP_GO' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_select TYPE string VALUE 'EVT_SHLP_SELECT' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_open TYPE string VALUE 'EVT_SHLP_SELOPT_OPEN' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_token_upd TYPE string VALUE 'EVT_SHLP_SELOPT_TOKEN_UPD' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_add TYPE string VALUE 'EVT_SHLP_SELOPT_ADD' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_cancel TYPE string VALUE 'EVT_SHLP_SELOPT_CANCEL' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_ok TYPE string VALUE 'EVT_SHLP_SELOPT_OK' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_delete TYPE string VALUE 'EVT_SHLP_SELOPT_DELETE' ##NO_TEXT.
+    CONSTANTS mc_evt_shlp_selopt_delete_all TYPE string VALUE 'EVT_SHLP_SELOPT_DELETE_ALL' ##NO_TEXT.
+    CONSTANTS mc_shlp_fields_ref_name TYPE string VALUE 'MR_SHLP_FIELDS_' ##NO_TEXT.
+    CONSTANTS mc_shlp_result_ref_name TYPE string VALUE 'MR_SHLP_FIELDS_' ##NO_TEXT.
+    DATA mv_result_filter_exit TYPE string .
+    DATA mv_selopt_prefill_exit TYPE string .
+    CONSTANTS mc_evt_shlp_selopt_change TYPE string VALUE 'EVT_SHLP_SELOPT_CHANGE' ##NO_TEXT.
+    CONSTANTS mc_token_upd_type_remove TYPE string VALUE 'removed' ##NO_TEXT.
+
+    CLASS-METHODS factory
+      IMPORTING
+        !iv_ddl_id              TYPE clike
+        !iv_popup_title         TYPE clike
+        !iv_result_filter_exit  TYPE clike OPTIONAL
+        !iv_selopt_prefill_exit TYPE clike OPTIONAL
+        !it_shlp_exit           TYPE tt_shlp_exit OPTIONAL
+        !iv_use_deep_shlp       TYPE boole_d OPTIONAL
+        !it_shlp_fv_default     TYPE tt_shlp_fv_default OPTIONAL
+      RETURNING
+        VALUE(result)           TYPE REF TO z2ui5_cl_tool_app_vh_cds_gen .
+    CLASS-METHODS template_vh_user_exit
+      IMPORTING
+        !iv_rollname TYPE rollname
+      EXPORTING
+        !es_config   TYPE z2ui5_cl_tool_app_vh_gen=>ts_config
+        !et_data     TYPE z2ui5_cl_tool_app_vh_gen=>tt_data .
 protected section.
 
   data MV_SELOPT_FIELDNAME type STRING .
@@ -236,6 +241,11 @@ protected section.
       !IV_DDL_ID type DDLNAME
       !IT_DDL_DESCR type TT_DDL_DESCR
       !IT_SHLP_FV_DEFAULT type TT_SHLP_FV_DEFAULT optional .
+  methods BUILD_DYNAMIC_WHERE
+    importing
+      !IT_COND type HRTB_COND
+    returning
+      value(RT_WHERE_CLAUSE) type TT_WHERE_CLAUSE .
 private section.
 ENDCLASS.
 
@@ -1726,10 +1736,6 @@ ENDMETHOD.
 *----------------------------------------------------------------------*
 * LOCAL DATA DEFINITION
 *----------------------------------------------------------------------*
-    TYPES: BEGIN OF ts_where_clause,
-             line(72) TYPE c,
-           END OF ts_where_clause.
-
     DATA: lt_cond	         TYPE hrtb_cond,
           lt_where_clause  TYPE TABLE OF ts_where_clause,
           lt_return_values TYPE TABLE OF ddshretval,
@@ -1745,7 +1751,12 @@ ENDMETHOD.
           lt_param         TYPE abap_parmbind_tab,
           lv_class_name    TYPE string,
           lv_meth_name     TYPE string,
-          lr_conv_out      TYPE REF TO data.
+          lr_conv_out      TYPE REF TO data,
+          lv_strlen        TYPE i,
+          lv_strlen2       TYPE i,
+          lv_camel_case    TYPE c,
+          lv_lower_case    TYPE string,
+          lv_add           TYPE abap_bool.
 
     FIELD-SYMBOLS: <ls_fielddescr>    TYPE dfies,
                    <ls_record_tab>    TYPE seahlpres,
@@ -1792,7 +1803,8 @@ ENDMETHOD.
 * ---------- Set filter criteria for given fieldname ----------------------------------------------
       LOOP AT <lt_token> ASSIGNING <ls_token>.
 * ---------- Init loop data -----------------------------------------------------------------------
-        CLEAR: ls_range, lv_date_out, lv_time_out, lr_conv_out.
+        CLEAR: ls_range, lv_date_out, lv_time_out, lr_conv_out, lv_strlen, lv_strlen2, lv_camel_case, lv_lower_case,
+               lv_add.
         UNASSIGN: <lv_conv_out>.
 
 * ---------- Convert token into range format ------------------------------------------------------
@@ -1934,6 +1946,54 @@ ENDMETHOD.
                         opera = ls_range-option
                         low   = ls_range-low
                         high  = ls_range-high ) TO lt_cond.
+
+        IF ls_range-option = 'LK'. "Wildcard"
+* ---------- Store range in UPPER case ------------------------------------------------------------
+          TRANSLATE ls_range-low TO UPPER CASE.
+          TRANSLATE ls_range-high TO UPPER CASE.
+          APPEND VALUE #( field = <ls_fielddescr>-fieldname
+                  opera = ls_range-option
+                  low   = ls_range-low
+                  high  = ls_range-high ) TO lt_cond.
+
+* ---------- Store range in LOWER case ------------------------------------------------------------
+          TRANSLATE ls_range-low TO LOWER CASE.
+          TRANSLATE ls_range-high TO LOWER CASE.
+          APPEND VALUE #( field = <ls_fielddescr>-fieldname
+                  opera = ls_range-option
+                  low   = ls_range-low
+                  high  = ls_range-high ) TO lt_cond.
+
+* ---------- Store range in CAMEL case ------------------------------------------------------------
+          TRANSLATE ls_range-low TO LOWER CASE.
+          TRANSLATE ls_range-high TO LOWER CASE.
+          lv_strlen = strlen( ls_range-low ).
+          IF lv_strlen > 2.
+            lv_strlen2 = lv_strlen - 2.
+            lv_camel_case = ls_range-low+1(1).
+            lv_lower_case = ls_range-low+2(lv_strlen2).
+            TRANSLATE lv_camel_case TO UPPER CASE.
+            ls_range-low = '*' && lv_camel_case && lv_lower_case.
+            lv_add = abap_true.
+          ENDIF.
+          CLEAR: lv_strlen, lv_strlen2, lv_camel_case, lv_lower_case.
+          lv_strlen = strlen( ls_range-high ).
+          IF lv_strlen > 1.
+            lv_strlen2 = lv_strlen - 1.
+            lv_camel_case = ls_range-high+0(1).
+            lv_lower_case = ls_range-high+1(lv_strlen2).
+            TRANSLATE lv_camel_case TO UPPER CASE.
+            ls_range-high = lv_camel_case && lv_lower_case.
+            lv_add = abap_true.
+          ENDIF.
+
+          IF lv_add = abap_true.
+            APPEND VALUE #( field = <ls_fielddescr>-fieldname
+                    opera = ls_range-option
+                    low   = ls_range-low
+                    high  = ls_range-high ) TO lt_cond.
+          ENDIF.
+        ENDIF.
       ENDLOOP.
     ENDLOOP.
 
@@ -1957,20 +2017,8 @@ ENDMETHOD.
 
     IF lt_cond IS NOT INITIAL.
 * ---------- Build Where clause dynamically -------------------------------------------------------
-      CALL FUNCTION 'RH_DYNAMIC_WHERE_BUILD'
-        EXPORTING
-          dbtable         = space
-        TABLES
-          condtab         = lt_cond
-          where_clause    = lt_where_clause
-        EXCEPTIONS
-          empty_condtab   = 1
-          no_db_field     = 2
-          unknown_db      = 3
-          wrong_condition = 4
-          OTHERS          = 5.
-
-      IF sy-subrc <> 0.
+      lt_where_clause = me->build_dynamic_where( it_cond = lt_cond ).
+      IF lt_where_clause IS INITIAL.
         RETURN.
       ENDIF.
     ENDIF.
@@ -2054,5 +2102,197 @@ ENDMETHOD.
       CALL METHOD (lv_class_name)=>(lv_meth_name)
         PARAMETER-TABLE lt_param.
     ENDIF.
+  ENDMETHOD.
+
+
+  METHOD build_dynamic_where.
+*----------------------------------------------------------------------*
+* LOCAL DATA DEFINITION
+*----------------------------------------------------------------------*
+    TYPES: BEGIN OF ts_cond,
+             condition TYPE hrrhdb-condition,
+             line(72),
+           END   OF ts_cond.
+
+    TYPES: BEGIN OF ts_eq,
+             field TYPE dfies-fieldname,
+             count TYPE i,
+           END   OF ts_eq.
+
+    DATA: lt_cond_coll    TYPE hrtb_cond,
+          ls_eq           TYPE ts_eq,
+          lt_eq           TYPE STANDARD TABLE OF ts_eq WITH DEFAULT KEY,
+          lv_eq_tab_lines TYPE i,
+          lv_rdwb_tabix   LIKE sy-tabix,
+          lv_line         TYPE ts_cond-line,
+          ls_cond_coll    TYPE hrcond,
+          ls_where_clause TYPE ts_where_clause,
+          lv_cond_count   TYPE i,
+          lv_first_record TYPE abap_bool,
+          lv_last_record  TYPE abap_bool,
+          lv_multi_record TYPE abap_bool.
+
+    FIELD-SYMBOLS: <ls_cond>  TYPE hrcond.
+
+* ---------- Collect conditions -------------------------------------------------------------------
+    LOOP AT it_cond ASSIGNING <ls_cond>.
+      COLLECT <ls_cond> INTO lt_cond_coll.
+    ENDLOOP.
+
+    IF it_cond IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    SORT lt_cond_coll BY field.
+    LOOP AT lt_cond_coll ASSIGNING <ls_cond>.
+* ---------- Init loop data -----------------------------------------------------------------------
+      CLEAR: ls_eq.
+
+      IF <ls_cond>-opera = 'IN'.
+        "wrong_condition.
+        RETURN.
+      ENDIF.
+      IF <ls_cond>-opera = 'BT' AND
+         <ls_cond>-high  = space.
+        "wrong_condition.
+        RETURN.
+      ENDIF.
+      IF <ls_cond>-opera <> 'EQ'.
+        READ TABLE lt_eq TRANSPORTING NO FIELDS WITH KEY field = <ls_cond>-field.
+        IF sy-subrc = 0.
+          "wrong_condition.
+          RETURN.
+        ENDIF.
+      ELSE.
+        ls_eq-field = <ls_cond>-field.
+        ls_eq-count = 1.
+        COLLECT ls_eq INTO lt_eq.
+      ENDIF.
+    ENDLOOP.
+
+    DESCRIBE TABLE lt_eq LINES lv_eq_tab_lines.
+    IF lv_eq_tab_lines > 0.
+      LOOP AT lt_eq INTO ls_eq WHERE count > 1.
+        READ TABLE lt_cond_coll WITH KEY field = ls_eq-field
+             BINARY SEARCH TRANSPORTING NO FIELDS.
+        CHECK sy-subrc = 0.
+        lv_rdwb_tabix = sy-tabix.
+        CONCATENATE 'AND' ls_eq-field 'IN (' INTO lv_line
+                                              SEPARATED BY space.
+        DO.
+          CLEAR: lv_line.
+          CONCATENATE lv_line '''' INTO lv_line.
+          READ TABLE lt_cond_coll INTO ls_cond_coll INDEX lv_rdwb_tabix.
+          IF sy-subrc > 0 OR
+             ls_cond_coll-field <> ls_eq-field.
+            EXIT.
+          ENDIF.
+          IF ls_cond_coll-low <> space.
+            CONCATENATE lv_line ls_cond_coll-low '''' INTO lv_line.
+          ELSE.
+            CONCATENATE lv_line '''' INTO lv_line SEPARATED BY space.
+          ENDIF.
+          IF sy-index = ls_eq-count.
+            CONCATENATE lv_line ')' INTO lv_line.
+          ELSE.
+            CONCATENATE lv_line ',' INTO lv_line SEPARATED BY space.
+          ENDIF.
+          ls_where_clause = lv_line.
+          APPEND ls_where_clause TO rt_where_clause.
+          DELETE lt_cond_coll INDEX lv_rdwb_tabix.
+        ENDDO.
+      ENDLOOP.
+    ENDIF.
+
+    LOOP AT lt_cond_coll ASSIGNING <ls_cond>.
+      CLEAR: lv_first_record, lv_last_record.
+      AT new field.
+        CLEAR: lv_cond_count, lv_multi_record.
+        LOOP AT lt_cond_coll INTO ls_cond_coll WHERE field = <ls_cond>-field.
+          lv_cond_count = lv_cond_count + 1.
+        ENDLOOP.
+        IF lv_cond_count > 1.
+          lv_multi_record = abap_true.
+        ENDIF.
+        lv_first_record = abap_true.
+      ENDAT.
+
+* ---------- Decrement counter --------------------------------------------------------------------
+      lv_cond_count = lv_cond_count - 1.
+
+* ---------- Last record for the same fieldname reached? ------------------------------------------
+      IF lv_cond_count = 0.
+        lv_last_record = abap_true.
+      ENDIF.
+
+      CLEAR: lv_line.
+      CASE <ls_cond>-opera.
+        WHEN 'BT'.
+          CONCATENATE 'AND' <ls_cond>-field
+                      'BETWEEN' ''''  INTO lv_line SEPARATED BY space.
+          IF <ls_cond>-low <> space.
+            CONCATENATE lv_line <ls_cond>-low '''' INTO lv_line.
+          ELSE.
+            CONCATENATE lv_line '''' INTO lv_line SEPARATED BY space.
+          ENDIF.
+          CONCATENATE lv_line 'AND' '''' INTO lv_line SEPARATED BY space.
+          IF <ls_cond>-high <> space.
+            CONCATENATE lv_line <ls_cond>-high '''' INTO lv_line.
+          ELSE.
+            CONCATENATE lv_line '''' INTO lv_line SEPARATED BY space.
+          ENDIF.
+        WHEN 'LK'.
+          TRANSLATE <ls_cond>-low USING '*%+_'.
+          IF lv_multi_record = abap_false.
+            CONCATENATE 'AND' <ls_cond>-field
+                        'LIKE' ''''  INTO lv_line SEPARATED BY space.
+
+            IF <ls_cond>-low <> space.
+              CONCATENATE lv_line <ls_cond>-low '''' INTO lv_line.
+            ELSE.
+              CONCATENATE lv_line '''' INTO lv_line SEPARATED BY space.
+            ENDIF.
+
+          ELSE.
+            IF lv_first_record = abap_true.
+              CONCATENATE 'AND (' <ls_cond>-field
+              'LIKE' ''''  INTO lv_line SEPARATED BY space.
+            ELSE.
+              CONCATENATE 'OR' <ls_cond>-field
+              'LIKE' ''''  INTO lv_line SEPARATED BY space.
+            ENDIF.
+
+            IF <ls_cond>-low <> space.
+              CONCATENATE lv_line <ls_cond>-low '''' INTO lv_line.
+            ELSE.
+              CONCATENATE lv_line '''' INTO lv_line SEPARATED BY space.
+            ENDIF.
+
+            IF lv_last_record = abap_true.
+              CONCATENATE lv_line ')' INTO lv_line SEPARATED BY space.
+            ENDIF.
+          ENDIF.
+
+        WHEN OTHERS.
+          CONCATENATE 'AND' <ls_cond>-field
+                      <ls_cond>-opera ''''  INTO lv_line SEPARATED BY space.
+          IF <ls_cond>-low <> space.
+            CONCATENATE lv_line <ls_cond>-low '''' INTO lv_line.
+          ELSE.
+            CONCATENATE lv_line '''' INTO lv_line SEPARATED BY space.
+          ENDIF.
+      ENDCASE.
+      ls_where_clause = lv_line.
+      APPEND ls_where_clause TO rt_where_clause.
+    ENDLOOP.
+
+    READ TABLE rt_where_clause INTO ls_where_clause INDEX 1.
+    lv_line = ls_where_clause.
+    IF lv_line(4) = 'AND '.
+      SHIFT lv_line BY 4 PLACES LEFT.
+      ls_where_clause = lv_line.
+      MODIFY rt_where_clause FROM ls_where_clause INDEX sy-tabix.
+    ENDIF.
+
   ENDMETHOD.
 ENDCLASS.

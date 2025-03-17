@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
@@ -207,6 +207,11 @@
      <DESCRIPT>Build data reference dynamically</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>BUILD_DYNAMIC_WHERE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Build dynamic where statement</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>CONVERT_RESULT_TO_TOKEN</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Convert SHLP/VH result to token table for given field</DESCRIPT>
@@ -318,6 +323,12 @@
      <SCONAME>IR_CLIENT</SCONAME>
      <LANGU>E</LANGU>
      <DESCRIPT>abap2UI5 - client</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>BUILD_DYNAMIC_WHERE</CMPNAME>
+     <SCONAME>IT_COND</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>HR: Table of Database Conditions</DESCRIPT>
     </SEOSUBCOTX>
     <SEOSUBCOTX>
      <CMPNAME>CONVERT_RESULT_TO_TOKEN</CMPNAME>
